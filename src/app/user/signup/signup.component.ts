@@ -15,11 +15,27 @@ export class SignupComponent implements OnInit {
   public email: String;
   public mobile: String;
   public password: String;
-  constructor() {}
+  public cfnpassword: String;
+  constructor(
+    private userService: UserService,
+    private _router: Router,
+    private _toaster: Toaster
+  ) {}
 
   ngOnInit(): void {}
+  /**compare password */
+  public comparePassword(): Boolean {
+    return this.password === this.cfnpassword;
+  }
   /**Signup function */
   public signUpUser(): any {
     console.log('Signup user');
+    let newuser = {
+      firstName: this.firstName,
+      lastName: this.lastName,
+      email: this.email,
+      mobile: this.mobile,
+      password: this.password,
+    };
   }
 }

@@ -71,6 +71,18 @@
       <div [hidden]="_pwd.valid || _pwd.pristine" class="alert alert-danger">
         Password Is required
       </div>
+      <input
+        class="form-control mt-1"
+        type="password"
+        placeholder="confirm password"
+        required
+        name="cfnpassword"
+        [(ngModel)]="cfnpassword"
+        #_cpwd="ngModel"
+      />
+      <div [hidden]="comparePassword()" class="alert alert-danger">
+        Password doesn't match
+      </div>
       <button class="mt-2" [disabled]="!signUpForm.form.valid">SignUp</button>
       <button class="ml-2" [routerLink]="['/home']">Cancel</button>
     </form>
