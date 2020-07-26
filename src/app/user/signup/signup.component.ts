@@ -34,7 +34,7 @@ export class SignupComponent implements OnInit {
     Object.entries(lookup.countries).map((entry) =>
       this.countries.push(entry[1].country)
     );
-    console.log(this.countries);
+    //console.log(this.countries);
   }
   public selectCountryCode(value): any {
     //console.log('select code:', `+${n.search(value)[0].phone}`);
