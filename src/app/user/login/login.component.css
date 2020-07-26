@@ -25,3 +25,9 @@ label {
   color: gold;
   font-weight: bolder;
 }
+.recover {
+  margin-top: 10px;
+}
+a {
+  color: #c7c6bf;
+}

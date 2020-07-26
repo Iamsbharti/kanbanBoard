@@ -33,7 +33,11 @@
         </div>
         <button class="mt-2" [disabled]="!loginForm.form.valid">Login</button>
         <button class="ml-2" [routerLink]="['/home']">Cancel</button>
-        <a class="mt-5" [routerLink]="['/recoverPassword']">RecoverPassword </a>
+        <div class="recover">
+          <a class="mt-10" [routerLink]="['/recoverPassword']"
+            >RecoverPassword
+          </a>
+        </div>
       </div>
       <div class="loginMessage">{{ loginResponse }}</div>
     </form>

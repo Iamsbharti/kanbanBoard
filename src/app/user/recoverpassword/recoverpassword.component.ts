@@ -76,12 +76,25 @@ export class RecoverpasswordComponent implements OnInit {
       recoveryCode: this.code,
       password: this.password,
     };
+    /**Switch on loader */
+    this.loadSpinner = true;
+    this.loadMessage = 'Resetting Password....';
     this._userService.resetPassword(resetInfo).subscribe(
       (response) => {
         console.log('reset api res', response);
-        this.resetResponse = response.message;
+        /**Switch off loader */
+        this.loadSpinner = false;
+
+        /**Compose sucess message */
+        this.resetResponse = `${response.message}-Redirecting to Login...`;
+
+        /**Toast sucess */
         this._toaster.open({ text: response.message, type: 'success' });
+
+        /**hide the recovery div */
         if (response.status === 200) this.hideRecoveryDiv = true;
+
+        /**Rediret to login */
         setTimeout(() => this._router.navigate(['/login']), 3000);
       },
       (error) => {
