@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const router = require("./router/router");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 const { initdb } = require("./initdb");
 const { logIp, notfound, handleError } = require("./middlewares/errorHandler");
 /**Init Express server & envoirnment variables */
@@ -12,6 +13,7 @@ dotenv.config();
 initdb();
 
 /**Middlewares */
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(logIp);
