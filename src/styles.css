@@ -1,1 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
+body {
+  background: url(assets/pier-407252_1920.jpg);
+  background-size: cover;
+  font-family: "Montserrat", sans-serif;
+}
