@@ -1,1 +1,79 @@
-<p>signup works!</p>
+<div class="container">
+  <h3>Register</h3>
+  <div class="signupbox">
+    <form #signUpForm="ngForm" (ngSubmit)="signUpUser()">
+      <input
+        class="form-control"
+        type="text"
+        name="firstname"
+        placeholder="Enter FirstName"
+        required
+        [(ngModel)]="firstName"
+        #_fname="ngModel"
+      />
+      <div
+        [hidden]="_fname.valid || _fname.pristine"
+        class="alert alert-danger"
+      >
+        FirstName is required
+      </div>
+      <input
+        class="form-control mt-1"
+        type="text"
+        name="lastname"
+        placeholder="Enter LastName"
+        required
+        [(ngModel)]="lastName"
+        #_lname="ngModel"
+      />
+      <div
+        [hidden]="_lname.valid || _lname.pristine"
+        class="alert alert-danger"
+      >
+        LastName is Required
+      </div>
+      <input
+        class="form-control mt-1"
+        type="email"
+        placeholder="Enter Valid Email"
+        required
+        name="email"
+        [(ngModel)]="email"
+        #_email="ngModel"
+      />
+      <div
+        [hidden]="_email.valid || _email.pristine"
+        class="alert alert-danger"
+      >
+        Email is required for login and password recovery
+      </div>
+      <input
+        class="form-control mt-1"
+        type="text"
+        placeholder="Mobile"
+        required
+        name="mobile"
+        [(ngModel)]="mobile"
+        #_mob="ngModel"
+      />
+      <div [hidden]="_mob.valid || _mob.pristine" class="alert alert-danger">
+        Mobile is required
+      </div>
+      <input
+        class="form-control mt-1"
+        type="password"
+        placeholder="password"
+        required
+        name="password"
+        [(ngModel)]="password"
+        #_pwd="ngModel"
+      />
+      <div [hidden]="_pwd.valid || _pwd.pristine" class="alert alert-danger">
+        Password Is required
+      </div>
+      <button class="mt-2" [disabled]="!signUpForm.form.valid">SignUp</button>
+      <button class="ml-2" [routerLink]="['/home']">Cancel</button>
+    </form>
+  </div>
+  <router-outlet></router-outlet>
+</div>
