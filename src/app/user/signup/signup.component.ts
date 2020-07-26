@@ -27,6 +27,11 @@ export class SignupComponent implements OnInit {
   public comparePassword(): Boolean {
     return this.password === this.cfnpassword;
   }
+  public validatePassword(): Boolean {
+    let pattern = new RegExp('^[A-Za-z0-9]\\w{8,64}$');
+    if (this.password === undefined) return true;
+    return pattern.test(this.password.toString());
+  }
   /**Signup function */
   public signUpUser(): any {
     console.log('Signup user');
