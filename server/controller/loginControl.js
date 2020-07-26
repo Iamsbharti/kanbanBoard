@@ -5,6 +5,7 @@ const { comparePassword } = require("../library/passwordHandler");
 
 exports.loginControl = async (req, res) => {
   console.log("Login Control");
+  console.log("Fix");
   const { email, password } = req.body;
   //emailexistence
   const emailExistence = async (email) => {
