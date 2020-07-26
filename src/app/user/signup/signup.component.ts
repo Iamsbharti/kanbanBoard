@@ -18,6 +18,8 @@ export class SignupComponent implements OnInit {
   public cfnpassword: String;
   public equalPwd: Boolean = false;
   public acceptedPwd: Boolean = false;
+  public signUpResponse: String;
+
   constructor(
     private userService: UserService,
     private _router: Router,
@@ -46,5 +48,23 @@ export class SignupComponent implements OnInit {
       mobile: this.mobile,
       password: this.password,
     };
+    this.userService.signUpService(newuser).subscribe(
+      (response) => {
+        console.log('Sign up response', response);
+        this.signUpResponse = response.message;
+
+        /**Toast sucess */
+        this._toaster.open({ text: response.message, type: 'success' });
+
+        /**Route to Login page */
+        setTimeout(() => this._router.navigate(['/login']), 2000);
+      },
+      (error) => {
+        console.warn('SignUpError', error.error);
+        console.log('error_msg', error.error.message);
+        this.signUpResponse = error.error.message;
+        this._toaster.open({ text: error.error.message, type: 'danger' });
+      }
+    );
   }
 }
