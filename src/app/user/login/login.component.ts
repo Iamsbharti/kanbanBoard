@@ -52,7 +52,7 @@ export class LoginComponent implements OnInit {
       /**handle errors */
       (error) => {
         console.warn('Error Login', error);
-        this.loginResponse = error;
+        this.loginResponse = error.error.message;
         this.toaster.open({ text: 'Login error', type: 'danger' });
       }
     );

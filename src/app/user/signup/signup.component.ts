@@ -51,7 +51,7 @@ export class SignupComponent implements OnInit {
     this.userService.signUpService(newuser).subscribe(
       (response) => {
         console.log('Sign up response', response);
-        this.signUpResponse = response.message;
+        this.signUpResponse = `${response.message}, Redirecting to Login`;
 
         /**Toast sucess */
         this._toaster.open({ text: response.message, type: 'success' });
