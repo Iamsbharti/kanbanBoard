@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../user.service';
 import { ToastConfig, Toaster } from 'ngx-toast-notifications';
 import { Router } from '@angular/router';
-
+import lookup from 'country-code-lookup';
+let n = require('country-js');
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
@@ -19,14 +20,28 @@ export class SignupComponent implements OnInit {
   public equalPwd: Boolean = false;
   public acceptedPwd: Boolean = false;
   public signUpResponse: String;
-
+  public countries = [];
+  public country: any;
+  public countrycode: any;
   constructor(
     private userService: UserService,
     private _router: Router,
     private _toaster: Toaster
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    /**Compute list of countries */
+    Object.entries(lookup.countries).map((entry) =>
+      this.countries.push(entry[1].country)
+    );
+    console.log(this.countries);
+  }
+  public selectCountryCode(value): any {
+    //console.log('select code:', `+${n.search(value)[0].phone}`);
+    this.countrycode = `+${n.search(value)[0].phone}`;
+    //console.log('cc::', this.countrycode);
+    this.mobile = this.countrycode;
+  }
   /**compare password */
   public comparePassword(): Boolean {
     this.equalPwd = this.password === this.cfnpassword;

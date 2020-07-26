@@ -59,4 +59,16 @@ export class UserService {
     let resetPwdRes = this._http.post(`${this.baseurl}/resetPassword`, user);
     return resetPwdRes;
   }
+  //get country
+  public getCountry(): any {
+    console.log('get country');
+    let countries = this._http.get('http://country.io/names.json');
+    return countries;
+  }
+  //get country phone code
+  public getCode(): any {
+    console.log('get code');
+    let code = this._http.get('http://country.io/phone.json');
+    return code;
+  }
 }

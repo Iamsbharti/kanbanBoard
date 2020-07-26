@@ -47,6 +47,19 @@
       >
         Email is required for login and password recovery
       </div>
+      <select
+        class="form-control"
+        #ctry
+        required
+        [(ngModel)]="country"
+        name="country"
+        #_country="ngModel"
+        (change)="selectCountryCode(ctry.value)"
+      >
+        <option *ngFor="let cntry of countries" [value]="cntry">{{
+          cntry
+        }}</option>
+      </select>
       <input
         class="form-control mt-1"
         type="text"
