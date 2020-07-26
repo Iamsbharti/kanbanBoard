@@ -16,6 +16,8 @@ export class SignupComponent implements OnInit {
   public mobile: String;
   public password: String;
   public cfnpassword: String;
+  public equalPwd: Boolean = false;
+  public acceptedPwd: Boolean = false;
   constructor(
     private userService: UserService,
     private _router: Router,
@@ -25,12 +27,14 @@ export class SignupComponent implements OnInit {
   ngOnInit(): void {}
   /**compare password */
   public comparePassword(): Boolean {
-    return this.password === this.cfnpassword;
+    this.equalPwd = this.password === this.cfnpassword;
+    return this.equalPwd;
   }
   public validatePassword(): Boolean {
     let pattern = new RegExp('^[A-Za-z0-9]\\w{8,64}$');
     if (this.password === undefined) return true;
-    return pattern.test(this.password.toString());
+    this.acceptedPwd = pattern.test(this.password.toString());
+    return this.acceptedPwd;
   }
   /**Signup function */
   public signUpUser(): any {

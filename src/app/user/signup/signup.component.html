@@ -86,7 +86,12 @@
       <div [hidden]="comparePassword()" class="alert alert-danger">
         Password doesn't match
       </div>
-      <button class="mt-2" [disabled]="!signUpForm.form.valid">SignUp</button>
+      <button
+        class="mt-2"
+        [disabled]="!signUpForm.form.valid || !acceptedPwd || !equalPwd"
+      >
+        SignUp
+      </button>
       <button class="ml-2" [routerLink]="['/home']">Cancel</button>
     </form>
   </div>
