@@ -1,17 +1,41 @@
 <div class="container">
   <div class="loginbox">
     <img src="/assets/loginUser.png" />
-    <form>
+    <form #loginForm="ngForm" (ngSubmit)="loginUser()">
       <div class="form-group">
         <label for="email">Email</label>
-        <input type="text" class="form-control" name="email" required />
+        <input
+          type="text"
+          class="form-control"
+          name="email"
+          required
+          [(ngModel)]="email"
+          #_email="ngModel"
+        />
+        <div
+          [hidden]="_email.valid || _email.pristine"
+          class="alert alert-danger"
+        >
+          Email is Required
+        </div>
+
         <label for="password">Password</label>
-        <input class="form-control" name="password" type="password" required />
-        <button class="mt-2">Login</button>
-        <button class="ml-2">Cancel</button>
+        <input
+          class="form-control"
+          name="password"
+          type="password"
+          required
+          [(ngModel)]="password"
+          #_pwd="ngModel"
+        />
+        <div [hidden]="_pwd.valid || _pwd.pristine" class="alert alert-danger">
+          Password Is required
+        </div>
+        <button class="mt-2" [disabled]="!loginForm.form.valid">Login</button>
+        <button class="ml-2" [routerLink]="['/home']">Cancel</button>
         <a class="mt-5" [routerLink]="['/recoverPassword']">RecoverPassword </a>
       </div>
-      <div class="loginMessage"></div>
+      <div class="loginMessage">{{ loginResponse }}</div>
     </form>
   </div>
 </div>
