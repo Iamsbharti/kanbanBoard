@@ -21,6 +21,8 @@ export class RecoverpasswordComponent implements OnInit {
   public equalPwd: Boolean = false;
   public acceptedPwd: Boolean = false;
   public resetResponse: String;
+  public loadSpinner: Boolean = false;
+  public loadMessage: String;
   constructor(
     private _userService: UserService,
     private _toaster: Toaster,
@@ -47,10 +49,15 @@ export class RecoverpasswordComponent implements OnInit {
       email: this.email,
     };
     console.log('Send recovery ccode-service call', user);
+    /**Switch on loader */
+    this.loadSpinner = true;
+    this.loadMessage = 'Sending Email...';
     this._userService.recoverPassword(user).subscribe(
       (response) => {
         console.log('Recovery response', response);
         /**Toast */
+        /**Switch off loader */
+        this.loadSpinner = false;
         this._toaster.open({ text: response.message, type: 'success' });
         this.recoveryMessage = response.data.Operation;
         if (response.status === 200) this.showResetPassword = true;
@@ -75,6 +82,7 @@ export class RecoverpasswordComponent implements OnInit {
         this.resetResponse = response.message;
         this._toaster.open({ text: response.message, type: 'success' });
         if (response.status === 200) this.hideRecoveryDiv = true;
+        setTimeout(() => this._router.navigate(['/login']), 3000);
       },
       (error) => {
         console.warn('Error', error.error);
