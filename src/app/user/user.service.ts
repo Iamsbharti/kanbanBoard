@@ -6,7 +6,7 @@ import { catchError, retry } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root',
 })
-export class UserServiceService {
+export class UserService {
   //initiliaze
   public baseurl = 'http://localhost:4201/api/v1';
   constructor(private _http: HttpClient) {}

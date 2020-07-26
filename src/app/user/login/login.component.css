@@ -1,0 +1,27 @@
+* {
+  font-family: "Montserrat", sans-serif;
+}
+.ng-valid[required],
+.ng-valid.required {
+  border-left: 5px solid green;
+}
+.ng-invalid:not(form) {
+  border-left: 5px solid red;
+}
+.loginbox {
+  margin-top: 20px;
+  box-sizing: border-box;
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.75);
+  width: 300px;
+}
+label {
+  color: rgb(153, 149, 133);
+  font-weight: bold;
+}
+.message {
+  margin-top: 20px;
+  color: gold;
+  font-weight: bolder;
+}
