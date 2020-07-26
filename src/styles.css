@@ -4,3 +4,19 @@ body {
   background-size: cover;
   font-family: "Montserrat", sans-serif;
 }
+
+/* Responsive Styles */
+@media screen and (max-width: 767px) {
+  body {
+    width: auto;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+}
+
+@media screen and (max-width: 575px) {
+  body {
+    width: auto;
+  }
+}
