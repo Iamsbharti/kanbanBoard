@@ -23,7 +23,8 @@ exports.recoverPwdControl = async (req, res) => {
     let query = { email: foundUser.email };
     let update = { passwordRecoverCode: recoveryCode };
     let recoveryResponse;
-    await User.updateOne(query, update, (error, n) => {
+    let { n } = await User.updateOne(query, update);
+    /*User.updateOne(query, update, (error, n) => {
       console.log("updatederror", `${n.n} updated--${error}`);
       if (error !== null) {
         recoveryResponse = Promise.reject(
@@ -39,7 +40,22 @@ exports.recoverPwdControl = async (req, res) => {
         console.log("finalres", result);
         recoveryResponse = Promise.resolve(result);
       }
-    });
+    });*/
+    console.log("updated recovery code", n);
+    if (n === 1) {
+      console.log("updated code");
+      let result = {
+        updated: n.n,
+        email: email,
+        recoveryCode: recoveryCode,
+      };
+      console.log("finalres", result);
+      recoveryResponse = Promise.resolve(result);
+    } else {
+      recoveryResponse = Promise.reject(
+        formatResponse(true, 500, "Recover Code gen Error", error)
+      );
+    }
     return recoveryResponse;
   };
   //send code to mail
@@ -68,13 +84,6 @@ exports.recoverPwdControl = async (req, res) => {
       html: emailText,
     };
     //send email
-    /*transporter.sendMail(mailOptions, (error, data) => {
-      if (error) {
-        console.log("Email Send error", error);
-      } else {
-        console.log("Email Sent", data);
-      }
-    });*/
     let data = await transporter.sendMail(mailOptions);
     //console.log("res", data);
     if (data) {
