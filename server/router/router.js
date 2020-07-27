@@ -12,11 +12,15 @@ const {
   taskListValidation,
   getTaskListValidation,
   signupParamValidation,
+  createTaskValidation,
+  createSubTaskValidation,
 } = require("../middlewares/paramValidation");
 const { isAuthorized } = require("../middlewares/authorization");
 const {
   createTaskList,
   getAllTaskList,
+  createTask,
+  createSubTask,
 } = require("../controller/taskListControl");
 
 /**Sign up route */
@@ -41,5 +45,14 @@ router.post(
   isAuthorized,
   getTaskListValidation,
   getAllTaskList
+);
+/**Create task */
+router.post("/createTask", isAuthorized, createTaskValidation, createTask);
+/**create subtask */
+router.post(
+  "/createSubTask",
+  isAuthorized,
+  createSubTaskValidation,
+  createSubTask
 );
 module.exports = router;

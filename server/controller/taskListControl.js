@@ -2,6 +2,7 @@ const TaskList = require("../models/TaskList");
 const shortid = require("shortid");
 const { formatResponse } = require("../library/formatResponse");
 const Task = require("../models/Task");
+const SubTask = require("../models/SubTask");
 const EXCLUDE = "-__v -_id";
 exports.createTaskList = async (req, res) => {
   console.log("Task List control");
@@ -80,17 +81,48 @@ exports.createTask = async (req, res) => {
   });
   Task.create(newTask, (error, createdTask) => {
     if (error) {
-      res.status(500).json(formatResponse(true, "Error creating Task", error));
+      res
+        .status(500)
+        .json(formatResponse(true, 500, "Error creating Task", error));
     } else {
       let response = createdTask.toObject();
       delete response._id;
-      delete response, __v;
+      delete response.__v;
       res
         .status(200)
         .json(formatResponse(false, 200, "Task Created", response));
     }
   });
 };
-exports.createSubTask = (req, res) => {
+exports.createSubTask = async (req, res) => {
   console.log("Create subtask control");
+  const { name, taskId, status } = req.body;
+  /**Check for existing subtask name */
+  let subTaskExists = await SubTask.findOne({ name: name, taskId: taskId });
+  if (subTaskExists)
+    return res
+      .status(400)
+      .json(formatResponse(true, 400, "Sub Task Name Exists", name));
+
+  /**Create new subtask */
+  let newSubTask = new SubTask({
+    name: name,
+    subTaskId: shortid.generate(),
+    taskId: taskId,
+    status: status,
+  });
+  SubTask.create(newSubTask, (error, createdSubTask) => {
+    if (error) {
+      res
+        .status(500)
+        .json(formatResponse(true, 500, "SubTask Creation Error", error));
+    } else {
+      let response = createdSubTask.toObject();
+      delete response._id;
+      delete response.__v;
+      res
+        .status(200)
+        .json(formatResponse(false, 200, "Sub Task Created", response));
+    }
+  });
 };
