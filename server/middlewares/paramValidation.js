@@ -98,6 +98,33 @@ exports.getTaskListValidation = (req, res, next) => {
   }
   next();
 };
+exports.createTaskValidation = (req, res, next) => {
+  console.log("Create task param validation");
+  let createTask = joi.object({
+    name: joi.string().min(3).required(),
+    taskListId: joi.string().required(),
+    userId: joi.string().required(),
+    status: joi.string().allow("done", "open").required(),
+  });
+  let { error } = createTask.validate(req.body, options);
+  if (error) {
+    formatInputParamError(error, res);
+  }
+  next();
+};
+exports.createSubTaskValidation = (req, res, next) => {
+  console.log("Create sub task validation");
+  let subTask = joi.object({
+    name: joi.string().min(3).required(),
+    taskId: joi.string().required(),
+    status: joi.string().allow("done", "open").required(),
+  });
+  let { error } = subTask.validate(req.body, options);
+  if (error) {
+    formatInputParamError(error, res);
+  }
+  next();
+};
 const formatInputParamError = (error, res) => {
   let errorMessage = [];
   error.details.map((err) => errorMessage.push(err.message));

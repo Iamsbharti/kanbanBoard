@@ -1,6 +1,7 @@
 const TaskList = require("../models/TaskList");
 const shortid = require("shortid");
 const { formatResponse } = require("../library/formatResponse");
+const Task = require("../models/Task");
 const EXCLUDE = "-__v -_id";
 exports.createTaskList = async (req, res) => {
   console.log("Task List control");
@@ -54,4 +55,42 @@ exports.getAllTaskList = async (req, res) => {
           .json(formatResponse(false, 200, "Task List Fetched", allList));
       }
     });
+};
+exports.createTask = async (req, res) => {
+  console.log("create task control");
+  const { name, userId, taskListId, status } = req.body;
+  /**check for existing name */
+  let taskNameExists = await Task.findOne({
+    name: name,
+    taskListId: taskListId,
+    userId: userId,
+  });
+  if (taskNameExists)
+    return res
+      .status(400)
+      .json(formatResponse(true, 400, "Task Name Exists", name));
+
+  /**Create new task */
+  let newTask = new Task({
+    name: name,
+    taskId: shortid.generate(),
+    taskListId: taskListId,
+    userId: userId,
+    status: status,
+  });
+  Task.create(newTask, (error, createdTask) => {
+    if (error) {
+      res.status(500).json(formatResponse(true, "Error creating Task", error));
+    } else {
+      let response = createdTask.toObject();
+      delete response._id;
+      delete response, __v;
+      res
+        .status(200)
+        .json(formatResponse(false, 200, "Task Created", response));
+    }
+  });
+};
+exports.createSubTask = (req, res) => {
+  console.log("Create subtask control");
 };
