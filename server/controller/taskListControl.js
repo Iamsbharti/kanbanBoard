@@ -26,9 +26,12 @@ exports.createTaskList = async (req, res) => {
         .status(500)
         .json(formatResponse(true, 500, "Task List Create Error", error));
     } else {
+      let response = createdList.toObject();
+      delete response.__v;
+      delete response._id;
       res
         .status(200)
-        .json(formatResponse(false, 200, "Task List Created", createdList));
+        .json(formatResponse(false, 200, "Task List Created", response));
     }
   });
 };
