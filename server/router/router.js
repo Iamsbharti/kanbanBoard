@@ -13,7 +13,7 @@ const {
 } = require("../middlewares/paramValidation");
 const { isAuthorized } = require("../middlewares/authorization");
 const { taskListParamValidation } = require("../middlewares/paramValidation");
-const { taskListControl } = require("../controller/taskListControl");
+const { createTaskList } = require("../controller/taskListControl");
 
 /**Sign up route */
 router.post("/signup", signupParamValidation, signUpControl);
@@ -29,6 +29,8 @@ router.post(
   "/createTaskList",
   isAuthorized,
   taskListParamValidation,
-  taskListControl
+  createTaskList
 );
+/**get all taskList for a userId */
+
 module.exports = router;

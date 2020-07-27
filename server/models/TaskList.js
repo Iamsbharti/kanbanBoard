@@ -15,4 +15,4 @@ let taskListSchema = mongoose.Schema({
     required: true,
   },
 });
-module.export = mongoose.model("TaskList", taskListSchema);
+module.exports = mongoose.model("TaskList", taskListSchema);
