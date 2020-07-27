@@ -6,21 +6,20 @@ exports.isAuthorized = (req, res, next) => {
   const reqBodyAuth = req.body.authToken;
   const reqQueryAuth = req.query.authToken;
   const reqHeaderAuth = req.header("authToken");
-  //console.log("authtoken", reqBodyAuth, reqHeaderAuth, reqQueryAuth);
+  console.log("authtoken", reqBodyAuth, reqHeaderAuth, reqQueryAuth);
   if (
     reqBodyAuth !== undefined ||
-    reqBodyAuth !== null ||
     reqQueryAuth !== undefined ||
-    reqQueryAuth !== null ||
-    reqHeaderAuth !== undefined ||
-    reqHeaderAuth !== null
+    reqHeaderAuth !== undefined
   ) {
+    console.log("if-auth");
     let decoded = jwt.verify(
       reqBodyAuth || reqQueryAuth || reqHeaderAuth,
       process.env.TOKEN_SECRET
     );
     console.log("Decoded", decoded.data.email);
   } else {
+    console.log("no auth");
     return res
       .status(400)
       .json(formatResponse(true, 400, "AuthToken Missing", null));

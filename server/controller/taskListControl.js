@@ -1,7 +1,7 @@
 const TaskList = require("../models/TaskList");
 const shortid = require("shortid");
 const { formatResponse } = require("../library/formatResponse");
-
+const EXCLUDE = "-__v -_id";
 exports.createTaskList = async (req, res) => {
   console.log("Task List control");
   const { name, userId } = req.body;
@@ -34,4 +34,24 @@ exports.createTaskList = async (req, res) => {
         .json(formatResponse(false, 200, "Task List Created", response));
     }
   });
+};
+exports.getAllTaskList = async (req, res) => {
+  console.log("get all task list control");
+  const { userId } = req.body;
+  /**fetch all task list for the userid */
+  TaskList.find({ userId: userId })
+    .select(EXCLUDE)
+    .lean()
+    .exec((error, allList) => {
+      console.log("error", error, allList);
+      if (error) {
+        res
+          .status(500)
+          .json(formatResponse(true, 500, "Error Fetching TaskLists", error));
+      } else {
+        res
+          .status(200)
+          .json(formatResponse(false, 200, "Task List Fetched", allList));
+      }
+    });
 };

@@ -1,19 +1,23 @@
 const router = require("express").Router();
 const { signUpControl } = require("../controller/signUpControl");
-const { signupParamValidation } = require("../middlewares/paramValidation");
 const { loginControl } = require("../controller/loginControl");
-const { loginParamValidation } = require("../middlewares/paramValidation");
 const {
   recoverPwdControl,
   resetPassword,
 } = require("../controller/recoverPwdControl");
 const {
+  loginParamValidation,
   recoverPwdValidation,
   resetPwdValidation,
+  taskListValidation,
+  getTaskListValidation,
+  signupParamValidation,
 } = require("../middlewares/paramValidation");
 const { isAuthorized } = require("../middlewares/authorization");
-const { taskListParamValidation } = require("../middlewares/paramValidation");
-const { createTaskList } = require("../controller/taskListControl");
+const {
+  createTaskList,
+  getAllTaskList,
+} = require("../controller/taskListControl");
 
 /**Sign up route */
 router.post("/signup", signupParamValidation, signUpControl);
@@ -28,9 +32,14 @@ router.post("/resetPassword", resetPwdValidation, resetPassword);
 router.post(
   "/createTaskList",
   isAuthorized,
-  taskListParamValidation,
+  taskListValidation,
   createTaskList
 );
 /**get all taskList for a userId */
-
+router.post(
+  "/getAllTaskList",
+  isAuthorized,
+  getTaskListValidation,
+  getAllTaskList
+);
 module.exports = router;

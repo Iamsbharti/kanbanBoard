@@ -74,7 +74,7 @@ exports.signupParamValidation = (req, res, next) => {
   }
   next();
 };
-exports.taskListParamValidation = (req, res, next) => {
+exports.taskListValidation = (req, res, next) => {
   console.log("task list param validation");
   let taskListSchema = joi.object({
     name: joi.string().min(3).required(),
@@ -82,6 +82,17 @@ exports.taskListParamValidation = (req, res, next) => {
   });
 
   let { error } = taskListSchema.validate(req.body, options);
+  if (error) {
+    formatInputParamError(error, res);
+  }
+  next();
+};
+exports.getTaskListValidation = (req, res, next) => {
+  console.log("get task list param validation");
+  let taskListSchema = joi.object({
+    userId: joi.string().required(),
+  });
+  let { error } = taskListSchema.validate(req.body);
   if (error) {
     formatInputParamError(error, res);
   }
