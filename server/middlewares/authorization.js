@@ -19,7 +19,7 @@ exports.isAuthorized = (req, res, next) => {
       reqBodyAuth || reqQueryAuth || reqHeaderAuth,
       process.env.TOKEN_SECRET
     );
-    console.log("Decoded", decoded);
+    console.log("Decoded", decoded.data.email);
   } else {
     return res
       .status(400)

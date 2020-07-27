@@ -1,5 +1,6 @@
 const joi = require("@hapi/joi");
 const { formatResponse } = require("../library/formatResponse");
+let options = { abortEarly: false };
 
 exports.loginParamValidation = (req, res, next) => {
   console.log("Login Param Validation");
@@ -7,14 +8,10 @@ exports.loginParamValidation = (req, res, next) => {
     email: joi.string().email().min(4).required(),
     password: joi.string().min(8).required(),
   });
-  let options = { abortEarly: false };
+
   let { error } = loginSchema.validate(req.body, options);
   if (error) {
-    let errorMsg = [];
-    error.details.map((err) => errorMsg.push(err.message));
-    return res
-      .status(401)
-      .json(formatResponse(true, 401, "Not Valid Parameters", errorMsg));
+    formatInputParamError(error, res);
   }
   next();
 };
@@ -49,14 +46,10 @@ exports.resetPwdValidation = (req, res, next) => {
       .pattern(new RegExp("^[A-Za-z0-9]\\w{8,64}$"))
       .required(),
   });
-  let options = { abortEarly: false };
+
   let { error } = resetPwdSchema.validate(req.body, options);
-  let errorMsg = [];
   if (error) {
-    error.details.map((err) => errorMsg.push(err.message));
-    return res
-      .status(400)
-      .json(formatResponse(true, 400, "Input Params Not Valid", errorMsg));
+    formatInputParamError(error, res);
   }
   next();
 };
@@ -73,15 +66,31 @@ exports.signupParamValidation = (req, res, next) => {
       .pattern(new RegExp("^[A-Za-z0-9]\\w{8,64}$"))
       .required(),
   });
-  let options = { abortEarly: false };
+
   let { error } = signUpSchema.validate(req.body, options);
   //console.log("validation error", error);
   if (error) {
-    let errorMessage = [];
-    error.details.map((err) => errorMessage.push(err.message));
-    return res.json(
-      formatResponse(true, 400, "Not valid Input Params", errorMessage)
-    );
+    formatInputParamError(error, res);
   }
   next();
+};
+exports.taskListParamValidation = (req, res, next) => {
+  console.log("task list param validation");
+  let taskListSchema = joi.object({
+    name: joi.string().min(3).required(),
+    userId: joi.string().required(),
+  });
+
+  let { error } = taskListSchema.validate(req.body, options);
+  if (error) {
+    formatInputParamError(error, res);
+  }
+  next();
+};
+const formatInputParamError = (error, res) => {
+  let errorMessage = [];
+  error.details.map((err) => errorMessage.push(err.message));
+  return res.json(
+    formatResponse(true, 400, "Not valid Input Params", errorMessage)
+  );
 };

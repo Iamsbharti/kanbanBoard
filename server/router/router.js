@@ -12,6 +12,7 @@ const {
   resetPwdValidation,
 } = require("../middlewares/paramValidation");
 const { isAuthorized } = require("../middlewares/authorization");
+const { taskListParamValidation } = require("../middlewares/paramValidation");
 const { taskListControl } = require("../controller/taskListControl");
 
 /**Sign up route */
@@ -24,5 +25,10 @@ router.post("/recoverPassword", recoverPwdValidation, recoverPwdControl);
 router.post("/resetPassword", resetPwdValidation, resetPassword);
 
 /*Create TaskList*/
-router.post("/createTaskList", isAuthorized, taskListControl);
+router.post(
+  "/createTaskList",
+  isAuthorized,
+  taskListParamValidation,
+  taskListControl
+);
 module.exports = router;
