@@ -24,5 +24,5 @@ router.post("/recoverPassword", recoverPwdValidation, recoverPwdControl);
 router.post("/resetPassword", resetPwdValidation, resetPassword);
 
 /*Create TaskList*/
-router.post("/taskList", isAuthorized, taskListControl);
+router.post("/createTaskList", isAuthorized, taskListControl);
 module.exports = router;
