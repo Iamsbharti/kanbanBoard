@@ -14,5 +14,12 @@ let taskListSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  createdOn: {
+    type: Date,
+    default: Date.now(),
+  },
+  updatedOn: {
+    type: Date,
+  },
 });
 module.exports = mongoose.model("TaskList", taskListSchema);
