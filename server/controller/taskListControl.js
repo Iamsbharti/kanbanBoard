@@ -3,11 +3,22 @@ const shortid = require("shortid");
 const { formatResponse } = require("../library/formatResponse");
 const Task = require("../models/Task");
 const SubTask = require("../models/SubTask");
+const User = require("../models/User");
 const EXCLUDE = "-__v -_id";
+
+/**Check for valid userId */
+const validUserId = async (userId, res) => {
+  let validuserId = await User.findOne({ userId: userId });
+  if (!validuserId)
+    return res
+      .status(404)
+      .json(formatResponse(true, 404, "UserId Not Found", userId));
+};
 exports.createTaskList = async (req, res) => {
   console.log("Task List control");
   const { name, userId } = req.body;
-
+  /**Verify userId */
+  await validUserId(userId, res);
   /**Check for existing task name */
   let nameExists = await TaskList.findOne({ name: name, userId: userId });
   if (nameExists)
@@ -40,6 +51,10 @@ exports.createTaskList = async (req, res) => {
 exports.getAllTaskList = async (req, res) => {
   console.log("get all task list control");
   const { userId } = req.body;
+
+  /**Verify userId */
+  await validUserId(userId, res);
+
   /**fetch all task list for the userid */
   TaskList.find({ userId: userId })
     .select(EXCLUDE)
@@ -60,6 +75,16 @@ exports.getAllTaskList = async (req, res) => {
 exports.createTask = async (req, res) => {
   console.log("create task control");
   const { name, userId, taskListId, status } = req.body;
+  /**Check for valid taskListId */
+  let validTaskId = await TaskList.findOne({ taskListId: taskListId });
+  if (!validTaskId)
+    return res
+      .status(404)
+      .json(formatResponse(true, 404, "Task List Id Not Found", taskListId));
+
+  /**Verify userId */
+  await validUserId(userId, res);
+
   /**check for existing name */
   let taskNameExists = await Task.findOne({
     name: name,
@@ -97,6 +122,12 @@ exports.createTask = async (req, res) => {
 exports.createSubTask = async (req, res) => {
   console.log("Create subtask control");
   const { name, taskId, status } = req.body;
+  /**check for valid taskId */
+  let validtaskId = await Task.findOne({ taskId: taskId });
+  if (!validtaskId)
+    return res
+      .status(404)
+      .json(formatResponse(true, 404, "TaskId not found", taskId));
   /**Check for existing subtask name */
   let subTaskExists = await SubTask.findOne({ name: name, taskId: taskId });
   if (subTaskExists)
