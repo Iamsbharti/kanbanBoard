@@ -11,7 +11,7 @@ import { TasklistService } from './tasklist.service';
     CommonModule,
     FormsModule,
     HttpClientModule,
-    RouterModule.forChild([
+    RouterModule.forRoot([
       { path: 'taskList', component: TasklistComponent, pathMatch: 'full' },
     ]),
   ],

@@ -6,6 +6,7 @@ import {
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
+import { UserService } from '../user/user.service';
 @Injectable({
   providedIn: 'root',
 })
@@ -13,7 +14,7 @@ export class TasklistService {
   //initialize
   public baseurl = 'http://localhost:4201/api/v1';
   public authToken: String;
-  constructor(private _http: HttpClient) {}
+  constructor(private _http: HttpClient, private userService: UserService) {}
 
   //handle exceptions
   public handleError(error: HttpErrorResponse) {
@@ -22,11 +23,13 @@ export class TasklistService {
   }
   public httpHeaderOptions = {
     headers: new HttpHeaders({
-      authToken: 'this.authToken',
+      authToken: this.userService.getAutheticatedUserInfo().authToken,
     }),
   };
+
   //create taskList
   public createTaskList(taskListData): any {
+    console.log('https header:', this.httpHeaderOptions);
     let createTaskListRes = this._http.post(
       `${this.baseurl}/createTaskList`,
       taskListData,

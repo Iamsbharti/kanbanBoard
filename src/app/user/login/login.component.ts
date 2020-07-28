@@ -47,7 +47,7 @@ export class LoginComponent implements OnInit {
         this.toaster.open({ text: response.message, type: 'success' });
 
         /**Redirect to TASK View */
-        this._router.navigate(['/']);
+        setTimeout(() => this._router.navigate(['/taskList']), 3000);
       },
       /**handle errors */
       (error) => {
