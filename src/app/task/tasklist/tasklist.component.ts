@@ -71,15 +71,6 @@ export class TasklistComponent implements OnInit {
     );
   }
 
-  /**get alltasks for a user and tasklist*/
-  public getTasks(): any {
-    let taskInfo = {};
-    this.taskListService.getTasks(taskInfo).subscribe(
-      (response) => {},
-      (error) => {}
-    );
-  }
-
   /**create subtask for a task */
   public createSubTask(): any {
     let subTaskInfo = {};
