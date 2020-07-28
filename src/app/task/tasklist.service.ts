@@ -13,7 +13,6 @@ import { UserService } from '../user/user.service';
 export class TasklistService {
   //initialize
   public baseurl = 'http://localhost:4201/api/v1';
-  public authToken: String;
   constructor(private _http: HttpClient, private userService: UserService) {}
 
   //handle exceptions
