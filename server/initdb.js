@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 exports.initdb = () => {
   mongoose.connect(process.env.DB_CONNECT, {
+    useCreateIndex: true,
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });

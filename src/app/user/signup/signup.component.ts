@@ -3,7 +3,7 @@ import { UserService } from '../user.service';
 import { ToastConfig, Toaster } from 'ngx-toast-notifications';
 import { Router } from '@angular/router';
 import lookup from 'country-code-lookup';
-let n = require('country-js');
+import n from 'country-js';
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
@@ -20,9 +20,11 @@ export class SignupComponent implements OnInit {
   public equalPwd: Boolean = false;
   public acceptedPwd: Boolean = false;
   public signUpResponse: String;
+  public countriesArray = [];
   public countries = [];
-  public country: any;
+  public country: String;
   public countrycode: any;
+  public ctr: String = 'country';
   constructor(
     private userService: UserService,
     private _router: Router,
@@ -32,9 +34,11 @@ export class SignupComponent implements OnInit {
   ngOnInit(): void {
     /**Compute list of countries */
     Object.entries(lookup.countries).map((entry) =>
-      this.countries.push(entry[1].country)
+      this.countriesArray.push(entry[1])
     );
-    //console.log(this.countries);
+    this.countriesArray.map((ctr) => {
+      this.countries.push(ctr.country);
+    });
   }
   public selectCountryCode(value): any {
     //console.log('select code:', `+${n.search(value)[0].phone}`);
