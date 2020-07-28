@@ -4,37 +4,41 @@ const { formatResponse } = require("../library/formatResponse");
 const Task = require("../models/Task");
 const SubTask = require("../models/SubTask");
 const User = require("../models/User");
+const { convertCompilerOptionsFromJson } = require("typescript");
 const EXCLUDE = "-__v -_id";
 
 /**Check for valid userId */
-const validUserId = async (userId, res) => {
+const validUserId = async (userId) => {
+  console.log("validate UserId:", userId);
   let validuserId = await User.findOne({ userId: userId });
-  if (!validuserId)
-    return res
-      .status(404)
-      .json(formatResponse(true, 404, "UserId Not Found", userId));
+  return !validuserId
+    ? formatResponse(true, 404, "UserId Not Found", userId)
+    : true;
 };
-const validTaskListId = async (taskListId, res) => {
-  /**Check for valid taskListId */
-  let validTaskId = await TaskList.findOne({ taskListId: taskListId });
-  if (!validTaskId)
-    return res
-      .status(404)
-      .json(formatResponse(true, 404, "Task List Id Not Found", taskListId));
+/**Check for valid taskListId */
+const validTaskListId = async (taskListId) => {
+  console.log("validate tasklist id:", taskListId);
+  let validTaskListId = await TaskList.findOne({ taskListId: taskListId });
+  return !validTaskListId
+    ? formatResponse(true, 404, "TaskListId Not Found", taskListId)
+    : true;
 };
 /**check for valid taskId */
-const validTaskId = async (taskId, res) => {
+const validTaskId = async (taskId) => {
+  console.log("validate taskid::", taskId);
   let validtaskId = await Task.findOne({ taskId: taskId });
-  if (!validtaskId)
-    return res
-      .status(404)
-      .json(formatResponse(true, 404, "TaskId not found", taskId));
+  return !validtaskId
+    ? formatResponse(true, 404, "TaskId Not Found", taskId)
+    : true;
 };
 exports.createTaskList = async (req, res) => {
   console.log("Task List control");
   const { name, userId } = req.body;
   /**Verify userId */
-  await validUserId(userId, res);
+  let isUserIdValid = await validUserId(userId);
+  console.log("isUserIdValid::", isUserIdValid);
+  if (isUserIdValid.error)
+    return res.status(isUserIdValid.status).json(isUserIdValid);
   /**Check for existing task name */
   let nameExists = await TaskList.findOne({ name: name, userId: userId });
   if (nameExists)
@@ -50,7 +54,8 @@ exports.createTaskList = async (req, res) => {
   });
 
   TaskList.create(newList, (error, createdList) => {
-    if (error) {
+    console.log("error", error, createdList);
+    if (error !== null) {
       res
         .status(500)
         .json(formatResponse(true, 500, "Task List Create Error", error));
@@ -69,7 +74,10 @@ exports.getAllTaskList = async (req, res) => {
   const { userId } = req.body;
 
   /**Verify userId */
-  await validUserId(userId, res);
+  let isUserIdValid = await validUserId(userId);
+  console.log("isUserIdValid::", isUserIdValid);
+  if (isUserIdValid.error)
+    return res.status(isUserIdValid.status).json(isUserIdValid);
 
   /**fetch all task list for the userid */
   TaskList.find({ userId: userId })
@@ -77,7 +85,7 @@ exports.getAllTaskList = async (req, res) => {
     .lean()
     .exec((error, allList) => {
       console.log("error", error, allList);
-      if (error) {
+      if (error !== null) {
         res
           .status(500)
           .json(formatResponse(true, 500, "Error Fetching TaskLists", error));
@@ -93,10 +101,16 @@ exports.createTask = async (req, res) => {
   const { name, userId, taskListId, status } = req.body;
 
   /**verify taskListId */
-  await validTaskListId(taskListId, res);
+  let isTaskListValid = await validTaskListId(taskListId);
+  console.log("isTaskListValid::", isTaskListValid);
+  if (isTaskListValid.error)
+    return res.status(isTaskListValid.status).json(isTaskListValid);
 
   /**Verify userId */
-  await validUserId(userId, res);
+  let isUserIdValid = await validUserId(userId);
+  console.log("isUserIdValid::", isUserIdValid);
+  if (isUserIdValid.error)
+    return res.status(isUserIdValid.status).json(isUserIdValid);
 
   /**check for existing name */
   let taskNameExists = await Task.findOne({
@@ -118,7 +132,8 @@ exports.createTask = async (req, res) => {
     status: status,
   });
   Task.create(newTask, (error, createdTask) => {
-    if (error) {
+    console.log("error", error, createdTask);
+    if (error !== null) {
       res
         .status(500)
         .json(formatResponse(true, 500, "Error creating Task", error));
@@ -137,10 +152,16 @@ exports.getAllTasks = async (req, res) => {
   const { taskListId, userId } = req.body;
 
   /**verify taskListId */
-  await validTaskListId(taskListId, res);
+  let isTaskListValid = await validTaskListId(taskListId);
+  console.log("isTaskListValid::", isTaskListValid);
+  if (isTaskListValid.error)
+    return res.status(isTaskListValid.status).json(isTaskListValid);
 
   /**Verify userId */
-  await validUserId(userId, res);
+  let isUserIdValid = await validUserId(userId);
+  console.log("isUserIdValid::", isUserIdValid);
+  if (isUserIdValid.error)
+    return res.status(isUserIdValid.status).json(isUserIdValid);
 
   /**fetch all tasks realated to listId and UserId */
   let query = { taskListId: taskListId, userId: userId };
@@ -148,7 +169,8 @@ exports.getAllTasks = async (req, res) => {
     .select(EXCLUDE)
     .lean()
     .exec((error, allTasks) => {
-      if (error) {
+      console.log("error", error, allTasks);
+      if (error !== null) {
         res
           .status(500)
           .json(formatResponse(true, 500, "Error Fetching Tasks", error));
@@ -162,8 +184,13 @@ exports.getAllTasks = async (req, res) => {
 exports.createSubTask = async (req, res) => {
   console.log("Create subtask control");
   const { name, taskId, status } = req.body;
+
   /**check for valid taskId */
-  await validTaskId(taskId, res);
+  let isTaskIdValid = await validTaskId(taskId);
+  console.log("isTaskIdValid::", isTaskIdValid);
+  if (isTaskIdValid.error)
+    return res.status(isTaskIdValid.status).json(isTaskIdValid);
+
   /**Check for existing subtask name */
   let subTaskExists = await SubTask.findOne({ name: name, taskId: taskId });
   if (subTaskExists)
@@ -179,7 +206,8 @@ exports.createSubTask = async (req, res) => {
     status: status,
   });
   SubTask.create(newSubTask, (error, createdSubTask) => {
-    if (error) {
+    console.log("error", error, createdSubTask);
+    if (error !== null) {
       res
         .status(500)
         .json(formatResponse(true, 500, "SubTask Creation Error", error));
@@ -196,15 +224,20 @@ exports.createSubTask = async (req, res) => {
 exports.getSubTasks = async (req, res) => {
   console.log("get all subtasks control");
   const { taskId } = req.body;
+
   /**check for valid taskId */
-  await validTaskId(taskId, res);
+  let isTaskIdValid = await validTaskId(taskId);
+  console.log("isTaskIdValid::", isTaskIdValid);
+  if (isTaskIdValid.error)
+    return res.status(isTaskIdValid.status).json(isTaskIdValid);
 
   /**fetch all subtasks for a taskid */
   SubTask.find({ taskId: taskId })
     .select(EXCLUDE)
     .lean()
     .exec((error, allsubTasks) => {
-      if (error) {
+      console.log("error", error, allsubTasks);
+      if (error !== null) {
         res
           .status(500)
           .json(formatResponse(true, 500, "Error Fetching Subtasks", error));
