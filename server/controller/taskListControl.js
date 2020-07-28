@@ -14,6 +14,22 @@ const validUserId = async (userId, res) => {
       .status(404)
       .json(formatResponse(true, 404, "UserId Not Found", userId));
 };
+const validTaskListId = async (taskListId, res) => {
+  /**Check for valid taskListId */
+  let validTaskId = await TaskList.findOne({ taskListId: taskListId });
+  if (!validTaskId)
+    return res
+      .status(404)
+      .json(formatResponse(true, 404, "Task List Id Not Found", taskListId));
+};
+/**check for valid taskId */
+const validTaskId = async (taskId, res) => {
+  let validtaskId = await Task.findOne({ taskId: taskId });
+  if (!validtaskId)
+    return res
+      .status(404)
+      .json(formatResponse(true, 404, "TaskId not found", taskId));
+};
 exports.createTaskList = async (req, res) => {
   console.log("Task List control");
   const { name, userId } = req.body;
@@ -75,12 +91,9 @@ exports.getAllTaskList = async (req, res) => {
 exports.createTask = async (req, res) => {
   console.log("create task control");
   const { name, userId, taskListId, status } = req.body;
-  /**Check for valid taskListId */
-  let validTaskId = await TaskList.findOne({ taskListId: taskListId });
-  if (!validTaskId)
-    return res
-      .status(404)
-      .json(formatResponse(true, 404, "Task List Id Not Found", taskListId));
+
+  /**verify taskListId */
+  await validTaskListId(taskListId, res);
 
   /**Verify userId */
   await validUserId(userId, res);
@@ -119,15 +132,38 @@ exports.createTask = async (req, res) => {
     }
   });
 };
+exports.getAllTasks = async (req, res) => {
+  console.log("get all tasks control");
+  const { taskListId, userId } = req.body;
+
+  /**verify taskListId */
+  await validTaskListId(taskListId, res);
+
+  /**Verify userId */
+  await validUserId(userId, res);
+
+  /**fetch all tasks realated to listId and UserId */
+  let query = { taskListId: taskListId, userId: userId };
+  Task.find(query)
+    .select(EXCLUDE)
+    .lean()
+    .exec((error, allTasks) => {
+      if (error) {
+        res
+          .status(500)
+          .json(formatResponse(true, 500, "Error Fetching Tasks", error));
+      } else {
+        res
+          .status(200)
+          .json(formatResponse(false, 200, "Fetched Tasks", allTasks));
+      }
+    });
+};
 exports.createSubTask = async (req, res) => {
   console.log("Create subtask control");
   const { name, taskId, status } = req.body;
   /**check for valid taskId */
-  let validtaskId = await Task.findOne({ taskId: taskId });
-  if (!validtaskId)
-    return res
-      .status(404)
-      .json(formatResponse(true, 404, "TaskId not found", taskId));
+  await validTaskId(taskId, res);
   /**Check for existing subtask name */
   let subTaskExists = await SubTask.findOne({ name: name, taskId: taskId });
   if (subTaskExists)
@@ -156,4 +192,26 @@ exports.createSubTask = async (req, res) => {
         .json(formatResponse(false, 200, "Sub Task Created", response));
     }
   });
+};
+exports.getSubTasks = async (req, res) => {
+  console.log("get all subtasks control");
+  const { taskId } = req.body;
+  /**check for valid taskId */
+  await validTaskId(taskId, res);
+
+  /**fetch all subtasks for a taskid */
+  SubTask.find({ taskId: taskId })
+    .select(EXCLUDE)
+    .lean()
+    .exec((error, allsubTasks) => {
+      if (error) {
+        res
+          .status(500)
+          .json(formatResponse(true, 500, "Error Fetching Subtasks", error));
+      } else {
+        res
+          .status(200)
+          .json(formatResponse(false, 200, "Fetched Subtasks", allsubTasks));
+      }
+    });
 };

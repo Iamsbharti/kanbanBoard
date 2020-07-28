@@ -112,6 +112,18 @@ exports.createTaskValidation = (req, res, next) => {
   }
   next();
 };
+exports.getTaskValidation = (req, res, next) => {
+  console.log("get task param validation");
+  let getTaskSchema = joi.object({
+    taskListId: joi.string().required(),
+    userId: joi.string().required(),
+  });
+  let { error } = getTaskSchema.validate(req.body, options);
+  if (error) {
+    formatInputParamError(error, res);
+  }
+  next();
+};
 exports.createSubTaskValidation = (req, res, next) => {
   console.log("Create sub task validation");
   let subTask = joi.object({
@@ -120,6 +132,17 @@ exports.createSubTaskValidation = (req, res, next) => {
     status: joi.string().allow("done", "open").required(),
   });
   let { error } = subTask.validate(req.body, options);
+  if (error) {
+    formatInputParamError(error, res);
+  }
+  next();
+};
+exports.getSubTaskValidation = (req, res, next) => {
+  console.log("get subtask param validation");
+  let subTaskSchema = joi.object({
+    taskId: joi.string().required(),
+  });
+  let { error } = subTaskSchema.validate(req.body, options);
   if (error) {
     formatInputParamError(error, res);
   }

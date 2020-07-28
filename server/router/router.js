@@ -14,6 +14,8 @@ const {
   signupParamValidation,
   createTaskValidation,
   createSubTaskValidation,
+  getTaskValidation,
+  getSubTaskValidation,
 } = require("../middlewares/paramValidation");
 const { isAuthorized } = require("../middlewares/authorization");
 const {
@@ -21,7 +23,10 @@ const {
   getAllTaskList,
   createTask,
   createSubTask,
+  getAllTasks,
+  getSubTasks,
 } = require("../controller/taskListControl");
+const { isUndefined } = require("util");
 
 /**Sign up route */
 router.post("/signup", signupParamValidation, signUpControl);
@@ -48,6 +53,9 @@ router.post(
 );
 /**Create task */
 router.post("/createTask", isAuthorized, createTaskValidation, createTask);
+/**get all tasks for listid and userid */
+router.post("/getTasks", isAuthorized, getTaskValidation, getAllTasks);
+
 /**create subtask */
 router.post(
   "/createSubTask",
@@ -55,4 +63,5 @@ router.post(
   createSubTaskValidation,
   createSubTask
 );
+router.post("/getSubTasks", isAuthorized, getSubTaskValidation, getSubTasks);
 module.exports = router;

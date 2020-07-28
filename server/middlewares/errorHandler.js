@@ -11,7 +11,7 @@ exports.logIp = async (req, res, next) => {
   next();
 };
 exports.notfound = (req, res, next) => {
-  res.status(404).json(formatResponse(true, 404, "Path Not Found", req, path));
+  res.status(404).json(formatResponse(true, 404, "Path Not Found", req.path));
   next();
 };
 exports.handleError = (error, req, res, next) => {
