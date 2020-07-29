@@ -6,7 +6,7 @@ exports.isAuthorized = (req, res, next) => {
   const reqBodyAuth = req.body.authToken;
   const reqQueryAuth = req.query.authToken;
   const reqHeaderAuth = req.header("authToken");
-  console.log("authtoken", reqBodyAuth, reqHeaderAuth, reqQueryAuth);
+  //console.log("authtoken", reqBodyAuth, reqHeaderAuth, reqQueryAuth);
   if (
     reqBodyAuth !== undefined ||
     reqQueryAuth !== undefined ||
