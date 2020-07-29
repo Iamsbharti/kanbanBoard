@@ -1,5 +1,7 @@
 <div class="container">
-  <div class="taskListHeader">TaskLists</div>
+  <div class="taskListHeader">
+    TaskLists
+  </div>
   <div class="row">
     <div class="col-md-4 mt-5" *ngFor="let list of taskLists">
       <div class="card" style="width: 18rem;">
@@ -8,12 +10,9 @@
           }}<span class="text-muted ml-5">
             {{ list.createdOn | date: "shortDate" }}</span
           >
-          {{ list.userId }}
-          {{ list.taskListId }}
-          <app-tasks>
-            [taskListId]="list.taskListId" [userId]="list.userId"
-          </app-tasks>
         </div>
+        <app-tasks [taskListId]="list.taskListId" [userId]="list.userId">
+        </app-tasks>
       </div>
     </div>
   </div>

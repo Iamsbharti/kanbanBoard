@@ -8,6 +8,7 @@ import { UserModule } from './user/user.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastNotificationsModule } from 'ngx-toast-notifications';
 import { TaskModule } from './task/task.module';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent],
@@ -16,6 +17,7 @@ import { TaskModule } from './task/task.module';
     AppRoutingModule,
     UserModule,
     TaskModule,
+    SharedModule,
     BrowserAnimationsModule,
     ToastNotificationsModule.forRoot({
       duration: 2000,
