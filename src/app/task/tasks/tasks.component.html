@@ -1,5 +1,10 @@
 <ul class="list-group">
   <li class="list-group-item" *ngFor="let task of tasks">
-    {{ task.name }}<img src="/assets/" />
+    <span class="task">{{ task.name }}</span>
+    <img class="add" src="/assets/addtaskicon.png" /><img
+      class="remove"
+      src="/assets/removetaskicon.png"
+    />
+    <app-subtasks [taskId]="task.taskId"></app-subtasks>
   </li>
 </ul>

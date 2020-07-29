@@ -1,6 +1,6 @@
 <div class="container">
   <div class="taskListHeader">
-    TaskLists
+    <img src="/assets/addListIcon.png" />
   </div>
   <div class="row">
     <div class="col-md-4 mt-5" *ngFor="let list of taskLists">
@@ -8,8 +8,9 @@
         <div class="card-header">
           {{ list.name
           }}<span class="text-muted ml-5">
-            {{ list.createdOn | date: "shortDate" }}</span
-          >
+            {{ list.createdOn | date: "shortDate" }}
+            <img class="add" src="/assets/addtaskicon.png"
+          /></span>
         </div>
         <app-tasks [taskListId]="list.taskListId" [userId]="list.userId">
         </app-tasks>

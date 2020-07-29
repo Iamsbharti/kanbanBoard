@@ -7,9 +7,10 @@ import { TasklistComponent } from './tasklist/tasklist.component';
 import { TasklistService } from './tasklist.service';
 import { SharedModule } from '../shared/shared.module';
 import { TasksComponent } from './tasks/tasks.component';
+import { SubtasksComponent } from './subtasks/subtasks.component';
 
 @NgModule({
-  declarations: [TasklistComponent, TasksComponent],
+  declarations: [TasklistComponent, TasksComponent, SubtasksComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -20,6 +21,6 @@ import { TasksComponent } from './tasks/tasks.component';
     ]),
   ],
   providers: [TasklistService],
-  exports: [TasksComponent],
+  exports: [TasksComponent, SubtasksComponent],
 })
 export class TaskModule {}
