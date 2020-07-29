@@ -1,3 +1,13 @@
+* {
+  font-family: "Montserrat", sans-serif;
+}
+.ng-valid[required],
+.ng-valid.required {
+  border-left: 5px solid green;
+}
+.ng-invalid:not(form) {
+  border-left: 5px solid red;
+}
 .add {
   margin-left: 10px;
   width: 20px;

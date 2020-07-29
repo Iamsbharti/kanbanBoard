@@ -16,6 +16,11 @@ export class TasklistComponent implements OnInit {
   public fetchedAlltaskLists: String;
   public userId: String;
   public toggleCreateTaskForm: Boolean = false;
+  /**new task info */
+  public taskName: String;
+  public taskListId: String;
+  public taskStatus: String;
+
   constructor(
     private taskListService: TasklistService,
     private _toast: Toaster,
@@ -62,19 +67,33 @@ export class TasklistComponent implements OnInit {
       }
     );
   }
-  /**open create task pop up */
-  public openCreateTaskForm(taskListId, userId): any {
+  /**toggle create task pop up */
+  public openCreateTaskForm(taskListId): any {
     this.toggleCreateTaskForm = !this.toggleCreateTaskForm;
+    console.log('Tasklist id after popup::', taskListId);
+    this.taskListId = taskListId;
   }
   /**create a single task */
-  public createTask(taskDetails): any {
+  public createTask(): any {
     let taskInfo = {
-      taskListData: taskDetails.taskListId,
-      userId: taskDetails.userId,
+      taskListId: this.taskListId,
+      userId: this.userId,
+      name: this.taskName,
+      status: 'open',
     };
+    console.log('taskinfor::', taskInfo);
     this.taskListService.createTask(taskInfo).subscribe(
-      (response) => {},
-      (error) => {}
+      (response) => {
+        console.log('Create task response::', response.message);
+        if (response.status === 200) {
+          this._toast.open({ text: response.message, type: 'success' });
+          setTimeout(() => this.getAllTaskList(), 1300);
+        }
+      },
+      (error) => {
+        console.warn('Error::', error.error);
+        this._toast.open({ text: error.error.message, type: 'danger' });
+      }
     );
   }
 
