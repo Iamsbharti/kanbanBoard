@@ -48,7 +48,7 @@ export class TasklistService {
   }
   //created task
   public createTask(taskDetails): any {
-    console.log('create task service:', taskDetails);
+    //console.log('create task service:', taskDetails);
     let createTaskRes = this._http.post(
       `${this.baseurl}/createTask`,
       taskDetails,

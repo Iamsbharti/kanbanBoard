@@ -58,7 +58,7 @@ export class TasklistComponent implements OnInit {
         this.taskLists = response.data;
         /**toast */
         this._toast.open({ text: response.message, type: 'success' });
-        console.log('taskList', this.taskLists);
+        //console.log('taskList', this.taskLists);
       },
       (error) => {
         console.warn('Error fetching task list', error, error);
@@ -73,45 +73,10 @@ export class TasklistComponent implements OnInit {
     console.log('Tasklist id after popup::', taskListId);
     this.taskListId = taskListId;
   }
-  /**create a single task */
-  public createTask(): any {
-    let taskInfo = {
-      taskListId: this.taskListId,
-      userId: this.userId,
-      name: this.taskName,
-      status: 'open',
-    };
-    console.log('taskinfor::', taskInfo);
-    this.taskListService.createTask(taskInfo).subscribe(
-      (response) => {
-        console.log('Create task response::', response.message);
-        if (response.status === 200) {
-          this._toast.open({ text: response.message, type: 'success' });
-          setTimeout(() => this.getAllTaskList(), 1300);
-        }
-      },
-      (error) => {
-        console.warn('Error::', error.error);
-        this._toast.open({ text: error.error.message, type: 'danger' });
-      }
-    );
-  }
-
-  /**create subtask for a task */
-  public createSubTask(): any {
-    let subTaskInfo = {};
-    this.taskListService.createSubTask(subTaskInfo).subscribe(
-      (response) => {},
-      (error) => {}
-    );
-  }
-
-  /**get all subtasks for a task */
-  public getAllSubTasks(): any {
-    let subTaskInfo = {};
-    this.taskListService.getSubTasks(subTaskInfo).subscribe(
-      (response) => {},
-      (error) => {}
-    );
+  /**Reload tasklist post task new create */
+  public reloadTaskList(): any {
+    this.getAllTaskList();
+    /**toggle pop up */
+    this.toggleCreateTaskForm = !this.toggleCreateTaskForm;
   }
 }

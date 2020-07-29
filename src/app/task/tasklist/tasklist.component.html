@@ -20,29 +20,12 @@
       </div>
     </div>
     <div class="col-md-4 mt-4 createTask" [hidden]="!toggleCreateTaskForm">
-      <h3><span class="badge badge-secondary">Create New Task</span></h3>
-      <form #createTaskForm="ngForm" (ngSubmit)="createTask()">
-        <div class="form-group">
-          <label for="name">Name</label>
-          <input
-            type="text"
-            class="form-control"
-            name="taskName"
-            required
-            [(ngModel)]="taskName"
-            #_name="ngModel"
-          />
-          <div
-            [hidden]="_name.valid || _name.pristine"
-            class="alert alert-danger"
-          >
-            TaskName is Required
-          </div>
-        </div>
-        <button class="mt-2" [disabled]="!createTaskForm.form.valid">
-          Create Task
-        </button>
-      </form>
+      <app-create-task
+        [operationName]="'Create New task'"
+        [taskListId]="taskListId"
+        [userId]="userId"
+        (notify)="reloadTaskList()"
+      ></app-create-task>
     </div>
   </div>
 </div>

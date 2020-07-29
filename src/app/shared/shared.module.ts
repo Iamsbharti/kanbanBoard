@@ -4,11 +4,12 @@ import { CommonModule, FormatWidth } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TasklistComponent } from '../task/tasklist/tasklist.component';
 import { TaskModule } from '../task/task.module';
+import { CreateTaskComponent } from './create-task/create-task.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [CreateTaskComponent],
   imports: [CommonModule, FormsModule],
-  exports: [],
+  exports: [CreateTaskComponent],
   providers: [TasklistComponent],
 })
 export class SharedModule {}

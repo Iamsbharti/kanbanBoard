@@ -22,10 +22,10 @@ export class TasksComponent implements OnInit {
     console.log('input:', taskInfo);
     this.taskService.getTasks(taskInfo).subscribe(
       (response) => {
-        console.log('get all task res::', response);
+        console.log('get all task res::', response.message);
         /**updated tasks */
         this.tasks = response.data;
-        console.log('All tasks::', this.tasks);
+        //console.log('All tasks::', this.tasks);
       },
       (error) => {
         console.warn('Error::', error.error);
