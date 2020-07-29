@@ -15,6 +15,7 @@ export class TasklistComponent implements OnInit {
   public subtasks: any;
   public fetchedAlltaskLists: String;
   public userId: String;
+  public toggleCreateTaskForm: Boolean = false;
   constructor(
     private taskListService: TasklistService,
     private _toast: Toaster,
@@ -61,10 +62,16 @@ export class TasklistComponent implements OnInit {
       }
     );
   }
-
+  /**open create task pop up */
+  public openCreateTaskForm(taskListId, userId): any {
+    this.toggleCreateTaskForm = !this.toggleCreateTaskForm;
+  }
   /**create a single task */
-  public createTask(): any {
-    let taskInfo = {};
+  public createTask(taskDetails): any {
+    let taskInfo = {
+      taskListData: taskDetails.taskListId,
+      userId: taskDetails.userId,
+    };
     this.taskListService.createTask(taskInfo).subscribe(
       (response) => {},
       (error) => {}

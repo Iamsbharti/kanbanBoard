@@ -16,3 +16,9 @@
 .remove::hover {
   border-color: blueviolet;
 }
+.status {
+  cursor: pointer;
+}
+.status::hover {
+  color: aliceblue;
+}

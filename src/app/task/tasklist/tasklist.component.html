@@ -3,18 +3,26 @@
     <img src="/assets/addListIcon.png" />
   </div>
   <div class="row">
-    <div class="col-md-4 mt-5" *ngFor="let list of taskLists">
-      <div class="card" style="width: 18rem;">
+    <div class="col-md-5 mt-4" *ngFor="let list of taskLists">
+      <div class="card" style="width: 22rem;">
         <div class="card-header">
           {{ list.name
           }}<span class="text-muted ml-5">
             {{ list.createdOn | date: "shortDate" }}
-            <img class="add" src="/assets/addtaskicon.png"
+            <img
+              class="add"
+              src="/assets/addtaskicon.png"
+              (click)="openCreateTaskForm(list.taskListId, list.userId)"
           /></span>
         </div>
         <app-tasks [taskListId]="list.taskListId" [userId]="list.userId">
         </app-tasks>
       </div>
+    </div>
+    <div class="col-md-4 mt-4 createTask" [hidden]="!toggleCreateTaskForm">
+      <form>
+        <input type="text" name="name" placeholder="list.name" />
+      </form>
     </div>
   </div>
 </div>

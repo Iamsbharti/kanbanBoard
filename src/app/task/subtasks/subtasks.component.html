@@ -1,5 +1,8 @@
 <ul class="list-group">
   <li class="list-group-item" *ngFor="let task of subtasks">
     {{ task.name }}<img class="remove" src="/assets/removetaskicon.png" />
+    <span class="badge badge-pill badge-secondary ml-3 status">{{
+      task.status
+    }}</span>
   </li>
 </ul>
