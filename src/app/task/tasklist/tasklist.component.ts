@@ -43,8 +43,16 @@ export class TasklistComponent implements OnInit {
   open(content, ops, id) {
     console.log('modal open::', ops, id);
     this.operationName = ops;
-    this.taskListId = id;
+    switch (ops) {
+      case ops === 'Create New Task':
+        this.taskListId = id;
+        break;
+      case ops === 'Create New SubTask':
+        this.taskId = id;
+        break;
+    }
     console.log('tasklistid::', this.taskListId);
+    console.log('taskid::', this.taskId);
     this.modalService
       .open(content, { ariaLabelledBy: 'modal-create' })
       .result.then(
@@ -96,10 +104,11 @@ export class TasklistComponent implements OnInit {
     /**toggle pop up */
   }
   /**toggle create subtask popup */
-  public openCreateSubTaskForm(taskId): any {
+  public openCreateSubTaskForm(taskId, modal): any {
     console.log('Emit from task component::', taskId);
-    // this.toggleCreateSubTaskForm = !this.toggleCreateSubTaskForm;
+    //open modal (click)="open(createModal, 'Create New Task', list.taskListId)"
     this.taskId = taskId;
+    this.open(modal, 'Create New SubTask', taskId);
   }
   /**reload task */
   public reloadTasks(): any {
