@@ -17,9 +17,11 @@ export class TasklistComponent implements OnInit {
   public userId: String;
   public toggleCreateTaskForm: Boolean = false;
   /**new task info */
-  public taskName: String;
+  public toggleCreateSubTaskForm: Boolean = false;
+  public subTaskName: String;
   public taskListId: String;
   public taskStatus: String;
+  public taskId: String;
 
   constructor(
     private taskListService: TasklistService,
@@ -78,5 +80,17 @@ export class TasklistComponent implements OnInit {
     this.getAllTaskList();
     /**toggle pop up */
     this.toggleCreateTaskForm = !this.toggleCreateTaskForm;
+  }
+  /**toggle create subtask popup */
+  public openCreateSubTaskForm(taskId): any {
+    console.log('Emit from task component::', taskId);
+    this.toggleCreateSubTaskForm = !this.toggleCreateSubTaskForm;
+    this.taskId = taskId;
+  }
+  /**reload task */
+  public reloadTasks(): any {
+    console.log('reload tasks');
+    this.getAllTaskList();
+    this.toggleCreateSubTaskForm = !this.toggleCreateSubTaskForm;
   }
 }

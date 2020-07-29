@@ -15,16 +15,28 @@
               (click)="openCreateTaskForm(list.taskListId)"
           /></span>
         </div>
-        <app-tasks [taskListId]="list.taskListId" [userId]="list.userId">
+        <app-tasks
+          [taskListId]="list.taskListId"
+          [userId]="list.userId"
+          (notify)="openCreateSubTaskForm($event)"
+        >
         </app-tasks>
       </div>
     </div>
+
     <div class="col-md-4 mt-4 createTask" [hidden]="!toggleCreateTaskForm">
       <app-create-task
         [operationName]="'Create New task'"
         [taskListId]="taskListId"
         [userId]="userId"
         (notify)="reloadTaskList()"
+      ></app-create-task>
+    </div>
+    <div class="col-md-4 mt-4 createTask" [hidden]="!toggleCreateSubTaskForm">
+      <app-create-task
+        [operationName]="'Create New SubTask'"
+        [taskId]="taskId"
+        (notify)="reloadTasks()"
       ></app-create-task>
     </div>
   </div>

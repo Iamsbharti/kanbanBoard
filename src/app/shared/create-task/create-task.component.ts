@@ -10,7 +10,7 @@ import { ToastConfig, Toaster } from 'ngx-toast-notifications';
 export class CreateTaskComponent implements OnInit {
   /**common input fields */
   @Input() userId: any;
-  @Input() operationName: any;
+  @Input() operationName: String;
   /**task field */
   @Input() taskListId: any;
   @Input() taskName: any;
@@ -31,33 +31,64 @@ export class CreateTaskComponent implements OnInit {
   ngOnInit(): void {}
   /**create a single task */
   public createTask(): any {
-    let taskInfo = {
-      taskListId: this.taskListId,
-      userId: this.userId,
-      name: this.taskName,
-      status: 'open',
-    };
-    console.log('taskinfor::', taskInfo);
-    this.taskService.createTask(taskInfo).subscribe(
-      (response) => {
-        console.log('Create task response::', response.message);
+    if (this.operationName.includes('Create New task')) {
+      console.log('create new task');
+      let taskInfo = {
+        taskListId: this.taskListId,
+        userId: this.userId,
+        name: this.taskName,
+        status: 'open',
+      };
+      console.log('taskinfor::', taskInfo);
+      this.taskService.createTask(taskInfo).subscribe(
+        (response) => {
+          console.log('Create task response::', response.message);
 
-        /**New task Create success */
-        if (response.status === 200) {
-          this._toast.open({ text: response.message, type: 'success' });
-          setTimeout(() => this.notify.emit(), 1300);
+          /**New task Create success */
+          if (response.status === 200) {
+            this._toast.open({ text: response.message, type: 'success' });
+            setTimeout(() => this.notify.emit(), 1300);
+          }
+        },
+        (error) => {
+          console.warn('Error::', error.error);
+          /**compute any error while */
+          this.errorResponse = false;
+          this.createNewtaskResponse = error.error.message;
+          console.log('resposen::', this.createNewtaskResponse);
+
+          this._toast.open({ text: error.error.message, type: 'danger' });
         }
-      },
-      (error) => {
-        console.warn('Error::', error.error);
-        /**compute any error while */
-        this.errorResponse = false;
-        this.createNewtaskResponse = error.error.message;
-        console.log('resposen::', this.createNewtaskResponse);
+      );
+    }
+    if (this.operationName.includes('Create New SubTask')) {
+      console.log('create new subtask');
+      let taskInfo = {
+        taskId: this.taskId,
+        name: this.taskName,
+        status: 'open',
+      };
+      console.log('subtaskinfor::', taskInfo);
+      this.taskService.createSubTask(taskInfo).subscribe(
+        (response) => {
+          console.log('Create task response::', response.message);
 
-        this._toast.open({ text: error.error.message, type: 'danger' });
-      }
-    );
+          /**New subtask Create success */
+          if (response.status === 200) {
+            this._toast.open({ text: response.message, type: 'success' });
+            setTimeout(() => this.notify.emit(), 1300);
+          }
+        },
+        (error) => {
+          console.warn('Error::', error.error);
+          /**compute any error while */
+          this.errorResponse = false;
+          this.createNewtaskResponse = error.error.message;
+          console.log('resposen-subtask::', this.createNewtaskResponse);
+          this._toast.open({ text: error.error.message, type: 'danger' });
+        }
+      );
+    }
   }
   /**get all taskLists */
   public getAllTaskList(): any {

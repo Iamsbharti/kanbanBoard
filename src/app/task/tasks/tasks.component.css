@@ -19,3 +19,6 @@
 .task {
   color: #b95143;
 }
+.subtask {
+  float: right;
+}
