@@ -8,7 +8,7 @@ import { TasklistService } from './tasklist.service';
 import { SharedModule } from '../shared/shared.module';
 import { TasksComponent } from './tasks/tasks.component';
 import { SubtasksComponent } from './subtasks/subtasks.component';
-
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 @NgModule({
   declarations: [TasklistComponent, TasksComponent, SubtasksComponent],
   imports: [
@@ -16,6 +16,7 @@ import { SubtasksComponent } from './subtasks/subtasks.component';
     FormsModule,
     HttpClientModule,
     SharedModule,
+    NgbModule,
     RouterModule.forRoot([
       { path: 'taskList', component: TasklistComponent, pathMatch: 'full' },
     ]),

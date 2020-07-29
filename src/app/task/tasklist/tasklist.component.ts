@@ -3,6 +3,8 @@ import { TasklistService } from '../tasklist.service';
 import { ToastConfig, Toaster } from 'ngx-toast-notifications';
 import { Router, Route } from '@angular/router';
 import { UserService } from '../../user/user.service';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+
 @Component({
   selector: 'app-tasklist',
   templateUrl: './tasklist.component.html',
@@ -15,19 +17,19 @@ export class TasklistComponent implements OnInit {
   public subtasks: any;
   public fetchedAlltaskLists: String;
   public userId: String;
-  public toggleCreateTaskForm: Boolean = false;
   /**new task info */
-  public toggleCreateSubTaskForm: Boolean = false;
   public subTaskName: String;
   public taskListId: String;
   public taskStatus: String;
   public taskId: String;
   public operationName: String;
+  public closeResult: string;
   constructor(
     private taskListService: TasklistService,
     private _toast: Toaster,
     private _router: Router,
-    private userService: UserService
+    private userService: UserService,
+    private modalService: NgbModal
   ) {
     this.userId = userService.getAutheticatedUserInfo().userId;
   }
@@ -36,6 +38,24 @@ export class TasklistComponent implements OnInit {
     //load task list on component load
     this.getAllTaskList();
     console.log('taskList', this.taskLists);
+  }
+  /**open modal */
+  open(content, ops, id) {
+    console.log('modal open::', ops, id);
+    this.operationName = ops;
+    this.taskListId = id;
+    console.log('tasklistid::', this.taskListId);
+    this.modalService
+      .open(content, { ariaLabelledBy: 'modal-create' })
+      .result.then(
+        (result) => {
+          this.closeResult = `Closed with: ${result}`;
+        },
+        (reason) => {
+          this.closeResult = `Dismissed`;
+        }
+      );
+    console.log('Mdal closed::', this.closeResult);
   }
 
   /**Create task List */
@@ -69,35 +89,22 @@ export class TasklistComponent implements OnInit {
       }
     );
   }
-  /**toggle create task pop up */
-  public openCreateTaskForm(taskListId): any {
-    this.toggleCreateTaskForm = !this.toggleCreateTaskForm;
-    console.log('Tasklist id after popup::', taskListId);
-    this.operationName = 'Create New task';
-    this.taskListId = taskListId;
-  }
+
   /**Reload tasklist post task new create */
   public reloadTaskList(): any {
     this.getAllTaskList();
     /**toggle pop up */
-    this.toggleCreateTaskForm = !this.toggleCreateTaskForm;
   }
   /**toggle create subtask popup */
   public openCreateSubTaskForm(taskId): any {
     console.log('Emit from task component::', taskId);
-    this.toggleCreateSubTaskForm = !this.toggleCreateSubTaskForm;
+    // this.toggleCreateSubTaskForm = !this.toggleCreateSubTaskForm;
     this.taskId = taskId;
   }
   /**reload task */
   public reloadTasks(): any {
     console.log('reload tasks');
     this.getAllTaskList();
-    this.toggleCreateSubTaskForm = !this.toggleCreateSubTaskForm;
-  }
-  /**toggle create task list form */
-  public openCreateTaskListForm(): any {
-    console.log('create tasklist form pop::');
-    this.toggleCreateTaskForm = !this.toggleCreateTaskForm;
-    this.operationName = 'Create New TaskList';
   }
 }
+//(click)="openCreateTaskListForm()"

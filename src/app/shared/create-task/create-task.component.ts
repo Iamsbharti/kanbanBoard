@@ -31,7 +31,8 @@ export class CreateTaskComponent implements OnInit {
   ngOnInit(): void {}
   /**create a single task */
   public createTask(): any {
-    if (this.operationName.includes('Create New task')) {
+    console.log('operation::', this.operationName);
+    if (this.operationName.includes('Create New Task')) {
       console.log('create new task');
       let taskInfo = {
         taskListId: this.taskListId,

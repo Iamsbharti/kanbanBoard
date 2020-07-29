@@ -1,6 +1,9 @@
 <div class="container">
   <div class="taskListHeader">
-    <img src="/assets/addListIcon.png" (click)="openCreateTaskListForm()" />
+    <img
+      src="/assets/addListIcon.png"
+      (click)="open(createModal, 'Create New TaskList', '')"
+    />
   </div>
   <div class="row">
     <div class="col-md-5 mt-4" *ngFor="let list of taskLists">
@@ -12,7 +15,7 @@
             <img
               class="add"
               src="/assets/addtaskicon.png"
-              (click)="openCreateTaskForm(list.taskListId)"
+              (click)="open(createModal, 'Create New Task', list.taskListId)"
           /></span>
         </div>
         <app-tasks
@@ -23,21 +26,23 @@
         </app-tasks>
       </div>
     </div>
+  </div>
 
-    <div class="col-md-4 mt-4 createTask" [hidden]="!toggleCreateTaskForm">
+  <!-- Create Modal -->
+  <ng-template #createModal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-create">
+        You are creating...
+      </h4>
+    </div>
+    <div class="modal-body">
       <app-create-task
         [operationName]="operationName"
         [taskListId]="taskListId"
         [userId]="userId"
+        [taskId]="taskId"
         (notify)="reloadTaskList()"
       ></app-create-task>
     </div>
-    <div class="col-md-4 mt-4 createTask" [hidden]="!toggleCreateSubTaskForm">
-      <app-create-task
-        [operationName]="'Create New SubTask'"
-        [taskId]="taskId"
-        (notify)="reloadTasks()"
-      ></app-create-task>
-    </div>
-  </div>
+  </ng-template>
 </div>
