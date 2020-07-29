@@ -89,6 +89,32 @@ export class CreateTaskComponent implements OnInit {
         }
       );
     }
+    if (this.operationName.includes('Create New TaskList')) {
+      console.log('create new tasklist');
+      let taskListInfo = {
+        userId: this.userId,
+        name: this.taskName,
+      };
+      this.taskService.createTaskList(taskListInfo).subscribe(
+        (response) => {
+          console.log('Create tasklist  response::', response.message);
+
+          /**New subtask Create success */
+          if (response.status === 200) {
+            this._toast.open({ text: response.message, type: 'success' });
+            setTimeout(() => this.notify.emit(), 1300);
+          }
+        },
+        (error) => {
+          console.warn('Error::', error.error);
+          /**compute any error while */
+          this.errorResponse = false;
+          this.createNewtaskResponse = error.error.message;
+          console.log('resposen-taklist::', this.createNewtaskResponse);
+          this._toast.open({ text: error.error.message, type: 'danger' });
+        }
+      );
+    }
   }
   /**get all taskLists */
   public getAllTaskList(): any {

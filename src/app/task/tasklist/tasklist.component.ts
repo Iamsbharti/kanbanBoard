@@ -22,7 +22,7 @@ export class TasklistComponent implements OnInit {
   public taskListId: String;
   public taskStatus: String;
   public taskId: String;
-
+  public operationName: String;
   constructor(
     private taskListService: TasklistService,
     private _toast: Toaster,
@@ -73,6 +73,7 @@ export class TasklistComponent implements OnInit {
   public openCreateTaskForm(taskListId): any {
     this.toggleCreateTaskForm = !this.toggleCreateTaskForm;
     console.log('Tasklist id after popup::', taskListId);
+    this.operationName = 'Create New task';
     this.taskListId = taskListId;
   }
   /**Reload tasklist post task new create */
@@ -92,5 +93,11 @@ export class TasklistComponent implements OnInit {
     console.log('reload tasks');
     this.getAllTaskList();
     this.toggleCreateSubTaskForm = !this.toggleCreateSubTaskForm;
+  }
+  /**toggle create task list form */
+  public openCreateTaskListForm(): any {
+    console.log('create tasklist form pop::');
+    this.toggleCreateTaskForm = !this.toggleCreateTaskForm;
+    this.operationName = 'Create New TaskList';
   }
 }

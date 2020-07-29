@@ -14,6 +14,9 @@
   height: 20px;
   cursor: pointer;
 }
+img {
+  cursor: pointer;
+}
 .createTask {
   margin-top: 20px;
   box-sizing: border-box;
