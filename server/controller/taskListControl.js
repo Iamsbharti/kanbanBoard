@@ -294,4 +294,20 @@ exports.updateTaskList = async (req, res) => {
       });
     }
   }
+  if (operation === "delete") {
+    console.log("delete task");
+    let query = { taskListId: taskListId, userId: userId };
+    TaskList.deleteOne(query, (error, deletedList) => {
+      console.log("Error-deleted::", error);
+      if (error != null) {
+        res
+          .status(500)
+          .json(formatResponse(true, 500, "TaskLIst Delete Error", error));
+      } else {
+        res
+          .status(200)
+          .json(formatResponse(false, 200, "TaskList deleted", null));
+      }
+    });
+  }
 };
