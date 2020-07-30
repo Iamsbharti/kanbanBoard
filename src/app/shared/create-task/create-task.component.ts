@@ -22,6 +22,7 @@ export class CreateTaskComponent implements OnInit {
 
   public createNewtaskResponse: String;
   public errorResponse: Boolean = true;
+  public successResponse: Boolean = true;
 
   //component will emit tasklist reload
   @Output()
@@ -32,7 +33,7 @@ export class CreateTaskComponent implements OnInit {
   /**create a single task */
   public createTask(): any {
     console.log('operation::', this.operationName);
-    if (this.operationName.includes('Create New Task')) {
+    if (this.operationName.includes('New Task')) {
       console.log('create new task');
       let taskInfo = {
         taskListId: this.taskListId,
@@ -48,6 +49,9 @@ export class CreateTaskComponent implements OnInit {
           /**New task Create success */
           if (response.status === 200) {
             this._toast.open({ text: response.message, type: 'success' });
+            this.errorResponse = false;
+            this.successResponse = true;
+            this.createNewtaskResponse = response.message;
             setTimeout(() => this.notify.emit(), 1300);
           }
         },
@@ -62,7 +66,7 @@ export class CreateTaskComponent implements OnInit {
         }
       );
     }
-    if (this.operationName.includes('Create New SubTask')) {
+    if (this.operationName.includes('New SubTask')) {
       console.log('create new subtask');
       let taskInfo = {
         taskId: this.taskId,
@@ -77,7 +81,10 @@ export class CreateTaskComponent implements OnInit {
           /**New subtask Create success */
           if (response.status === 200) {
             this._toast.open({ text: response.message, type: 'success' });
-            setTimeout(() => this.notify.emit(), 1300);
+            this.errorResponse = false;
+            this.successResponse = true;
+            this.createNewtaskResponse = response.message;
+            setTimeout(() => this.notify.emit(), 130);
           }
         },
         (error) => {
@@ -90,7 +97,7 @@ export class CreateTaskComponent implements OnInit {
         }
       );
     }
-    if (this.operationName.includes('Create New TaskList')) {
+    if (this.operationName.includes('New TaskList')) {
       console.log('create new tasklist');
       let taskListInfo = {
         userId: this.userId,
@@ -103,6 +110,9 @@ export class CreateTaskComponent implements OnInit {
           /**New subtask Create success */
           if (response.status === 200) {
             this._toast.open({ text: response.message, type: 'success' });
+            this.errorResponse = false;
+            this.successResponse = true;
+            this.createNewtaskResponse = response.message;
             setTimeout(() => this.notify.emit(), 1300);
           }
         },

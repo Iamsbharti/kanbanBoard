@@ -2,7 +2,7 @@
   <div class="taskListHeader">
     <img
       src="/assets/addListIcon.png"
-      (click)="open(createModal, 'Create New TaskList', '')"
+      (click)="open(createModal, 'New TaskList', '')"
     />
   </div>
   <div class="row">
@@ -15,7 +15,7 @@
             <img
               class="add"
               src="/assets/addtaskicon.png"
-              (click)="open(createModal, 'Create New Task', list.taskListId)"
+              (click)="open(createModal, 'New Task', list.taskListId)"
           /></span>
         </div>
         <app-tasks
@@ -41,8 +41,17 @@
         [taskListId]="taskListId"
         [userId]="userId"
         [taskId]="taskId"
-        (notify)="reloadTaskList()"
+        (notify)="reloadTaskList(createModal)"
       ></app-create-task>
+    </div>
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-outline-dark"
+        (click)="modal.close('Save click')"
+      >
+        Done?
+      </button>
     </div>
   </ng-template>
 </div>

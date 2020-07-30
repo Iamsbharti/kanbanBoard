@@ -44,10 +44,10 @@ export class TasklistComponent implements OnInit {
     console.log('modal open::', ops, id);
     this.operationName = ops;
     switch (ops) {
-      case ops === 'Create New Task':
+      case ops === 'New Task':
         this.taskListId = id;
         break;
-      case ops === 'Create New SubTask':
+      case ops === 'New SubTask':
         this.taskId = id;
         break;
     }
@@ -63,7 +63,7 @@ export class TasklistComponent implements OnInit {
           this.closeResult = `Dismissed`;
         }
       );
-    console.log('Mdal closed::', this.closeResult);
+    console.log('Modal closed::', this.closeResult);
   }
 
   /**Create task List */
@@ -99,16 +99,16 @@ export class TasklistComponent implements OnInit {
   }
 
   /**Reload tasklist post task new create */
-  public reloadTaskList(): any {
+  public reloadTaskList(modal): any {
     this.getAllTaskList();
-    /**toggle pop up */
+    /**toggle modal */
   }
   /**toggle create subtask popup */
   public openCreateSubTaskForm(taskId, modal): any {
     console.log('Emit from task component::', taskId);
     //open modal (click)="open(createModal, 'Create New Task', list.taskListId)"
     this.taskId = taskId;
-    this.open(modal, 'Create New SubTask', taskId);
+    this.open(modal, 'New SubTask', taskId);
   }
   /**reload task */
   public reloadTasks(): any {
