@@ -124,7 +124,7 @@ exports.createTaskValidation = (req, res, next) => {
     name: joi.string().min(3).required(),
     taskListId: joi.string().required(),
     userId: joi.string().required(),
-    status: joi.string().allow("done", "open").required(),
+    status: joi.valid("done", "open"),
   });
   let { error } = createTask.validate(req.body, options);
   if (error) {
@@ -185,13 +185,15 @@ exports.getSubTaskValidation = (req, res, next) => {
   }
   next();
 };
-exports.updateTaskList = (req, res, next) => {
+exports.updateTaskListValidation = (req, res, next) => {
   console.log("update task list validation::");
   let updateTaskList = joi.object({
     taskListId: joi.string().required(),
-    operation: joi.string().required(),
+    operation: joi.valid("delete", "edit"),
+    userId: joi.string().required(),
+    name: joi.string().optional(),
   });
-  let { error } = subTaskSchema.validate(req.body, options);
+  let { error } = updateTaskList.validate(req.body, options);
   if (error) {
     let errorMessage = [];
     error.details.map((err) => errorMessage.push(err.message));

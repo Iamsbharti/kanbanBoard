@@ -5,6 +5,7 @@ const Task = require("../models/Task");
 const SubTask = require("../models/SubTask");
 const User = require("../models/User");
 const { convertCompilerOptionsFromJson } = require("typescript");
+const { update } = require("../models/TaskList");
 const EXCLUDE = "-__v -_id";
 
 /**Check for valid userId */
@@ -247,4 +248,50 @@ exports.getSubTasks = async (req, res) => {
           .json(formatResponse(false, 200, "Fetched Subtasks", allsubTasks));
       }
     });
+};
+exports.updateTaskList = async (req, res) => {
+  console.log("Update task list control:");
+  const { name, taskListId, operation, userId } = req.body;
+  console.log(name, taskListId, operation);
+
+  /**verify taskListId */
+  let isTaskListValid = await validTaskListId(taskListId);
+  console.log("isTaskListValid::", isTaskListValid);
+  if (isTaskListValid.error)
+    return res.status(isTaskListValid.status).json(isTaskListValid);
+
+  /**Verify userId */
+  let isUserIdValid = await validUserId(userId);
+  console.log("isUserIdValid::", isUserIdValid);
+  if (isUserIdValid.error)
+    return res.status(isUserIdValid.status).json(isUserIdValid);
+
+  /**based on operation value */
+  if (operation === "edit") {
+    //Update lastlist name
+    if (name === undefined) {
+      return res
+        .status(400)
+        .json(formatResponse(true, 400, "Noting to update", "Pass the name"));
+    } else {
+      let query = { taskListId: taskListId, userId: userId };
+      let updateOptions = { name: name };
+      TaskList.updateOne(query, updateOptions, (error, updatedList) => {
+        console.log("updated list::", error, updatedList);
+        if (error !== null) {
+          res
+            .status(500)
+            .json(formatResponse(true, 500, "TaskList Update Error", null));
+        } else {
+          let { n } = updatedList;
+          console.log("Updated--", n);
+          res
+            .status(200)
+            .json(
+              formatResponse(false, 200, "TaskList Updated", `${n}-updated`)
+            );
+        }
+      });
+    }
+  }
 };
