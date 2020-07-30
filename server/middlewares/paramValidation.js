@@ -1,5 +1,6 @@
 const joi = require("@hapi/joi");
 const { formatResponse } = require("../library/formatResponse");
+const { update } = require("../models/User");
 let options = { abortEarly: false };
 
 exports.loginParamValidation = (req, res, next) => {
@@ -189,11 +190,30 @@ exports.updateTaskListValidation = (req, res, next) => {
   console.log("update task list validation::");
   let updateTaskList = joi.object({
     taskListId: joi.string().required(),
-    operation: joi.valid("delete", "edit"),
+    operation: joi.valid("delete", "edit").required(),
     userId: joi.string().required(),
-    name: joi.string().optional(),
+    update: joi.object().optional(),
   });
   let { error } = updateTaskList.validate(req.body, options);
+  if (error) {
+    let errorMessage = [];
+    error.details.map((err) => errorMessage.push(err.message));
+    return res.json(
+      formatResponse(true, 400, "Not valid Input Params", errorMessage)
+    );
+  }
+  next();
+};
+exports.updateTaskValidation = (req, res, next) => {
+  console.log("Update task validation");
+  let updateTask = joi.object({
+    taskListId: joi.string().required(),
+    operation: joi.valid("delete", "edit").required(),
+    taskId: joi.string().required(),
+    userId: joi.string().required(),
+    update: joi.object().optional(),
+  });
+  let { error } = updateTask.validate(req.body, options);
   if (error) {
     let errorMessage = [];
     error.details.map((err) => errorMessage.push(err.message));

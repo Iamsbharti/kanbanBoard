@@ -251,8 +251,8 @@ exports.getSubTasks = async (req, res) => {
 };
 exports.updateTaskList = async (req, res) => {
   console.log("Update task list control:");
-  const { name, taskListId, operation, userId } = req.body;
-  console.log(name, taskListId, operation);
+  const { update, taskListId, operation, userId } = req.body;
+  console.log(update, taskListId, operation);
 
   /**verify taskListId */
   let isTaskListValid = await validTaskListId(taskListId);
@@ -269,14 +269,15 @@ exports.updateTaskList = async (req, res) => {
   /**based on operation value */
   if (operation === "edit") {
     //Update lastlist name
-    if (name === undefined) {
+    if (Object.keys(update).length === 0) {
       return res
         .status(400)
-        .json(formatResponse(true, 400, "Noting to update", "Pass the name"));
+        .json(
+          formatResponse(true, 400, "Noting to update", "pass valid property")
+        );
     } else {
       let query = { taskListId: taskListId, userId: userId };
-      let updateOptions = { name: name };
-      TaskList.updateOne(query, updateOptions, (error, updatedList) => {
+      TaskList.updateOne(query, update, (error, updatedList) => {
         console.log("updated list::", error, updatedList);
         if (error !== null) {
           res
@@ -288,7 +289,7 @@ exports.updateTaskList = async (req, res) => {
           res
             .status(200)
             .json(
-              formatResponse(false, 200, "TaskList Updated", `${n}-updated`)
+              formatResponse(false, 200, "TaskList Updated", `${n}-doc updated`)
             );
         }
       });
@@ -309,5 +310,47 @@ exports.updateTaskList = async (req, res) => {
           .json(formatResponse(false, 200, "TaskList deleted", null));
       }
     });
+  }
+};
+exports.updateTask = async (req, res) => {
+  console.log("Update task control::");
+  const { taskListId, userId, update, operation } = req.body;
+  /**verify taskListId */
+  let isTaskListValid = await validTaskListId(taskListId);
+  console.log("isTaskListValid::", isTaskListValid);
+  if (isTaskListValid.error)
+    return res.status(isTaskListValid.status).json(isTaskListValid);
+
+  /**Verify userId */
+  let isUserIdValid = await validUserId(userId);
+  console.log("isUserIdValid::", isUserIdValid);
+  if (isUserIdValid.error)
+    return res.status(isUserIdValid.status).json(isUserIdValid);
+
+  if (operation === "edit") {
+    let query = { taskListId: taskListId, userId: userId };
+    if (Object.keys(update).length === 0) {
+      return res
+        .status(400)
+        .json(
+          formatResponse(true, 400, "Noting to update", "pass valid property")
+        );
+    } else {
+      console.log("Final update option::", update);
+      Task.updateOne(query, update, (error, updatedTask) => {
+        if (error !== null) {
+          res
+            .status(500)
+            .json(formatResponse(true, 500, "Error Updating Task", error));
+        } else {
+          let { n } = updatedTask;
+          res
+            .status(200)
+            .json(
+              formatResponse(false, 200, "Task Updated", `${n}-doc updated`)
+            );
+        }
+      });
+    }
   }
 };
