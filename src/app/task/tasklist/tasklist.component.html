@@ -22,6 +22,7 @@
           [taskListId]="list.taskListId"
           [userId]="list.userId"
           (notify)="openCreateSubTaskForm($event, createModal)"
+          (delete)="deleteTask($event)"
         >
         </app-tasks>
       </div>

@@ -115,5 +115,9 @@ export class TasklistComponent implements OnInit {
     console.log('reload tasks');
     this.getAllTaskList();
   }
+  /**delete task listeners*/
+  public deleteTask(msg): any {
+    console.log('Delete task listeners::', msg);
+  }
 }
 //(click)="openCreateTaskListForm()"

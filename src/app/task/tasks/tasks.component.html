@@ -5,7 +5,11 @@
       class="add"
       src="/assets/addtaskicon.png"
       (click)="emitSubTaskCreation(task.taskId)"
-    /><img class="remove" src="/assets/removetaskicon.png" />
+    /><img
+      class="remove"
+      src="/assets/removetaskicon.png"
+      (click)="emitTaskDeletion(task.taskId)"
+    />
     <span class="badge badge-pill badge-primary ml-3">{{ task.status }}</span>
     <app-subtasks [taskId]="task.taskId"></app-subtasks>
   </li>

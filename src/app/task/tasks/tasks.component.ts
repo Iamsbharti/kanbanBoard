@@ -14,6 +14,8 @@ export class TasksComponent implements OnInit {
   //component will emitt
   @Output()
   notify: EventEmitter<String> = new EventEmitter<String>();
+  @Output()
+  delete: EventEmitter<String> = new EventEmitter<String>();
 
   public tasks: any;
   public toggleCreateTaskForm: Boolean = false;
@@ -53,6 +55,12 @@ export class TasksComponent implements OnInit {
   }
   /**emitt subtask creation */
   public emitSubTaskCreation(taskId): any {
+    console.log('Emit creation');
     this.notify.emit(taskId);
+  }
+  /**emit subtask deletion */
+  public emitTaskDeletion(taskId): any {
+    console.log('Emit deletetion');
+    this.delete.emit(taskId);
   }
 }
