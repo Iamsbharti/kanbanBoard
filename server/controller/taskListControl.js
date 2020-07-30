@@ -359,6 +359,13 @@ exports.updateTask = async (req, res) => {
   console.log("isUserIdValid::", isUserIdValid);
   if (isUserIdValid.error)
     return res.status(isUserIdValid.status).json(isUserIdValid);
+
+  /**check for valid taskId */
+  let isTaskIdValid = await validTaskId(taskId);
+  console.log("isTaskIdValid::", isTaskIdValid);
+  if (isTaskIdValid.error)
+    return res.status(isTaskIdValid.status).json(isTaskIdValid);
+
   let query = { taskListId: taskListId, userId: userId, taskId: taskId };
   if (operation === "edit") {
     if (Object.keys(update).length === 0) {
@@ -409,9 +416,66 @@ exports.updateTask = async (req, res) => {
 exports.updateSubTask = async (req, res) => {
   console.log("Update sub task control::");
   const { subTaskId, taskId, update, operation } = req.body;
+  /**----Sanity check--------------- */
   /**check for valid taskId */
   let isTaskIdValid = await validTaskId(taskId);
   console.log("isTaskIdValid::", isTaskIdValid);
   if (isTaskIdValid.error)
     return res.status(isTaskIdValid.status).json(isTaskIdValid);
+  /**check for valid subtaskid */
+  let subTaskExists = await SubTask.findOne({ subTaskId: subTaskId });
+  if (!subTaskExists) {
+    return res
+      .status(404)
+      .json(formatResponse(true, 404, "SubTask Id Not Found", subTaskId));
+  }
+
+  /**Check passed start operation */
+  /**operation based flow */
+  let query = { taskId: taskId, subTaskId: subTaskId };
+  /**update subtask */
+  if (operation === "edit") {
+    /**check for empty update object */
+    if (Object.keys(update).length === 0) {
+      return res
+        .status(400)
+        .json(
+          formatResponse(true, 400, "Noting to update", "pass valid property")
+        );
+    } else {
+      console.log("Final update option::", update);
+      SubTask.updateOne(query, update, (error, updatedSubTask) => {
+        if (error !== null) {
+          res
+            .status(500)
+            .json(formatResponse(true, 500, "Error Updating Task", error));
+        } else {
+          let { n } = updatedSubTask;
+          res
+            .status(200)
+            .json(
+              formatResponse(false, 200, "SubTask Updated", `${n}-doc updated`)
+            );
+        }
+      });
+    }
+  }
+  /**delete subtask */
+  if (operation === "delete") {
+    console.log("Delete subtask");
+    SubTask.deleteOne(query, (error, deletedSubTask) => {
+      if (error !== null) {
+        res
+          .status(500)
+          .json(formatResponse(true, 500, "Error Deleting Task", error));
+      } else {
+        let { n } = deletedSubTask;
+        res
+          .status(200)
+          .json(
+            formatResponse(false, 200, "SubTask Deleted", `${n}-doc deleted`)
+          );
+      }
+    });
+  }
 };

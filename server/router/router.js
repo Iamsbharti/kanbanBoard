@@ -18,6 +18,7 @@ const {
   getSubTaskValidation,
   updateTaskListValidation,
   updateTaskValidation,
+  updateSubTaskValidation,
 } = require("../middlewares/paramValidation");
 const { isAuthorized } = require("../middlewares/authorization");
 const {
@@ -29,6 +30,7 @@ const {
   getSubTasks,
   updateTaskList,
   updateTask,
+  updateSubTask,
 } = require("../controller/taskListControl");
 const { isUndefined } = require("util");
 
@@ -77,4 +79,11 @@ router.post(
 );
 /**update/delete task */
 router.post("/updateTask", isAuthorized, updateTaskValidation, updateTask);
+/**update/delete subtask */
+router.post(
+  "/updateSubTask",
+  isAuthorized,
+  updateSubTaskValidation,
+  updateSubTask
+);
 module.exports = router;
