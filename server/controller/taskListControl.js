@@ -4,8 +4,9 @@ const { formatResponse } = require("../library/formatResponse");
 const Task = require("../models/Task");
 const SubTask = require("../models/SubTask");
 const User = require("../models/User");
-const { convertCompilerOptionsFromJson } = require("typescript");
+const { convertCompilerOptionsFromJson, Extension } = require("typescript");
 const { update } = require("../models/TaskList");
+const { query } = require("express");
 const EXCLUDE = "-__v -_id";
 
 /**Check for valid userId */
@@ -296,25 +297,57 @@ exports.updateTaskList = async (req, res) => {
     }
   }
   if (operation === "delete") {
-    console.log("delete task");
+    console.log("delete task and related task and subtasks");
     let query = { taskListId: taskListId, userId: userId };
+    /**find taskId and to delete it's subtasks */
+    console.log("Fetching task ids for userid and taskList Id");
+    let taskDetails = await Task.find(query).select("taskId").lean().exec();
+    let taskIdsArray = [];
+    console.log("taskDetails::", taskDetails);
+    taskDetails.map((task) => taskIdsArray.push(task.taskId));
+    console.log("TasksIds::", taskIdsArray);
+
+    /**delete subtasks based on taskid */
+    console.log("Deleting subtasks based on fetched taskId");
+    taskIdsArray.map((task) =>
+      SubTask.deleteMany({ taskId: task.taskId }, (error, deleted) => {
+        if (error !== null) {
+          console.log("Error deleting SubTasks::", error);
+        } else {
+          let { n } = deleted;
+          console.log("Subtask Delted::", `${n}-docs deleted`);
+        }
+      })
+    );
+    /**delete tasks based on userid and taskListID */
+    console.log("sub tasks deleted now deleting tasks");
+    let deletedTask = await Task.deleteMany(query);
+    console.log(
+      "Deleted task before deleting tasklist::",
+      deletedTask.n + "-docs deleted"
+    );
+    /**delete taskList */
+    console.log("Dependencies deleted ,now delete tasklist");
     TaskList.deleteOne(query, (error, deletedList) => {
-      console.log("Error-deleted::", error);
+      console.log("Error-deleted::", error, deletedList);
       if (error != null) {
         res
           .status(500)
           .json(formatResponse(true, 500, "TaskLIst Delete Error", error));
       } else {
+        let { n } = deletedList;
         res
           .status(200)
-          .json(formatResponse(false, 200, "TaskList deleted", null));
+          .json(
+            formatResponse(false, 200, "TaskList deleted", `${n}-docs deleted`)
+          );
       }
     });
   }
 };
 exports.updateTask = async (req, res) => {
   console.log("Update task control::");
-  const { taskListId, userId, update, operation } = req.body;
+  const { taskListId, userId, taskId, update, operation } = req.body;
   /**verify taskListId */
   let isTaskListValid = await validTaskListId(taskListId);
   console.log("isTaskListValid::", isTaskListValid);
@@ -326,9 +359,8 @@ exports.updateTask = async (req, res) => {
   console.log("isUserIdValid::", isUserIdValid);
   if (isUserIdValid.error)
     return res.status(isUserIdValid.status).json(isUserIdValid);
-
+  let query = { taskListId: taskListId, userId: userId, taskId: taskId };
   if (operation === "edit") {
-    let query = { taskListId: taskListId, userId: userId };
     if (Object.keys(update).length === 0) {
       return res
         .status(400)
@@ -353,4 +385,33 @@ exports.updateTask = async (req, res) => {
       });
     }
   }
+  if (operation === "delete") {
+    console.log("Delete task");
+    /**delete/cleanup subsequent subtasks */
+    let deletedSubTasks = await SubTask.deleteMany({ taskId: taskId });
+    deletedSubTasks &&
+      Task.deleteOne(query, (error, deletedTask) => {
+        if (error !== null) {
+          res
+            .status(500)
+            .json(formatResponse(true, 500, "Error Deleting Task", error));
+        } else {
+          let { n } = deletedTask;
+          res
+            .status(200)
+            .json(
+              formatResponse(false, 200, "Task Deleted", `${n}-doc deleted`)
+            );
+        }
+      });
+  }
+};
+exports.updateSubTask = async (req, res) => {
+  console.log("Update sub task control::");
+  const { subTaskId, taskId, update, operation } = req.body;
+  /**check for valid taskId */
+  let isTaskIdValid = await validTaskId(taskId);
+  console.log("isTaskIdValid::", isTaskIdValid);
+  if (isTaskIdValid.error)
+    return res.status(isTaskIdValid.status).json(isTaskIdValid);
 };

@@ -158,7 +158,7 @@ exports.createSubTaskValidation = (req, res, next) => {
   let subTask = joi.object({
     name: joi.string().min(3).required(),
     taskId: joi.string().required(),
-    status: joi.valid("done", "open"),
+    status: joi.valid("done", "open").required(),
   });
   let { error } = subTask.validate(req.body, options);
   console.log("Error::", error);
@@ -214,6 +214,24 @@ exports.updateTaskValidation = (req, res, next) => {
     update: joi.object().optional(),
   });
   let { error } = updateTask.validate(req.body, options);
+  if (error) {
+    let errorMessage = [];
+    error.details.map((err) => errorMessage.push(err.message));
+    return res.json(
+      formatResponse(true, 400, "Not valid Input Params", errorMessage)
+    );
+  }
+  next();
+};
+exports.updateSubTaskValidation = (req, res, next) => {
+  console.log("Update sub task validation");
+  let updateSubTask = joi.object({
+    operation: joi.valid("delete", "edit").required(),
+    taskId: joi.string().required(),
+    subTaskId: joi.string().required(),
+    update: joi.object().optional(),
+  });
+  let { error } = updateSubTask.validate(req.body, options);
   if (error) {
     let errorMessage = [];
     error.details.map((err) => errorMessage.push(err.message));
