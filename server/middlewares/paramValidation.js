@@ -157,9 +157,10 @@ exports.createSubTaskValidation = (req, res, next) => {
   let subTask = joi.object({
     name: joi.string().min(3).required(),
     taskId: joi.string().required(),
-    status: joi.string().allow("done", "open").required(),
+    status: joi.valid("done", "open"),
   });
   let { error } = subTask.validate(req.body, options);
+  console.log("Error::", error);
   if (error) {
     let errorMessage = [];
     error.details.map((err) => errorMessage.push(err.message));
@@ -173,6 +174,22 @@ exports.getSubTaskValidation = (req, res, next) => {
   console.log("get subtask param validation");
   let subTaskSchema = joi.object({
     taskId: joi.string().required(),
+  });
+  let { error } = subTaskSchema.validate(req.body, options);
+  if (error) {
+    let errorMessage = [];
+    error.details.map((err) => errorMessage.push(err.message));
+    return res.json(
+      formatResponse(true, 400, "Not valid Input Params", errorMessage)
+    );
+  }
+  next();
+};
+exports.updateTaskList = (req, res, next) => {
+  console.log("update task list validation::");
+  let updateTaskList = joi.object({
+    taskListId: joi.string().required(),
+    operation: joi.string().required(),
   });
   let { error } = subTaskSchema.validate(req.body, options);
   if (error) {
