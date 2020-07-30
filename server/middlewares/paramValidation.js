@@ -11,7 +11,11 @@ exports.loginParamValidation = (req, res, next) => {
 
   let { error } = loginSchema.validate(req.body, options);
   if (error) {
-    formatInputParamError(error, res);
+    let errorMessage = [];
+    error.details.map((err) => errorMessage.push(err.message));
+    return res.json(
+      formatResponse(true, 400, "Not valid Input Params", errorMessage)
+    );
   }
   next();
 };
@@ -49,7 +53,11 @@ exports.resetPwdValidation = (req, res, next) => {
 
   let { error } = resetPwdSchema.validate(req.body, options);
   if (error) {
-    formatInputParamError(error, res);
+    let errorMessage = [];
+    error.details.map((err) => errorMessage.push(err.message));
+    return res.json(
+      formatResponse(true, 400, "Not valid Input Params", errorMessage)
+    );
   }
   next();
 };
@@ -70,7 +78,11 @@ exports.signupParamValidation = (req, res, next) => {
   let { error } = signUpSchema.validate(req.body, options);
   //console.log("validation error", error);
   if (error) {
-    formatInputParamError(error, res);
+    let errorMessage = [];
+    error.details.map((err) => errorMessage.push(err.message));
+    return res.json(
+      formatResponse(true, 400, "Not valid Input Params", errorMessage)
+    );
   }
   next();
 };
@@ -83,7 +95,11 @@ exports.taskListValidation = (req, res, next) => {
 
   let { error } = taskListSchema.validate(req.body, options);
   if (error) {
-    formatInputParamError(error, res);
+    let errorMessage = [];
+    error.details.map((err) => errorMessage.push(err.message));
+    return res.json(
+      formatResponse(true, 400, "Not valid Input Params", errorMessage)
+    );
   }
   next();
 };
@@ -94,7 +110,11 @@ exports.getTaskListValidation = (req, res, next) => {
   });
   let { error } = taskListSchema.validate(req.body);
   if (error) {
-    formatInputParamError(error, res);
+    let errorMessage = [];
+    error.details.map((err) => errorMessage.push(err.message));
+    return res.json(
+      formatResponse(true, 400, "Not valid Input Params", errorMessage)
+    );
   }
   next();
 };
@@ -108,7 +128,11 @@ exports.createTaskValidation = (req, res, next) => {
   });
   let { error } = createTask.validate(req.body, options);
   if (error) {
-    formatInputParamError(error, res);
+    let errorMessage = [];
+    error.details.map((err) => errorMessage.push(err.message));
+    return res.json(
+      formatResponse(true, 400, "Not valid Input Params", errorMessage)
+    );
   }
   next();
 };
@@ -120,7 +144,11 @@ exports.getTaskValidation = (req, res, next) => {
   });
   let { error } = getTaskSchema.validate(req.body, options);
   if (error) {
-    formatInputParamError(error, res);
+    let errorMessage = [];
+    error.details.map((err) => errorMessage.push(err.message));
+    return res.json(
+      formatResponse(true, 400, "Not valid Input Params", errorMessage)
+    );
   }
   next();
 };
@@ -133,7 +161,11 @@ exports.createSubTaskValidation = (req, res, next) => {
   });
   let { error } = subTask.validate(req.body, options);
   if (error) {
-    formatInputParamError(error, res);
+    let errorMessage = [];
+    error.details.map((err) => errorMessage.push(err.message));
+    return res.json(
+      formatResponse(true, 400, "Not valid Input Params", errorMessage)
+    );
   }
   next();
 };
@@ -144,14 +176,11 @@ exports.getSubTaskValidation = (req, res, next) => {
   });
   let { error } = subTaskSchema.validate(req.body, options);
   if (error) {
-    formatInputParamError(error, res);
+    let errorMessage = [];
+    error.details.map((err) => errorMessage.push(err.message));
+    return res.json(
+      formatResponse(true, 400, "Not valid Input Params", errorMessage)
+    );
   }
   next();
-};
-const formatInputParamError = (error, res) => {
-  let errorMessage = [];
-  error.details.map((err) => errorMessage.push(err.message));
-  return res.json(
-    formatResponse(true, 400, "Not valid Input Params", errorMessage)
-  );
 };
