@@ -12,7 +12,7 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 })
 export class TasklistComponent implements OnInit {
   //init fields
-  public taskLists: [any];
+  public taskLists: any[];
   public tasks: any;
   public subtasks: any;
   public fetchedAlltaskLists: String;
