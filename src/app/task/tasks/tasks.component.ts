@@ -17,7 +17,7 @@ export class TasksComponent implements OnInit {
   @Output()
   delete: EventEmitter<String> = new EventEmitter<String>();
 
-  public tasks: any;
+  public tasks: [Object];
   public toggleCreateTaskForm: Boolean = false;
   constructor(private taskService: TasklistService) {}
   ngOnInit(): void {
@@ -28,7 +28,7 @@ export class TasksComponent implements OnInit {
       taskListId: this.taskListId,
       userId: this.userId,
     };
-    console.log('input:', taskInfo);
+    //console.log('input:', taskInfo);
     this.taskService.getTasks(taskInfo).subscribe(
       (response) => {
         console.log('get all task res::', response.message);
@@ -48,10 +48,9 @@ export class TasksComponent implements OnInit {
     this.taskListId = taskListId;
   }
   /**Reload tasklist post task new create */
-  public reloadTaskList(): any {
-    this.getAllTask();
-    /**toggle pop up */
-    this.toggleCreateTaskForm = !this.toggleCreateTaskForm;
+  public addNewTask(newTask): any {
+    console.log('newtask in task component::', newTask);
+    this.tasks.push(newTask);
   }
   /**emitt subtask creation */
   public emitSubTaskCreation(taskId): any {
@@ -59,8 +58,8 @@ export class TasksComponent implements OnInit {
     this.notify.emit(taskId);
   }
   /**emit subtask deletion */
-  public emitTaskDeletion(taskId): any {
-    console.log('Emit deletetion');
-    this.delete.emit(taskId);
+  public emitTaskDeletion(taskId, taskListId): any {
+    console.log('Emit deletetion', taskId, taskListId);
+    this.delete.emit(`${taskId}:${taskListId}`);
   }
 }

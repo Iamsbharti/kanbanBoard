@@ -1,4 +1,4 @@
-<ul class="list-group">
+<ul class="list-group" (notifyNewTask)="addNewTask($event)">
   <li class="list-group-item" *ngFor="let task of tasks">
     <span class="task">{{ task.name }}</span>
     <img
@@ -8,7 +8,7 @@
     /><img
       class="remove"
       src="/assets/removetaskicon.png"
-      (click)="emitTaskDeletion(task.taskId)"
+      (click)="emitTaskDeletion(task.taskId, task.taskListId)"
     />
     <span class="badge badge-pill badge-primary ml-3">{{ task.status }}</span>
     <app-subtasks [taskId]="task.taskId"></app-subtasks>

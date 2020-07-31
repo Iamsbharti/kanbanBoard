@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { TasklistService } from '../tasklist.service';
 import { ToastConfig, Toaster } from 'ngx-toast-notifications';
 import { Router, Route } from '@angular/router';
@@ -12,7 +12,7 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 })
 export class TasklistComponent implements OnInit {
   //init fields
-  public taskLists: any;
+  public taskLists: [Object];
   public tasks: any;
   public subtasks: any;
   public fetchedAlltaskLists: String;
@@ -24,6 +24,13 @@ export class TasklistComponent implements OnInit {
   public taskId: String;
   public operationName: String;
   public closeResult: string;
+  /**component will emit event ot update
+   * task and subtask array in their respective compoenents
+   */
+  @Output()
+  notifyNewTaskList: EventEmitter<Object> = new EventEmitter<Object>();
+  notifyNewTask: EventEmitter<Object> = new EventEmitter<Object>();
+  notifyNewSubTask: EventEmitter<Object> = new EventEmitter<Object>();
   constructor(
     private taskListService: TasklistService,
     private _toast: Toaster,
@@ -37,20 +44,22 @@ export class TasklistComponent implements OnInit {
   ngOnInit(): void {
     //load task list on component load
     this.getAllTaskList();
-    console.log('taskList', this.taskLists);
+    console.log('taskList', typeof this.taskLists);
   }
   /**open modal */
   open(content, ops, id) {
     console.log('modal open::', ops, id);
     this.operationName = ops;
-    switch (ops) {
-      case ops === 'New Task':
-        this.taskListId = id;
-        break;
-      case ops === 'New SubTask':
-        this.taskId = id;
-        break;
+    console.log(ops == 'New Task');
+    if (ops == 'New Task') {
+      console.log('new task case');
+      this.taskListId = id;
     }
+    if (ops == 'New SubTask') {
+      console.log('new subtask case');
+      this.taskId = id;
+    }
+
     console.log('tasklistid::', this.taskListId);
     console.log('taskid::', this.taskId);
     this.modalService
@@ -85,6 +94,7 @@ export class TasklistComponent implements OnInit {
         console.log('get all task list', response.message);
         this.fetchedAlltaskLists = response.message;
         /**store all tasklists */
+        console.log('tasklists return::', response.data);
         this.taskLists = response.data;
         /**toast */
         this._toast.open({ text: response.message, type: 'success' });
@@ -98,11 +108,29 @@ export class TasklistComponent implements OnInit {
     );
   }
 
-  /**Reload tasklist post task new create */
-  public reloadTaskList(modal): any {
+  /**listen for newly created task list and push it to existing array */
+  public addNewTaskList(newTaskList: any): any {
+    console.log('reloading');
+    console.log(newTaskList);
+    this.notifyNewTask.emit(newTaskList);
     this.getAllTaskList();
-    /**toggle modal */
+
+    return this.taskLists.push(newTaskList);
   }
+  /**listen for newly created task  and emitt event to update it */
+  public addNewTask(newTask: any): any {
+    console.log('addnew task listeners::', newTask);
+    console.log(typeof newTask);
+    this.getAllTaskList();
+    //this.notifyNewTask.emit(newTask);
+  }
+  /**listen for newly created task list and emit event to update it */
+  public addNewSubTask(newSubTask: any): any {
+    console.log(typeof newSubTask);
+    console.log(newSubTask);
+    this.notifyNewSubTask.emit(newSubTask);
+  }
+
   /**toggle create subtask popup */
   public openCreateSubTaskForm(taskId, modal): any {
     console.log('Emit from task component::', taskId);
@@ -111,13 +139,56 @@ export class TasklistComponent implements OnInit {
     this.open(modal, 'New SubTask', taskId);
   }
   /**reload task */
-  public reloadTasks(): any {
-    console.log('reload tasks');
+  public reloadTask(load): any {
+    console.log('reload tasks', load);
     this.getAllTaskList();
   }
+  public getAllTask(taskListId): any {
+    let taskInfo = {
+      taskListId: taskListId,
+      userId: this.userId,
+    };
+    console.log('input-reload task:', taskInfo);
+    this.taskListService.getTasks(taskInfo).subscribe(
+      (response) => {
+        console.log('get all task res::', response.message);
+        /**updated tasks */
+        this.tasks = response.data;
+        //console.log('All tasks::', this.tasks);
+      },
+      (error) => {
+        console.warn('Error::', error.error);
+      }
+    );
+  }
   /**delete task listeners*/
-  public deleteTask(msg): any {
-    console.log('Delete task listeners::', msg);
+  public deleteTask(values): any {
+    console.log('Delete task listeners::', values, this.userId);
+    /**call delete service */
+    let [taskId, taskListId] = values.split(':');
+    console.log(taskListId, taskId);
+    let taskInfo = {
+      taskListId: taskListId,
+      taskId: taskId,
+      userId: this.userId,
+      operation: 'delete',
+    };
+    this.taskListService.updateTask(taskInfo).subscribe(
+      (response) => {
+        console.log('Delete api reponse::', response.message);
+        /**success toast  */
+        this._toast.open({ text: response.message, type: 'success' });
+        this.getAllTaskList();
+      },
+      (error) => {
+        console.log('Error Deleting Task::', error.error);
+        this._toast.open({ text: error.error.message, type: 'danger' });
+      }
+    );
+  }
+  /**delete tasklist */
+  public deleteTaskList(): any {
+    console.log('delete tasklist');
   }
 }
 //(click)="openCreateTaskListForm()"

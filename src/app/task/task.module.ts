@@ -22,6 +22,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ]),
   ],
   providers: [TasklistService],
-  exports: [TasksComponent, SubtasksComponent],
+  exports: [TasksComponent, SubtasksComponent, TasklistComponent],
 })
 export class TaskModule {}

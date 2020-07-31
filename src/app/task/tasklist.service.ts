@@ -83,4 +83,14 @@ export class TasklistService {
     );
     return allSubTasks;
   }
+  /**update task */
+  public updateTask(taskInfo): any {
+    console.log('update task sevice::', taskInfo);
+    let udpatedTask = this._http.post(
+      `${this.baseurl}/updateTask`,
+      taskInfo,
+      this.httpHeaderOptions
+    );
+    return udpatedTask;
+  }
 }

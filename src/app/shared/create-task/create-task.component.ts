@@ -26,7 +26,11 @@ export class CreateTaskComponent implements OnInit {
 
   //component will emit tasklist reload
   @Output()
-  notify: EventEmitter<String> = new EventEmitter<String>();
+  notifyNewTaskList: EventEmitter<Object> = new EventEmitter<Object>();
+  notifyNewTask: EventEmitter<Object> = new EventEmitter<Object>();
+  notifyNewSubTask: EventEmitter<Object> = new EventEmitter<Object>();
+  reload: EventEmitter<String> = new EventEmitter<String>();
+
   constructor(private taskService: TasklistService, private _toast: Toaster) {}
 
   ngOnInit(): void {}
@@ -41,7 +45,7 @@ export class CreateTaskComponent implements OnInit {
         name: this.taskName,
         status: 'open',
       };
-      console.log('taskinfor::', taskInfo);
+      console.log('taskinfo::', taskInfo);
       this.taskService.createTask(taskInfo).subscribe(
         (response) => {
           console.log('Create task response::', response.message);
@@ -52,7 +56,9 @@ export class CreateTaskComponent implements OnInit {
             this.errorResponse = false;
             this.successResponse = true;
             this.createNewtaskResponse = response.message;
-            setTimeout(() => this.notify.emit(), 1300);
+            console.log('emitt new task change', response.data);
+            this.notifyNewTaskList.emit(response.data);
+            this.reload.emit('hi');
           }
         },
         (error) => {
@@ -84,7 +90,7 @@ export class CreateTaskComponent implements OnInit {
             this.errorResponse = false;
             this.successResponse = true;
             this.createNewtaskResponse = response.message;
-            setTimeout(() => this.notify.emit(), 130);
+            this.notifyNewSubTask.emit(response.data);
           }
         },
         (error) => {
@@ -113,7 +119,9 @@ export class CreateTaskComponent implements OnInit {
             this.errorResponse = false;
             this.successResponse = true;
             this.createNewtaskResponse = response.message;
-            setTimeout(() => this.notify.emit(), 1300);
+            console.log('emmit new tasklist create');
+            //setTimeout(() => this.notifyNewTaskList.emit(response.data), 1300);
+            this.notifyNewTaskList.emit(response.data);
           }
         },
         (error) => {

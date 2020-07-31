@@ -9,7 +9,7 @@ import { TasklistService } from '../tasklist.service';
 export class SubtasksComponent implements OnInit {
   //init field
   @Input() taskId: any;
-  public subtasks: any;
+  public subtasks: [Object];
   constructor(private taskService: TasklistService) {}
 
   ngOnInit(): void {
@@ -29,5 +29,9 @@ export class SubtasksComponent implements OnInit {
         console.warn('Error fetching Subtasks:', error.error);
       }
     );
+  }
+  public addNewSubTask(newSubTask): any {
+    console.log('New sub task in subtask component::', newSubTask);
+    this.subtasks.push(newSubTask);
   }
 }
