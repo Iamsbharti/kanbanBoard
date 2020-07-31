@@ -271,7 +271,10 @@ export class TasklistComponent implements OnInit {
     console.log('edit tasklist listener');
     this.getAllTaskList();
   }
-  public editTask(value): any {}
-  public editSubTask(value): any {}
+  public editTask(value): any {
+    this.getAllTaskList();
+  }
+  public editSubTask(value): any {
+    this.getAllTaskList();
+  }
 }
-//(click)="openCreateTaskListForm()"

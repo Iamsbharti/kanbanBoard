@@ -31,6 +31,8 @@ export class CreateTaskComponent implements OnInit {
   notifyNewTask: EventEmitter<Object> = new EventEmitter<Object>();
   @Output()
   notifyNewSubTask: EventEmitter<Object> = new EventEmitter<Object>();
+  @Output()
+  closeModal: EventEmitter<String> = new EventEmitter<String>();
 
   constructor(private taskService: TasklistService, private _toast: Toaster) {}
 
@@ -59,6 +61,7 @@ export class CreateTaskComponent implements OnInit {
             this.createNewtaskResponse = response.message;
             console.log('emitt new task change', response.data);
             this.notifyNewTask.emit(response.data);
+            this.closeModal.emit();
           }
         },
         (error) => {
@@ -92,6 +95,8 @@ export class CreateTaskComponent implements OnInit {
             this.createNewtaskResponse = response.message;
             //this.notifyNewTaskList.emit(response.data);
             this.notifyNewSubTask.emit(response.data);
+            /**emit modal close event */
+            this.closeModal.emit();
           }
         },
         (error) => {
@@ -121,6 +126,8 @@ export class CreateTaskComponent implements OnInit {
             this.successResponse = true;
             this.createNewtaskResponse = response.message;
             console.log('emmit new tasklist create');
+            /**emit modal close event */
+            this.closeModal.emit();
             setTimeout(() => this.notifyNewTaskList.emit(response.data), 130);
             //this.notifyNewTaskList.emit(response.data);
           }
