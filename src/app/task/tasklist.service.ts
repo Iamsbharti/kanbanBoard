@@ -102,4 +102,13 @@ export class TasklistService {
       this.httpHeaderOptions
     );
   }
+  /**update/delete subtask */
+  public updateSubTask(subTaskInfo): any {
+    console.log('update subtask  servcie');
+    return this._http.post(
+      `${this.baseurl}/updateSubTask`,
+      subTaskInfo,
+      this.httpHeaderOptions
+    );
+  }
 }

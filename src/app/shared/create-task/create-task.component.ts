@@ -27,9 +27,10 @@ export class CreateTaskComponent implements OnInit {
   //component will emit tasklist reload
   @Output()
   notifyNewTaskList: EventEmitter<Object> = new EventEmitter<Object>();
+  @Output()
   notifyNewTask: EventEmitter<Object> = new EventEmitter<Object>();
+  @Output()
   notifyNewSubTask: EventEmitter<Object> = new EventEmitter<Object>();
-  reload: EventEmitter<String> = new EventEmitter<String>();
 
   constructor(private taskService: TasklistService, private _toast: Toaster) {}
 
@@ -57,8 +58,7 @@ export class CreateTaskComponent implements OnInit {
             this.successResponse = true;
             this.createNewtaskResponse = response.message;
             console.log('emitt new task change', response.data);
-            this.notifyNewTaskList.emit(response.data);
-            this.reload.emit('hi');
+            this.notifyNewTask.emit(response.data);
           }
         },
         (error) => {
@@ -90,7 +90,8 @@ export class CreateTaskComponent implements OnInit {
             this.errorResponse = false;
             this.successResponse = true;
             this.createNewtaskResponse = response.message;
-            this.notifyNewTaskList.emit(response.data);
+            //this.notifyNewTaskList.emit(response.data);
+            this.notifyNewSubTask.emit(response.data);
           }
         },
         (error) => {

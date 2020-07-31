@@ -29,7 +29,9 @@ export class TasklistComponent implements OnInit {
    */
   @Output()
   notifyNewTaskList: EventEmitter<Object> = new EventEmitter<Object>();
+  @Output()
   notifyNewTask: EventEmitter<Object> = new EventEmitter<Object>();
+  @Output()
   notifyNewSubTask: EventEmitter<Object> = new EventEmitter<Object>();
   constructor(
     private taskListService: TasklistService,
@@ -113,25 +115,24 @@ export class TasklistComponent implements OnInit {
     console.log('reloading');
     let { taskListId, subTaskId, taskId } = newTaskList;
     console.log(newTaskList);
-    this.notifyNewTask.emit(newTaskList);
+    //this.notifyNewTask.emit(newTaskList);
     console.log('tasklist iddd', taskListId);
-
     console.log('get all list call');
-    this.getAllTaskList();
-
-    //return this.taskLists.push(newTaskList);
+    //this.getAllTaskList();
+    return this.taskLists.push(newTaskList);
   }
   /**listen for newly created task  and emitt event to update it */
   public addNewTask(newTask: any): any {
     console.log('addnew task listeners::', newTask);
     console.log(typeof newTask);
-    this.getAllTaskList();
-    //this.notifyNewTask.emit(newTask);
+    //this.getAllTaskList();
+    this.notifyNewTask.emit(newTask);
   }
   /**listen for newly created task list and emit event to update it */
   public addNewSubTask(newSubTask: any): any {
     console.log(typeof newSubTask);
     console.log(newSubTask);
+    this.getAllTaskList();
     this.notifyNewSubTask.emit(newSubTask);
   }
 

@@ -11,7 +11,8 @@ export class SubtasksComponent implements OnInit {
   @Input() taskId: any;
   public subtasks: [Object];
   constructor(private taskService: TasklistService) {}
-
+  @Output()
+  delete: EventEmitter<String> = new EventEmitter<String>();
   ngOnInit(): void {
     this.getAllSubTasks();
   }
@@ -33,5 +34,10 @@ export class SubtasksComponent implements OnInit {
   public addNewSubTask(newSubTask): any {
     console.log('New sub task in subtask component::', newSubTask);
     this.subtasks.push(newSubTask);
+  }
+  /**emit subtask deletion */
+  public emitSubTaskDeletion(taskId, subTaskId): any {
+    console.log('Emit sub task deletetion', taskId, subTaskId);
+    this.delete.emit(`${taskId}:${subTaskId}`);
   }
 }

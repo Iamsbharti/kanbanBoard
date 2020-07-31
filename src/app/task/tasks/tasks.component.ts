@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { TasklistService } from '../../task/tasklist.service';
+import { ToastConfig, Toaster } from 'ngx-toast-notifications';
 
 @Component({
   selector: 'app-tasks',
@@ -19,7 +20,7 @@ export class TasksComponent implements OnInit {
 
   public tasks: [Object];
   public toggleCreateTaskForm: Boolean = false;
-  constructor(private taskService: TasklistService) {}
+  constructor(private taskService: TasklistService, private _toast: Toaster) {}
   ngOnInit(): void {
     this.getAllTask();
   }
@@ -50,7 +51,7 @@ export class TasksComponent implements OnInit {
   /**Reload tasklist post task new create */
   public addNewTask(newTask): any {
     console.log('newtask in task component::', newTask);
-    this.tasks.push(newTask);
+    return this.tasks.push(newTask);
   }
   /**emitt subtask creation */
   public emitSubTaskCreation(taskId): any {
@@ -61,5 +62,29 @@ export class TasksComponent implements OnInit {
   public emitTaskDeletion(taskId, taskListId): any {
     console.log('Emit deletetion', taskId, taskListId);
     this.delete.emit(`${taskId}:${taskListId}`);
+  }
+  /**delete sub task */
+  public deleteSubTask(values): any {
+    console.log('Delete task listeners::', values, this.userId);
+    /**call delete service */
+    let [taskId, subTaskId] = values.split(':');
+    console.log(subTaskId, taskId);
+    let taskInfo = {
+      subTaskId: subTaskId,
+      taskId: taskId,
+      operation: 'delete',
+    };
+    this.taskService.updateSubTask(taskInfo).subscribe(
+      (response) => {
+        console.log('Delete api reponse::', response.message);
+        /**success toast  */
+        this._toast.open({ text: response.message, type: 'success' });
+        this.getAllTask();
+      },
+      (error) => {
+        console.log('Error Deleting Task::', error.error);
+        this._toast.open({ text: error.error.message, type: 'danger' });
+      }
+    );
   }
 }
