@@ -79,17 +79,19 @@ export class TasklistComponent implements OnInit {
     console.log('Modal closed::', this.closeResult);
   }
   /**open edit modal */
-  openEdit(content, ops, id) {
+  openEdit(content, ops, id, name) {
     console.log('modal edit open::', ops, id);
     this.operationName = ops;
     console.log(ops == 'Edit Task');
-    if (ops == 'Edit Task') {
-      console.log('edit task case');
+    if (ops == 'Edit TaskList') {
+      console.log('Edit TaskList case');
       this.taskListId = id;
+      this.name = name;
     }
     if (ops == 'Edit SubTask') {
       console.log('edit subtask case');
       this.taskId = id;
+      this.name = name;
     }
 
     console.log('tasklistid::', this.taskListId);
@@ -264,10 +266,11 @@ export class TasklistComponent implements OnInit {
       }
     );
   }
-  /** (notifyEditTaskList)="editTaskList($event)"
-        (notifyEditTask)="editTask($event)"
-        (notifyEditSubTask)="editSubTask($event)" */
-  public editTaskLists(value): any {}
+
+  public editTaskLists(value): any {
+    console.log('edit tasklist listener');
+    this.getAllTaskList();
+  }
   public editTask(value): any {}
   public editSubTask(value): any {}
 }

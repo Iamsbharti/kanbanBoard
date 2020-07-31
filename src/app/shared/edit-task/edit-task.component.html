@@ -15,6 +15,21 @@
     <div [hidden]="_name.valid || _name.pristine" class="alert alert-danger">
       TaskName is Required
     </div>
+    <div [hidden]="toggleTaskList">
+      <select
+        class="form-control mt-1"
+        #list
+        required
+        [(ngModel)]="tasklist"
+        name="tasklist"
+        defaultvalue="select one"
+        #_tsk="ngModel"
+      >
+        <option *ngFor="let task of taskLists" [value]="task">{{
+          task.name
+        }}</option>
+      </select>
+    </div>
     <div
       [hidden]="errorResponse"
       class="badge badge-danger"
@@ -26,7 +41,7 @@
       {{ createNewtaskResponse }}
     </div>
   </div>
-  <button class="mt-2" [disabled]="!editTaskForm.form.valid">
-    Create Task
+  <button class="mt-2">
+    Edit Task
   </button>
 </form>

@@ -23,7 +23,9 @@
             <img
               class="add"
               src="/assets/edit.png"
-              (click)="editTaskList(list.taskListId, editModal)"
+              (click)="
+                openEdit(editModal, 'Edit TaskList', list.taskListId, list.name)
+              "
           /></span>
         </div>
         <app-tasks
@@ -79,6 +81,7 @@
         [userId]="userId"
         [taskId]="taskId"
         [name]="name"
+        [taskLists]="taskLists"
         (notifyEditTaskList)="editTaskLists($event)"
         (notifyEditTask)="editTask($event)"
         (notifyEditSubTask)="editSubTask($event)"
