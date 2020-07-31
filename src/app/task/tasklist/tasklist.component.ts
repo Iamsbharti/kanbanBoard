@@ -157,7 +157,7 @@ export class TasklistComponent implements OnInit {
   public addNewTask(newTask: any): any {
     console.log('addnew task listeners::', newTask);
     console.log(typeof newTask);
-    //this.getAllTaskList();
+    this.getAllTaskList();
     this.notifyNewTask.emit(newTask);
   }
   /**listen for newly created task list and emit event to update it */
