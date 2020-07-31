@@ -40,7 +40,7 @@ export class CreateTaskComponent implements OnInit {
   /**create a single task */
   public createTask(): any {
     console.log('operation::', this.operationName);
-    if (this.operationName.includes('New Task')) {
+    if (this.operationName.endsWith('New Task')) {
       console.log('create new task');
       let taskInfo = {
         taskListId: this.taskListId,
@@ -61,6 +61,7 @@ export class CreateTaskComponent implements OnInit {
             this.createNewtaskResponse = response.message;
             console.log('emitt new task change', response.data);
             this.notifyNewTask.emit(response.data);
+            /**emit close modal event */
             this.closeModal.emit();
           }
         },
@@ -125,11 +126,11 @@ export class CreateTaskComponent implements OnInit {
             this.errorResponse = false;
             this.successResponse = true;
             this.createNewtaskResponse = response.message;
-            console.log('emmit new tasklist create');
+            console.log('emmit new tasklist create', response.data);
+            this.notifyNewTaskList.emit(response.data);
+            //setTimeout(() => this.notifyNewTaskList.emit(response.data), 130);
             /**emit modal close event */
             this.closeModal.emit();
-            setTimeout(() => this.notifyNewTaskList.emit(response.data), 130);
-            //this.notifyNewTaskList.emit(response.data);
           }
         },
         (error) => {

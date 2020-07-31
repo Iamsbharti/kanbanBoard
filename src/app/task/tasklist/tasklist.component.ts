@@ -12,7 +12,7 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 })
 export class TasklistComponent implements OnInit {
   //init fields
-  public taskLists: [Object];
+  public taskLists: [any];
   public tasks: any;
   public subtasks: any;
   public fetchedAlltaskLists: String;
@@ -144,13 +144,8 @@ export class TasklistComponent implements OnInit {
 
   /**listen for newly created task list and push it to existing array */
   public addNewTaskList(newTaskList: any): any {
-    console.log('reloading');
-    let { taskListId, subTaskId, taskId } = newTaskList;
-    console.log(newTaskList);
-    //this.notifyNewTask.emit(newTaskList);
-    console.log('tasklist iddd', taskListId);
-    console.log('get all list call');
-    //this.getAllTaskList();
+    console.log('refresh new taskList::', newTaskList.name);
+    console.log('Adding to current list');
     return this.taskLists.push(newTaskList);
   }
   /**listen for newly created task  and emitt event to update it */
@@ -224,7 +219,7 @@ export class TasklistComponent implements OnInit {
     );
   }
   /**delete tasklist */
-  public deleteTaskList(taskListId): any {
+  public deleteTaskList(taskListId: String): any {
     console.log('delete tasklist::', taskListId);
     let taskListInfo = {
       userId: this.userId,
@@ -235,7 +230,8 @@ export class TasklistComponent implements OnInit {
       (response) => {
         console.log('Delete task list response::', response.message);
         this._toast.open({ text: response.message, type: 'success' });
-        this.getAllTaskList();
+        /**delete the entry from current tasklist */
+        this.taskLists.filter((list) => list.taskListId != taskListId);
       },
       (error) => {
         console.log('Error deleting tasklist::', error.error);
