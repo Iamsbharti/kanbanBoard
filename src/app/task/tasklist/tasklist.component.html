@@ -19,7 +19,11 @@
             <img
               class="add"
               src="/assets/removetaskicon.png"
-              (click)="deleteTaskList(list.taskListId)"
+              (click)="deleteTaskList(list.taskListId)" />
+            <img
+              class="add"
+              src="/assets/edit.png"
+              (click)="editTaskList(list.taskListId, editModal)"
           /></span>
         </div>
         <app-tasks
@@ -50,6 +54,35 @@
         (notifyNewTask)="addNewTask($event)"
         (notifyNewSubTask)="addNewSubTask($event)"
       ></app-create-task>
+    </div>
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-outline-dark"
+        (click)="modal.close('Save click')"
+      >
+        Done?
+      </button>
+    </div>
+  </ng-template>
+  <!-- Edit Modal -->
+  <ng-template #editModal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-edit">
+        You are editing...
+      </h4>
+    </div>
+    <div class="modal-body">
+      <app-edit-task
+        [operationName]="operationName"
+        [taskListId]="taskListId"
+        [userId]="userId"
+        [taskId]="taskId"
+        [name]="name"
+        (notifyEditTaskList)="editTaskLists($event)"
+        (notifyEditTask)="editTask($event)"
+        (notifyEditSubTask)="editSubTask($event)"
+      ></app-edit-task>
     </div>
     <div class="modal-footer">
       <button

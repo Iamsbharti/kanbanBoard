@@ -24,6 +24,8 @@ export class TasklistComponent implements OnInit {
   public taskId: String;
   public operationName: String;
   public closeResult: string;
+  /**edit */
+  public name: String;
   /**component will emit event ot update
    * task and subtask array in their respective compoenents
    */
@@ -66,6 +68,34 @@ export class TasklistComponent implements OnInit {
     console.log('taskid::', this.taskId);
     this.modalService
       .open(content, { ariaLabelledBy: 'modal-create' })
+      .result.then(
+        (result) => {
+          this.closeResult = `Closed with: ${result}`;
+        },
+        (reason) => {
+          this.closeResult = `Dismissed`;
+        }
+      );
+    console.log('Modal closed::', this.closeResult);
+  }
+  /**open edit modal */
+  openEdit(content, ops, id) {
+    console.log('modal edit open::', ops, id);
+    this.operationName = ops;
+    console.log(ops == 'Edit Task');
+    if (ops == 'Edit Task') {
+      console.log('edit task case');
+      this.taskListId = id;
+    }
+    if (ops == 'Edit SubTask') {
+      console.log('edit subtask case');
+      this.taskId = id;
+    }
+
+    console.log('tasklistid::', this.taskListId);
+    console.log('taskid::', this.taskId);
+    this.modalService
+      .open(content, { ariaLabelledBy: 'modal-edit' })
       .result.then(
         (result) => {
           this.closeResult = `Closed with: ${result}`;
@@ -211,5 +241,34 @@ export class TasklistComponent implements OnInit {
       }
     );
   }
+  /**edit task list */
+  public editTaskList(taskListId, modal): any {
+    /**open modal to take edited input */
+    this.open(modal, 'Edit TaskList', taskListId);
+    console.log('delete tasklist::', taskListId);
+    let taskListInfo = {
+      userId: this.userId,
+      taskListId: taskListId,
+      name: name,
+      operation: 'edit',
+    };
+    this.taskListService.updateTaskList(taskListInfo).subscribe(
+      (response) => {
+        console.log('Delete task list response::', response.message);
+        this._toast.open({ text: response.message, type: 'success' });
+        this.getAllTaskList();
+      },
+      (error) => {
+        console.log('Error deleting tasklist::', error.error);
+        this._toast.open({ text: error.error.message, type: 'danger' });
+      }
+    );
+  }
+  /** (notifyEditTaskList)="editTaskList($event)"
+        (notifyEditTask)="editTask($event)"
+        (notifyEditSubTask)="editSubTask($event)" */
+  public editTaskLists(value): any {}
+  public editTask(value): any {}
+  public editSubTask(value): any {}
 }
 //(click)="openCreateTaskListForm()"

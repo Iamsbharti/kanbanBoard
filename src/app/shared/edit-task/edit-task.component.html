@@ -1,0 +1,32 @@
+<h3>
+  <span class="badge badge-secondary">{{ operationName }}</span>
+</h3>
+<form #editTaskForm="ngForm" (ngSubmit)="editTask()">
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input
+      type="text"
+      class="form-control"
+      name="name"
+      required
+      [(ngModel)]="name"
+      #_name="ngModel"
+    />
+    <div [hidden]="_name.valid || _name.pristine" class="alert alert-danger">
+      TaskName is Required
+    </div>
+    <div
+      [hidden]="errorResponse"
+      class="badge badge-danger"
+      [ngClass]="{
+        'badge badge-danger': errorResponse,
+        'badge badge-success': successResponse
+      }"
+    >
+      {{ createNewtaskResponse }}
+    </div>
+  </div>
+  <button class="mt-2" [disabled]="!editTaskForm.form.valid">
+    Create Task
+  </button>
+</form>
