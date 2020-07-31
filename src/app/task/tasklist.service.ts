@@ -85,12 +85,21 @@ export class TasklistService {
   }
   /**update task */
   public updateTask(taskInfo): any {
-    console.log('update task sevice::', taskInfo);
+    //console.log('update task sevice::', taskInfo);
     let udpatedTask = this._http.post(
       `${this.baseurl}/updateTask`,
       taskInfo,
       this.httpHeaderOptions
     );
     return udpatedTask;
+  }
+  /**update/delete tasklist */
+  public updateTaskList(taskListInfo): any {
+    console.log('update tasklist service:');
+    return this._http.post(
+      `${this.baseurl}/updatetaskList`,
+      taskListInfo,
+      this.httpHeaderOptions
+    );
   }
 }

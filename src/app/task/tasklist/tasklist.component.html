@@ -4,7 +4,6 @@
       src="/assets/addListIcon.png"
       (click)="open(createModal, 'New TaskList', '')"
     />
-    <img src="/assets/removetaskicon.png" (click)="deleteTaskList()" />
   </div>
   <div class="row">
     <div class="col-md-5 mt-4" *ngFor="let list of taskLists">
@@ -16,7 +15,11 @@
             <img
               class="add"
               src="/assets/addtaskicon.png"
-              (click)="open(createModal, 'New Task', list.taskListId)"
+              (click)="open(createModal, 'New Task', list.taskListId)" />
+            <img
+              class="add"
+              src="/assets/removetaskicon.png"
+              (click)="deleteTaskList(list.taskListId)"
           /></span>
         </div>
         <app-tasks

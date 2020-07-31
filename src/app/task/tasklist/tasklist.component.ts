@@ -97,7 +97,7 @@ export class TasklistComponent implements OnInit {
         console.log('tasklists return::', response.data);
         this.taskLists = response.data;
         /**toast */
-        this._toast.open({ text: response.message, type: 'success' });
+        //this._toast.open({ text: response.message, type: 'success' });
         //console.log('taskList', this.taskLists);
       },
       (error) => {
@@ -111,11 +111,15 @@ export class TasklistComponent implements OnInit {
   /**listen for newly created task list and push it to existing array */
   public addNewTaskList(newTaskList: any): any {
     console.log('reloading');
+    let { taskListId, subTaskId, taskId } = newTaskList;
     console.log(newTaskList);
     this.notifyNewTask.emit(newTaskList);
+    console.log('tasklist iddd', taskListId);
+
+    console.log('get all list call');
     this.getAllTaskList();
 
-    return this.taskLists.push(newTaskList);
+    //return this.taskLists.push(newTaskList);
   }
   /**listen for newly created task  and emitt event to update it */
   public addNewTask(newTask: any): any {
@@ -187,8 +191,24 @@ export class TasklistComponent implements OnInit {
     );
   }
   /**delete tasklist */
-  public deleteTaskList(): any {
-    console.log('delete tasklist');
+  public deleteTaskList(taskListId): any {
+    console.log('delete tasklist::', taskListId);
+    let taskListInfo = {
+      userId: this.userId,
+      taskListId: taskListId,
+      operation: 'delete',
+    };
+    this.taskListService.updateTaskList(taskListInfo).subscribe(
+      (response) => {
+        console.log('Delete task list response::', response.message);
+        this._toast.open({ text: response.message, type: 'success' });
+        this.getAllTaskList();
+      },
+      (error) => {
+        console.log('Error deleting tasklist::', error.error);
+        this._toast.open({ text: error.error.message, type: 'danger' });
+      }
+    );
   }
 }
 //(click)="openCreateTaskListForm()"

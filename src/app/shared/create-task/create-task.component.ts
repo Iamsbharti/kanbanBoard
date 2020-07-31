@@ -90,7 +90,7 @@ export class CreateTaskComponent implements OnInit {
             this.errorResponse = false;
             this.successResponse = true;
             this.createNewtaskResponse = response.message;
-            this.notifyNewSubTask.emit(response.data);
+            this.notifyNewTaskList.emit(response.data);
           }
         },
         (error) => {
@@ -120,8 +120,8 @@ export class CreateTaskComponent implements OnInit {
             this.successResponse = true;
             this.createNewtaskResponse = response.message;
             console.log('emmit new tasklist create');
-            //setTimeout(() => this.notifyNewTaskList.emit(response.data), 1300);
-            this.notifyNewTaskList.emit(response.data);
+            setTimeout(() => this.notifyNewTaskList.emit(response.data), 130);
+            //this.notifyNewTaskList.emit(response.data);
           }
         },
         (error) => {
