@@ -30,7 +30,7 @@ export class EditTaskComponent implements OnInit {
   //component will emit tasklist reload
 
   @Output()
-  notifyEditTaskList: EventEmitter<Object> = new EventEmitter<Object>();
+  notifyEditTaskList: EventEmitter<String> = new EventEmitter<String>();
   @Output()
   notifyEditTask: EventEmitter<Object> = new EventEmitter<Object>();
   @Output()
@@ -141,7 +141,10 @@ export class EditTaskComponent implements OnInit {
             this.successResponse = true;
             this.createNewtaskResponse = response.message;
             console.log('emmit  tasklist edit');
-            setTimeout(() => this.notifyEditTaskList.emit(response.data), 130);
+            this.notifyEditTaskList.emit(
+              `${this.name + ':' + this.taskListId}`
+            );
+            //setTimeout(() => this.notifyEditTaskList.emit(response.data), 130);
             /**emit close modal event */
             this.closeModal.emit();
           }

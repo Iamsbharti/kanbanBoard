@@ -231,7 +231,9 @@ export class TasklistComponent implements OnInit {
         console.log('Delete task list response::', response.message);
         this._toast.open({ text: response.message, type: 'success' });
         /**delete the entry from current tasklist */
-        this.taskLists.filter((list) => list.taskListId != taskListId);
+        this.taskLists = this.taskLists.filter(
+          (list) => list.taskListId != taskListId
+        );
       },
       (error) => {
         console.log('Error deleting tasklist::', error.error);
@@ -240,32 +242,17 @@ export class TasklistComponent implements OnInit {
     );
   }
   /**edit task list */
-  public editTaskList(taskListId, modal): any {
-    /**open modal to take edited input */
-    this.open(modal, 'Edit TaskList', taskListId);
-    console.log('delete tasklist::', taskListId);
-    let taskListInfo = {
-      userId: this.userId,
-      taskListId: taskListId,
-      name: name,
-      operation: 'edit',
-    };
-    this.taskListService.updateTaskList(taskListInfo).subscribe(
-      (response) => {
-        console.log('Delete task list response::', response.message);
-        this._toast.open({ text: response.message, type: 'success' });
-        this.getAllTaskList();
-      },
-      (error) => {
-        console.log('Error deleting tasklist::', error.error);
-        this._toast.open({ text: error.error.message, type: 'danger' });
-      }
-    );
-  }
-
   public editTaskLists(value): any {
-    console.log('edit tasklist listener');
-    this.getAllTaskList();
+    console.log('edit tasklist listener::', value);
+    const [name, taskListId] = value.split(':');
+    console.log('to edit::', name, taskListId);
+    /**update tasklist name */
+    this.taskLists.filter((list) => {
+      if (list.taskListId === taskListId) {
+        list.name = name;
+        return list;
+      }
+    });
   }
   public editTask(value): any {
     this.getAllTaskList();
