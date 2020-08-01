@@ -1,6 +1,7 @@
 const joi = require("@hapi/joi");
 const { formatResponse } = require("../library/formatResponse");
 const { update } = require("../models/User");
+const { consoleTestResultHandler } = require("tslint/lib/test");
 let options = { abortEarly: false };
 
 exports.loginParamValidation = (req, res, next) => {
@@ -238,6 +239,21 @@ exports.updateSubTaskValidation = (req, res, next) => {
     return res.json(
       formatResponse(true, 400, "Not valid Input Params", errorMessage)
     );
+  }
+  next();
+};
+exports.getFriendRequests = (req, res, next) => {
+  console.log("get fr param validation");
+  const frSchema = joi.object({
+    senderId: joi.string().required(),
+  });
+  let { error } = frSchema.validate(req.body);
+  if (error) {
+    return res
+      .status(400)
+      .json(
+        formatResponse(true, "Not Valid Input Params", error.details[0].message)
+      );
   }
   next();
 };
