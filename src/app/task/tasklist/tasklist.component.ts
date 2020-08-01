@@ -30,7 +30,7 @@ export class TasklistComponent implements OnInit {
   public tasks: any[];
   public status: String;
   /**multiusers */
-  public toggleOnlineUser: Boolean = false;
+  public toggleOnlineUser: Boolean = true;
   public onlineUser: any;
   public username: String;
   /**component will emit event ot update
@@ -56,11 +56,11 @@ export class TasklistComponent implements OnInit {
   ngOnInit(): void {
     //load task list on component load
     this.getAllTaskList();
-    this.onlineUser.push({ name: 'saurabh' });
   }
   /**set inline users list */
   public setOnlineUsers(users): any {
-    this.onlineUser.push(users);
+    console.log('online users::', users);
+    this.onlineUser = users;
   }
   /**toggle online userlist */
   public showOnlineUsers(): any {

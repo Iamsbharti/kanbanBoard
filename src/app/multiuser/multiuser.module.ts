@@ -4,10 +4,12 @@ import { FriendListComponent } from './friend-list/friend-list.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
+import { MultiUserService } from './multi-user.service';
 
 @NgModule({
   declarations: [FriendListComponent],
   imports: [CommonModule, FormsModule, HttpClientModule],
   exports: [FriendListComponent],
+  providers: [MultiUserService],
 })
 export class MultiuserModule {}

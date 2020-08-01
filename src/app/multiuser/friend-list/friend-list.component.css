@@ -1,0 +1,16 @@
+.onlineUsers {
+  width: 350px;
+}
+li {
+  margin-top: 10px;
+}
+img {
+  width: 20px;
+  height: 20px;
+  margin-right: 50px;
+}
+.image {
+  background: url("/assets/offlineuser.png") no-repeat;
+  width: 20px; /* Width of new image */
+  height: 20px; /* Height of new image */
+}

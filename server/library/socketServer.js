@@ -10,7 +10,7 @@ const eventEmitter = new events.EventEmitter();
 exports.setSocketServer = (server) => {
   console.log("Socket server INIT");
   let io = socketio.listen(server);
-  console.log("IO::", io.getMaxListeners());
+
   let myio = io.of("/multiuser");
 
   let onlineUsers = [];
@@ -20,8 +20,9 @@ exports.setSocketServer = (server) => {
 
     //authorize user
     socket.on("set-user", (authToken) => {
+      console.log("Authenticating user");
       if (authToken) {
-        jwt.verufy(authToken, process.env.TOKEN_SECRET, (error, decoded) => {
+        jwt.verify(authToken, process.env.TOKEN_SECRET, (error, decoded) => {
           if (error != null) {
             console.log("Auth-Error");
             socket.emit("Auth-Error", error);
@@ -34,13 +35,23 @@ exports.setSocketServer = (server) => {
             /**for self */
             socket.emit(userId, "You are online");
             /**push onlineuser to array*/
-            onlineUsers.push({ userId: userId, name: name });
+            onlineUsers.map((user) => {
+              if (user.userId !== userId) {
+                onlineUsers.push({ userId: userId, name: name });
+              }
+            });
+            if (onlineUsers.length === 0) {
+              onlineUsers.push({ userId: userId, name: name });
+            }
+
             console.log(onlineUsers);
             /**set room */
             socket.room = "kanbanboard";
             socket.join(socket.room);
             /**broadcast the online users list */
+            console.log("Emit online-users-list");
             socket.to(socket.room).broadcast.emit("online-users", onlineUsers);
+            myio.emit("online-users", onlineUsers);
           }
         });
       }
