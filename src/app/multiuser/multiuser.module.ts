@@ -8,5 +8,6 @@ import { RouterModule, Routes } from '@angular/router';
 @NgModule({
   declarations: [FriendListComponent],
   imports: [CommonModule, FormsModule, HttpClientModule],
+  exports: [FriendListComponent],
 })
 export class MultiuserModule {}

@@ -29,6 +29,10 @@ export class TasklistComponent implements OnInit {
   public subTaskId: String;
   public tasks: any[];
   public status: String;
+  /**multiusers */
+  public toggleOnlineUser: Boolean = false;
+  public onlineUser: any;
+  public username: String;
   /**component will emit event ot update
    * task and subtask array in their respective compoenents
    */
@@ -46,12 +50,22 @@ export class TasklistComponent implements OnInit {
     private modalService: NgbModal
   ) {
     this.userId = userService.getAutheticatedUserInfo().userId;
+    this.username = userService.getAutheticatedUserInfo().firstName;
   }
 
   ngOnInit(): void {
     //load task list on component load
     this.getAllTaskList();
-    console.log('taskList', typeof this.taskLists);
+    this.onlineUser.push({ name: 'saurabh' });
+  }
+  /**set inline users list */
+  public setOnlineUsers(users): any {
+    this.onlineUser.push(users);
+  }
+  /**toggle online userlist */
+  public showOnlineUsers(): any {
+    console.log('show online users list');
+    this.toggleOnlineUser = !this.toggleOnlineUser;
   }
   /**open modal */
   open(content, ops, id) {

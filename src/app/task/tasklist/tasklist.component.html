@@ -5,6 +5,23 @@
       <code>Add Task List</code>
     </span>
   </div>
+
+  <button
+    type="button"
+    class="btn btn-primary"
+    style="margin-top: 20px;"
+    (click)="showOnlineUsers()"
+  >
+    Online Users
+    <span class="badge badge-light"></span>
+  </button>
+  <div class="user" [hidden]="toggleOnlineUser">
+    <app-friend-list
+      [userId]="userId"
+      [username]="username"
+      (onlineUsers)="setOnlineUsers($event)"
+    ></app-friend-list>
+  </div>
   <div class="row">
     <div class="col-md-5 mt-4" *ngFor="let list of taskLists">
       <div class="card" style="width: 22rem;">
