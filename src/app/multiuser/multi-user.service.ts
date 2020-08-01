@@ -12,7 +12,7 @@ import { Cookie } from 'ng2-cookies';
   providedIn: 'root',
 })
 export class MultiUserService {
-  private socketUrl = 'http://localhost:4201/';
+  private socketUrl = 'http://localhost:4201';
   private apiBaseUrl = 'http://localhost:4201/api/v1';
   private authToken: any;
   private socket;
@@ -36,7 +36,7 @@ export class MultiUserService {
   /**define listeners and emitters */
   /**1: Listen to authentication handshake */
   public autheticateUser = () => {
-    'Auth user listener';
+    console.log('Auth user listener');
     return Observable.create((observer) => {
       this.socket.on('authenticate', (data) => {
         observer.next(data);

@@ -11,7 +11,7 @@ exports.setSocketServer = (server) => {
   console.log("Socket server INIT");
   let io = socketio.listen(server);
 
-  let myio = io.of("/");
+  let myio = io.of("");
 
   let onlineUsers = [];
   myio.on("connection", (socket) => {

@@ -8,7 +8,14 @@ import { MultiUserService } from './multi-user.service';
 
 @NgModule({
   declarations: [FriendListComponent],
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    HttpClientModule,
+    RouterModule.forRoot([
+      { path: 'friendlist', component: FriendListComponent, pathMatch: 'full' },
+    ]),
+  ],
   exports: [FriendListComponent],
   providers: [MultiUserService],
 })

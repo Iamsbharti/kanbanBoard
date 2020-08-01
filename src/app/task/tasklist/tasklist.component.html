@@ -29,7 +29,7 @@
   >
     Online Users
     <span class="badge badge-light" *ngIf="onlineUser">{{
-      onlineUser.length
+      onlineUser.length || 0
     }}</span>
   </button>
 

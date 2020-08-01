@@ -18,7 +18,6 @@ export class FriendListComponent implements OnInit {
 
   constructor(private multiUserService: MultiUserService) {
     this.authToken = Cookie.get('authToken');
-    //console.log('authtoken::', this.authToken);
   }
 
   ngOnInit(): void {
@@ -36,7 +35,7 @@ export class FriendListComponent implements OnInit {
   public getOnlineUsersList(): any {
     console.log('get online users list');
     this.multiUserService.getOnlineUserList().subscribe((data) => {
-      console.log('Online users from socket::', data);
+      //console.log('Online users from socket::', data);
       /**filter out the current user */
       let users = [];
       data.map((d) => {
@@ -44,7 +43,7 @@ export class FriendListComponent implements OnInit {
           users.push(d);
         }
       });
-      console.log('final list:', users);
+      //console.log('final list:', users);
       this.onlineUsers.emit(users);
       this.onlineUsersList = users;
     });

@@ -4,6 +4,7 @@ import { ToastConfig, Toaster } from 'ngx-toast-notifications';
 import { Router, Route } from '@angular/router';
 import { UserService } from '../../user/user.service';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { ENGINE_METHOD_DIGESTS } from 'constants';
 
 @Component({
   selector: 'app-tasklist',
@@ -61,6 +62,7 @@ export class TasklistComponent implements OnInit {
   ngOnInit(): void {
     //load task list on component load
     this.getAllTaskList();
+    this.showOnlineUsers();
   }
 
   /**set inline users list */
@@ -72,6 +74,7 @@ export class TasklistComponent implements OnInit {
   public showOnlineUsers(): any {
     console.log('show online users list');
     this.toggleOnlineUser = !this.toggleOnlineUser;
+    this._router.navigate(['taskList']);
   }
   /**open modal */
   open(content, ops, id) {
