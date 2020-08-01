@@ -1,5 +1,6 @@
 const FriendRequest = require("../models/FriendRequest");
 const { formatResponse } = require("../library/formatResponse");
+const { send } = require("process");
 exports.getFriendList = async (req, res) => {
   console.log("Get friend list control");
   const EXCLUDE = "-__v -_id";
@@ -25,4 +26,22 @@ exports.getFriendList = async (req, res) => {
           );
       }
     });
+};
+/**save friend request */
+exports.saveFriendRequest = (friendRequest) => {
+  console.log("save friend request");
+  const { recieverId, recieverName, senderId, senderName } = friendRequest;
+  let newFriendRequest = {
+    recieverId: recieverId,
+    recieverName: recieverName,
+    senderId: senderId,
+    senderName: senderName,
+  };
+  FriendRequest.create(newFriendRequest, (error, createdFRequest) => {
+    if (error !== null) {
+      console.error("Error Saving FR");
+    } else {
+      console.log("FR saved::", createdFRequest._id);
+    }
+  });
 };

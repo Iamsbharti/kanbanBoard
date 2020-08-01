@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const events = require("events");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-
+const { saveFriendRequest } = require("../controller/friendReqSocketControl");
 //init eventemitter
 const eventEmitter = new events.EventEmitter();
 
@@ -60,6 +60,11 @@ exports.setSocketServer = (server) => {
     socket.on("sentFriendRequest", (friendRequest) => {
       console.log("Recieved Friend Request::", friendRequest);
       const { recieverId, recieverName, senderId, senderName } = friendRequest;
+
+      /**save friend request kepp it separate from socket flow*/
+      setTimeout(() => eventEmitter.emit("save-request", friendRequest), 1200);
+
+      /**broad cast the friend request reciever  */
       myio.emit(recieverId, friendRequest);
     });
     /**logout/disconnect user listener*/
@@ -71,6 +76,11 @@ exports.setSocketServer = (server) => {
       //socket.to(socket.room).broadcast.emit("online-users", onlineUsers);
       myio.emit("online-users", onlineUsers);
       return onlineUsers;
+    });
+
+    /**save-request listener */
+    eventEmitter.on("save-request", (friendRequest) => {
+      saveFriendRequest(friendRequest);
     });
   });
 };

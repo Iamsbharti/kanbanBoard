@@ -34,7 +34,7 @@ const {
   updateSubTask,
 } = require("../controller/taskListControl");
 
-const { getFriendList } = require("../controller/socketControl");
+const { getFriendList } = require("../controller/friendReqSocketControl");
 
 /**Sign up route */
 router.post("/signup", signupParamValidation, signUpControl);
