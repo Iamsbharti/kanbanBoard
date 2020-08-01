@@ -31,5 +31,8 @@ let userSchema = mongoose.Schema({
   passwordRecoverCode: {
     type: String,
   },
+  friends: {
+    type: Array,
+  },
 });
 module.exports = mongoose.model("User", userSchema);

@@ -5,6 +5,8 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const { initdb } = require("./initdb");
 const { logIp, notfound, handleError } = require("./middlewares/errorHandler");
+const { setSocketServer } = require("./library/socketServer");
+
 /**Init Express server & envoirnment variables */
 const app = express();
 dotenv.config();
@@ -28,4 +30,10 @@ app.use(handleError);
 
 /**Listener */
 const port = process.env.PORT;
-app.listen(port, () => console.log("API Server launched at::", port));
+let server = app.listen(port, () =>
+  console.log("API Server launched at::", port)
+);
+
+//Init socket
+let socketServerInit = setSocketServer(server);
+console.log("Socket Init::", socketServerInit);
