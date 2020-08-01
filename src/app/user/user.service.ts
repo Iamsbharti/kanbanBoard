@@ -41,6 +41,7 @@ export class UserService {
   public getAutheticatedUserInfo(): any {
     console.log('get autheticated user info');
     let lc = JSON.parse(localStorage.getItem('userInfo'));
+    console.log('lc::', lc);
     return lc === null ? '' : lc;
   }
 

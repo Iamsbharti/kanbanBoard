@@ -9,7 +9,7 @@ exports.signUpControl = async (req, res) => {
 
   //check for existing email
   const emailExistence = async (email) => {
-    console.log("Email existence", email);
+    //console.log("Email existence", email);
     let userExists = await User.findOne({ email: email });
     if (userExists) {
       return Promise.reject(formatResponse(true, 401, "User Exists", email));
@@ -30,7 +30,7 @@ exports.signUpControl = async (req, res) => {
       mobile: mobile,
       password: await hashPassword(password),
     });
-    console.log("new User", newUser);
+    //console.log("new User", newUser);
     let result;
     let user = await User.create(newUser);
     if (user) {
@@ -52,7 +52,7 @@ exports.signUpControl = async (req, res) => {
   emailExistence(email)
     .then(createNewUser)
     .then((result) => {
-      console.log("Result", result);
+      //console.log("Result", result);
       res
         .status(200)
         .json(formatResponse(false, 200, "User Create Sucess", result));

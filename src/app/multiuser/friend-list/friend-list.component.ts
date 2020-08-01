@@ -12,18 +12,22 @@ export class FriendListComponent implements OnInit {
   @Input() username: any;
   @Output()
   onlineUsers: EventEmitter<Array<Object>> = new EventEmitter<Array<Object>>();
+
   private authToken: String;
   public onlineUsersList: any[];
+
   constructor(private multiUserService: MultiUserService) {
     this.authToken = Cookie.get('authToken');
+    //console.log('authtoken::', this.authToken);
   }
 
   ngOnInit(): void {
     this.handeShakeAuthentication();
+    this.getOnlineUsersList();
   }
 
   public handeShakeAuthentication(): any {
-    console.log('listen to hand shake');
+    console.log('listen to hand shake', this.authToken.length);
     this.multiUserService.autheticateUser().subscribe((data) => {
       this.multiUserService.setUser(this.authToken);
       this.getOnlineUsersList();

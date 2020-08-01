@@ -4,12 +4,12 @@ const User = require("../models/User");
 const { comparePassword } = require("../library/passwordHandler");
 
 exports.loginControl = async (req, res) => {
-  console.log("Login Control");
-  console.log("Fix");
+  //console.log("Login Control");
+
   const { email, password } = req.body;
   //emailexistence
   const emailExistence = async (email) => {
-    console.log("Email Existence", email);
+    // //console.log("Email Existence", email);
     let userExists = await User.findOne({ email: email });
     if (!userExists) {
       return Promise.reject(formatResponse(true, 404, "User Not Found", email));
@@ -19,9 +19,9 @@ exports.loginControl = async (req, res) => {
   };
   //comparepassword
   const validateCredentials = async (foundUser) => {
-    console.log("Validate credentials");
+    //console.log("Validate credentials");
     let validCred = await comparePassword(password, foundUser.password);
-    console.log("valid cred", validCred);
+    ////console.log("valid cred", validCred);
     if (validCred) {
       let _userData = foundUser.toObject();
       delete _userData.password;
@@ -35,10 +35,10 @@ exports.loginControl = async (req, res) => {
   };
   //generatetoken
   const generateToken = async (userData) => {
-    console.log("generateToken");
+    //console.log("generateToken");
     let result;
     generateTokens(userData, (error, tokenDetails) => {
-      console.log("Error/token", error);
+      ////console.log("Error/token", error);
       if (error) {
         result = Promise.reject(
           formatResponse(true, 500, "Token Generation Error", null)
@@ -58,12 +58,12 @@ exports.loginControl = async (req, res) => {
     .then(validateCredentials)
     .then(generateToken)
     .then((result) => {
-      console.log("login result");
+      ////console.log("login result");
       res.header("authToken", result.authToken);
       res.status(200).json(formatResponse(false, 200, "Login Sucess", result));
     })
     .catch((error) => {
-      console.log("Error", error);
+      //console.log("Error", error);
       res.status(error.status).json(error);
     });
   //sendresponse

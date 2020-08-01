@@ -4,7 +4,7 @@ const { update } = require("../models/User");
 let options = { abortEarly: false };
 
 exports.loginParamValidation = (req, res, next) => {
-  console.log("Login Param Validation");
+  ////console.log("Login Param Validation");
   let loginSchema = joi.object({
     email: joi.string().email().min(4).required(),
     password: joi.string().min(8).required(),
@@ -22,7 +22,7 @@ exports.loginParamValidation = (req, res, next) => {
 };
 
 exports.recoverPwdValidation = (req, res, next) => {
-  console.log("Recovery Password validation");
+  ////console.log("Recovery Password validation");
   let recoverySchema = joi.object({
     email: joi.string().email().min(5).required(),
   });
@@ -42,7 +42,7 @@ exports.recoverPwdValidation = (req, res, next) => {
   next();
 };
 exports.resetPwdValidation = (req, res, next) => {
-  console.log("reset pwd validation");
+  ////console.log("reset pwd validation");
   let resetPwdSchema = joi.object({
     recoveryCode: joi.string().min(6).required(),
     email: joi.string().email().min(6).required(),
@@ -64,7 +64,7 @@ exports.resetPwdValidation = (req, res, next) => {
 };
 
 exports.signupParamValidation = (req, res, next) => {
-  console.log("signupParamValidation");
+  ////console.log("signupParamValidation");
   let signUpSchema = joi.object({
     firstName: joi.string().min(4).required(),
     lastName: joi.string().min(4).required(),
@@ -77,7 +77,7 @@ exports.signupParamValidation = (req, res, next) => {
   });
 
   let { error } = signUpSchema.validate(req.body, options);
-  //console.log("validation error", error);
+  //////console.log("validation error", error);
   if (error) {
     let errorMessage = [];
     error.details.map((err) => errorMessage.push(err.message));
@@ -88,7 +88,7 @@ exports.signupParamValidation = (req, res, next) => {
   next();
 };
 exports.taskListValidation = (req, res, next) => {
-  console.log("task list param validation");
+  ////console.log("task list param validation");
   let taskListSchema = joi.object({
     name: joi.string().min(3).required(),
     userId: joi.string().required(),
@@ -105,7 +105,7 @@ exports.taskListValidation = (req, res, next) => {
   next();
 };
 exports.getTaskListValidation = (req, res, next) => {
-  console.log("get task list param validation");
+  ////console.log("get task list param validation");
   let taskListSchema = joi.object({
     userId: joi.string().required(),
   });
@@ -120,7 +120,7 @@ exports.getTaskListValidation = (req, res, next) => {
   next();
 };
 exports.createTaskValidation = (req, res, next) => {
-  console.log("Create task param validation");
+  ////console.log("Create task param validation");
   let createTask = joi.object({
     name: joi.string().min(3).required(),
     taskListId: joi.string().required(),
@@ -138,7 +138,7 @@ exports.createTaskValidation = (req, res, next) => {
   next();
 };
 exports.getTaskValidation = (req, res, next) => {
-  console.log("get task param validation");
+  ////console.log("get task param validation");
   let getTaskSchema = joi.object({
     taskListId: joi.string().required(),
     userId: joi.string().required(),
@@ -154,14 +154,14 @@ exports.getTaskValidation = (req, res, next) => {
   next();
 };
 exports.createSubTaskValidation = (req, res, next) => {
-  console.log("Create sub task validation");
+  ////console.log("Create sub task validation");
   let subTask = joi.object({
     name: joi.string().min(3).required(),
     taskId: joi.string().required(),
     status: joi.valid("done", "open").required(),
   });
   let { error } = subTask.validate(req.body, options);
-  console.log("Error::", error);
+  ////console.log("Error::", error);
   if (error) {
     let errorMessage = [];
     error.details.map((err) => errorMessage.push(err.message));
@@ -172,7 +172,7 @@ exports.createSubTaskValidation = (req, res, next) => {
   next();
 };
 exports.getSubTaskValidation = (req, res, next) => {
-  console.log("get subtask param validation");
+  ////console.log("get subtask param validation");
   let subTaskSchema = joi.object({
     taskId: joi.string().required(),
   });
@@ -187,7 +187,7 @@ exports.getSubTaskValidation = (req, res, next) => {
   next();
 };
 exports.updateTaskListValidation = (req, res, next) => {
-  console.log("update task list validation::");
+  ////console.log("update task list validation::");
   let updateTaskList = joi.object({
     taskListId: joi.string().required(),
     operation: joi.valid("delete", "edit").required(),
@@ -205,7 +205,7 @@ exports.updateTaskListValidation = (req, res, next) => {
   next();
 };
 exports.updateTaskValidation = (req, res, next) => {
-  console.log("Update task validation");
+  ////console.log("Update task validation");
   let updateTask = joi.object({
     taskListId: joi.string().required(),
     operation: joi.valid("delete", "edit").required(),
@@ -224,7 +224,7 @@ exports.updateTaskValidation = (req, res, next) => {
   next();
 };
 exports.updateSubTaskValidation = (req, res, next) => {
-  console.log("Update sub task validation");
+  ////console.log("Update sub task validation");
   let updateSubTask = joi.object({
     operation: joi.valid("delete", "edit").required(),
     taskId: joi.string().required(),

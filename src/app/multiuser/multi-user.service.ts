@@ -12,16 +12,13 @@ import { Cookie } from 'ng2-cookies';
   providedIn: 'root',
 })
 export class MultiUserService {
-  private socketUrl = 'http://localhost:4201/multiuser';
+  private socketUrl = 'http://localhost:4201/';
   private apiBaseUrl = 'http://localhost:4201/api/v1';
   private authToken: any;
   private socket;
   constructor(private _http: HttpClient, private userService: UserService) {
     /**init client socket */
     this.socket = io(this.socketUrl);
-    if (this.userService.getAutheticatedUserInfo().authToken !== undefined) {
-      this.authToken = this.userService.getAutheticatedUserInfo().authToken;
-    }
   }
   //handle exceptions
   public handleError(error: HttpErrorResponse) {
@@ -29,16 +26,17 @@ export class MultiUserService {
     return Observable.throw(error.message);
   }
 
-  //define header for api authentication
+  /*//define header for api authentication
   public httpHeaderOptions = {
     headers: new HttpHeaders({
       authToken: this.authToken,
     }),
-  };
+  };*/
 
   /**define listeners and emitters */
   /**1: Listen to authentication handshake */
   public autheticateUser = () => {
+    'Auth user listener';
     return Observable.create((observer) => {
       this.socket.on('authenticate', (data) => {
         observer.next(data);
@@ -52,6 +50,7 @@ export class MultiUserService {
   };
   /**3 Get Online Userlist by listning to online-users broadcase */
   public getOnlineUserList = () => {
+    console.log('get online user service');
     return Observable.create((observer) => {
       this.socket.on('online-users', (data) => {
         observer.next(data);
@@ -61,7 +60,7 @@ export class MultiUserService {
   /**emitt disconnect event with userId */
   public disconnectUser = (userId) => {
     console.log('Disconnecting user', userId);
-    this.socket.emit('disconnect', userId);
+    this.socket.emit('disconnected', userId);
     /**delete cookie and  localstorage*/
     console.log('clearing localstorage and cookie');
     localStorage.clear();

@@ -11,7 +11,7 @@ const EXCLUDE = "-__v -_id";
 
 /**Check for valid userId */
 const validUserId = async (userId) => {
-  console.log("validate UserId:", userId);
+  ////console.log("validate UserId:", userId);
   let validuserId = await User.findOne({ userId: userId });
   return !validuserId
     ? formatResponse(true, 404, "UserId Not Found", userId)
@@ -19,7 +19,7 @@ const validUserId = async (userId) => {
 };
 /**Check for valid taskListId */
 const validTaskListId = async (taskListId) => {
-  console.log("validate tasklist id:", taskListId);
+  ////console.log("validate tasklist id:", taskListId);
   let validTaskListId = await TaskList.findOne({ taskListId: taskListId });
   return !validTaskListId
     ? formatResponse(true, 404, "TaskListId Not Found", taskListId)
@@ -27,18 +27,18 @@ const validTaskListId = async (taskListId) => {
 };
 /**check for valid taskId */
 const validTaskId = async (taskId) => {
-  console.log("validate taskid::", taskId);
+  ////console.log("validate taskid::", taskId);
   let validtaskId = await Task.findOne({ taskId: taskId });
   return !validtaskId
     ? formatResponse(true, 404, "TaskId Not Found", taskId)
     : true;
 };
 exports.createTaskList = async (req, res) => {
-  console.log("Task List control");
+  //console.log("Task List control");
   const { name, userId } = req.body;
   /**Verify userId */
   let isUserIdValid = await validUserId(userId);
-  console.log("isUserIdValid::", isUserIdValid);
+  ////console.log("isUserIdValid::", isUserIdValid);
   if (isUserIdValid.error)
     return res.status(isUserIdValid.status).json(isUserIdValid);
   /**Check for existing task name */
@@ -56,7 +56,7 @@ exports.createTaskList = async (req, res) => {
   });
 
   TaskList.create(newList, (error, createdList) => {
-    console.log("error", error, createdList);
+    ////console.log("error", error, createdList);
     if (error !== null) {
       res
         .status(500)
@@ -72,12 +72,12 @@ exports.createTaskList = async (req, res) => {
   });
 };
 exports.getAllTaskList = async (req, res) => {
-  console.log("get all task list control");
+  //console.log("get all task list control");
   const { userId } = req.body;
 
   /**Verify userId */
   let isUserIdValid = await validUserId(userId);
-  console.log("isUserIdValid::", isUserIdValid);
+  ////console.log("isUserIdValid::", isUserIdValid);
   if (isUserIdValid.error)
     return res.status(isUserIdValid.status).json(isUserIdValid);
 
@@ -86,7 +86,7 @@ exports.getAllTaskList = async (req, res) => {
     .select(EXCLUDE)
     .lean()
     .exec((error, allList) => {
-      console.log("error", error, allList);
+      // //console.log("error", error, allList);
       if (error !== null) {
         res
           .status(500)
@@ -99,18 +99,18 @@ exports.getAllTaskList = async (req, res) => {
     });
 };
 exports.createTask = async (req, res) => {
-  console.log("create task control");
+  //console.log("create task control");
   const { name, userId, taskListId, status } = req.body;
 
   /**verify taskListId */
   let isTaskListValid = await validTaskListId(taskListId);
-  console.log("isTaskListValid::", isTaskListValid);
+  // //console.log("isTaskListValid::", isTaskListValid);
   if (isTaskListValid.error)
     return res.status(isTaskListValid.status).json(isTaskListValid);
 
   /**Verify userId */
   let isUserIdValid = await validUserId(userId);
-  console.log("isUserIdValid::", isUserIdValid);
+  ////console.log("isUserIdValid::", isUserIdValid);
   if (isUserIdValid.error)
     return res.status(isUserIdValid.status).json(isUserIdValid);
 
@@ -134,7 +134,7 @@ exports.createTask = async (req, res) => {
     status: status,
   });
   Task.create(newTask, (error, createdTask) => {
-    console.log("error", error, createdTask);
+    ////console.log("error", error, createdTask);
     if (error !== null) {
       res
         .status(500)
@@ -150,18 +150,18 @@ exports.createTask = async (req, res) => {
   });
 };
 exports.getAllTasks = async (req, res) => {
-  console.log("get all tasks control");
+  //console.log("get all tasks control");
   const { taskListId, userId } = req.body;
 
   /**verify taskListId */
   let isTaskListValid = await validTaskListId(taskListId);
-  console.log("isTaskListValid::", isTaskListValid);
+  ////console.log("isTaskListValid::", isTaskListValid);
   if (isTaskListValid.error)
     return res.status(isTaskListValid.status).json(isTaskListValid);
 
   /**Verify userId */
   let isUserIdValid = await validUserId(userId);
-  console.log("isUserIdValid::", isUserIdValid);
+  ////console.log("isUserIdValid::", isUserIdValid);
   if (isUserIdValid.error)
     return res.status(isUserIdValid.status).json(isUserIdValid);
 
@@ -171,7 +171,7 @@ exports.getAllTasks = async (req, res) => {
     .select(EXCLUDE)
     .lean()
     .exec((error, allTasks) => {
-      console.log("error", error, allTasks);
+      ////console.log("error", error, allTasks);
       if (error !== null) {
         res
           .status(500)
@@ -184,12 +184,12 @@ exports.getAllTasks = async (req, res) => {
     });
 };
 exports.createSubTask = async (req, res) => {
-  console.log("Create subtask control");
+  //console.log("Create subtask control");
   const { name, taskId, status } = req.body;
 
   /**check for valid taskId */
   let isTaskIdValid = await validTaskId(taskId);
-  console.log("isTaskIdValid::", isTaskIdValid);
+  ////console.log("isTaskIdValid::", isTaskIdValid);
   if (isTaskIdValid.error)
     return res.status(isTaskIdValid.status).json(isTaskIdValid);
 
@@ -208,7 +208,7 @@ exports.createSubTask = async (req, res) => {
     status: status,
   });
   SubTask.create(newSubTask, (error, createdSubTask) => {
-    console.log("error", error, createdSubTask);
+    ////console.log("error", error, createdSubTask);
     if (error !== null) {
       res
         .status(500)
@@ -224,12 +224,12 @@ exports.createSubTask = async (req, res) => {
   });
 };
 exports.getSubTasks = async (req, res) => {
-  console.log("get all subtasks control");
+  //console.log("get all subtasks control");
   const { taskId } = req.body;
 
   /**check for valid taskId */
   let isTaskIdValid = await validTaskId(taskId);
-  console.log("isTaskIdValid::", isTaskIdValid);
+  ////console.log("isTaskIdValid::", isTaskIdValid);
   if (isTaskIdValid.error)
     return res.status(isTaskIdValid.status).json(isTaskIdValid);
 
@@ -238,7 +238,7 @@ exports.getSubTasks = async (req, res) => {
     .select(EXCLUDE)
     .lean()
     .exec((error, allsubTasks) => {
-      console.log("error", error, allsubTasks);
+      ////console.log("error", error, allsubTasks);
       if (error !== null) {
         res
           .status(500)
@@ -251,19 +251,19 @@ exports.getSubTasks = async (req, res) => {
     });
 };
 exports.updateTaskList = async (req, res) => {
-  console.log("Update task list control:");
+  //console.log("Update task list control:");
   const { update, taskListId, operation, userId } = req.body;
-  console.log(update, taskListId, operation);
+  ////console.log(update, taskListId, operation);
 
   /**verify taskListId */
   let isTaskListValid = await validTaskListId(taskListId);
-  console.log("isTaskListValid::", isTaskListValid);
+  ////console.log("isTaskListValid::", isTaskListValid);
   if (isTaskListValid.error)
     return res.status(isTaskListValid.status).json(isTaskListValid);
 
   /**Verify userId */
   let isUserIdValid = await validUserId(userId);
-  console.log("isUserIdValid::", isUserIdValid);
+  ////console.log("isUserIdValid::", isUserIdValid);
   if (isUserIdValid.error)
     return res.status(isUserIdValid.status).json(isUserIdValid);
 
@@ -279,14 +279,14 @@ exports.updateTaskList = async (req, res) => {
     } else {
       let query = { taskListId: taskListId, userId: userId };
       TaskList.updateOne(query, update, (error, updatedList) => {
-        console.log("updated list::", error, updatedList);
+        ////console.log("updated list::", error, updatedList);
         if (error !== null) {
           res
             .status(500)
             .json(formatResponse(true, 500, "TaskList Update Error", null));
         } else {
           let { n } = updatedList;
-          console.log("Updated--", n);
+          ////console.log("Updated--", n);
           res
             .status(200)
             .json(
@@ -297,39 +297,39 @@ exports.updateTaskList = async (req, res) => {
     }
   }
   if (operation === "delete") {
-    console.log("delete task and related task and subtasks");
+    //console.log("delete task and related task and subtasks");
     let query = { taskListId: taskListId, userId: userId };
     /**find taskId and to delete it's subtasks */
-    console.log("Fetching task ids for userid and taskList Id");
+    ////console.log("Fetching task ids for userid and taskList Id");
     let taskDetails = await Task.find(query).select("taskId").lean().exec();
     let taskIdsArray = [];
-    console.log("taskDetails::", taskDetails);
+    ////console.log("taskDetails::", taskDetails);
     taskDetails.map((task) => taskIdsArray.push(task.taskId));
-    console.log("TasksIds::", taskIdsArray);
+    ////console.log("TasksIds::", taskIdsArray);
 
     /**delete subtasks based on taskid */
-    console.log("Deleting subtasks based on fetched taskId");
+    //console.log("Deleting subtasks based on fetched taskId");
     taskIdsArray.map((task) =>
       SubTask.deleteMany({ taskId: task.taskId }, (error, deleted) => {
         if (error !== null) {
-          console.log("Error deleting SubTasks::", error);
+          //console.log("Error deleting SubTasks::", error);
         } else {
           let { n } = deleted;
-          console.log("Subtask Delted::", `${n}-docs deleted`);
+          //console.log("Subtask Delted::", `${n}-docs deleted`);
         }
       })
     );
     /**delete tasks based on userid and taskListID */
-    console.log("sub tasks deleted now deleting tasks");
+    //console.log("sub tasks deleted now deleting tasks");
     let deletedTask = await Task.deleteMany(query);
     console.log(
       "Deleted task before deleting tasklist::",
       deletedTask.n + "-docs deleted"
     );
     /**delete taskList */
-    console.log("Dependencies deleted ,now delete tasklist");
+    //console.log("Dependencies deleted ,now delete tasklist");
     TaskList.deleteOne(query, (error, deletedList) => {
-      console.log("Error-deleted::", error, deletedList);
+      //console.log("Error-deleted::", error, deletedList);
       if (error != null) {
         res
           .status(500)
@@ -346,23 +346,23 @@ exports.updateTaskList = async (req, res) => {
   }
 };
 exports.updateTask = async (req, res) => {
-  console.log("Update task control::");
+  //console.log("Update task control::");
   const { taskListId, userId, taskId, update, operation } = req.body;
   /**verify taskListId */
   let isTaskListValid = await validTaskListId(taskListId);
-  console.log("isTaskListValid::", isTaskListValid);
+  ////console.log("isTaskListValid::", isTaskListValid);
   if (isTaskListValid.error)
     return res.status(isTaskListValid.status).json(isTaskListValid);
 
   /**Verify userId */
   let isUserIdValid = await validUserId(userId);
-  console.log("isUserIdValid::", isUserIdValid);
+  ////console.log("isUserIdValid::", isUserIdValid);
   if (isUserIdValid.error)
     return res.status(isUserIdValid.status).json(isUserIdValid);
 
   /**check for valid taskId */
   let isTaskIdValid = await validTaskId(taskId);
-  console.log("isTaskIdValid::", isTaskIdValid);
+  ////console.log("isTaskIdValid::", isTaskIdValid);
   if (isTaskIdValid.error)
     return res.status(isTaskIdValid.status).json(isTaskIdValid);
 
@@ -375,7 +375,7 @@ exports.updateTask = async (req, res) => {
           formatResponse(true, 400, "Noting to update", "pass valid property")
         );
     } else {
-      console.log("Final update option::", update);
+      ////console.log("Final update option::", update);
       Task.updateOne(query, update, (error, updatedTask) => {
         if (error !== null) {
           res
@@ -393,7 +393,7 @@ exports.updateTask = async (req, res) => {
     }
   }
   if (operation === "delete") {
-    console.log("Delete task");
+    //console.log("Delete task");
     /**delete/cleanup subsequent subtasks */
     let deletedSubTasks = await SubTask.deleteMany({ taskId: taskId });
     deletedSubTasks &&
@@ -414,12 +414,12 @@ exports.updateTask = async (req, res) => {
   }
 };
 exports.updateSubTask = async (req, res) => {
-  console.log("Update sub task control::");
+  //console.log("Update sub task control::");
   const { subTaskId, taskId, update, operation } = req.body;
   /**----Sanity check--------------- */
   /**check for valid taskId */
   let isTaskIdValid = await validTaskId(taskId);
-  console.log("isTaskIdValid::", isTaskIdValid);
+  ////console.log("isTaskIdValid::", isTaskIdValid);
   if (isTaskIdValid.error)
     return res.status(isTaskIdValid.status).json(isTaskIdValid);
   /**check for valid subtaskid */
@@ -443,7 +443,7 @@ exports.updateSubTask = async (req, res) => {
           formatResponse(true, 400, "Noting to update", "pass valid property")
         );
     } else {
-      console.log("Final update option::", update);
+      ////console.log("Final update option::", update);
       SubTask.updateOne(query, update, (error, updatedSubTask) => {
         if (error !== null) {
           res
@@ -462,7 +462,7 @@ exports.updateSubTask = async (req, res) => {
   }
   /**delete subtask */
   if (operation === "delete") {
-    console.log("Delete subtask");
+    //console.log("Delete subtask");
     SubTask.deleteOne(query, (error, deletedSubTask) => {
       if (error !== null) {
         res

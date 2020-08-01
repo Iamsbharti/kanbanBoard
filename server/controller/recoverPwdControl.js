@@ -19,7 +19,7 @@ exports.recoverPwdControl = async (req, res) => {
   //generate random code and save against users' recoveryCode
   const generateRecoveryCode = async (foundUser) => {
     let recoveryCode = parseInt(Math.random() * 1000000, 10);
-    console.log("Recovery Code", recoveryCode);
+    //console.log("Recovery Code", recoveryCode);
     let query = { email: foundUser.email };
     let update = { passwordRecoverCode: recoveryCode };
     let recoveryResponse;
@@ -41,15 +41,15 @@ exports.recoverPwdControl = async (req, res) => {
         recoveryResponse = Promise.resolve(result);
       }
     });*/
-    console.log("updated recovery code", n);
+    //console.log("updated recovery code", n);
     if (n === 1) {
-      console.log("updated code");
+      //console.log("updated code");
       let result = {
         updated: n.n,
         email: email,
         recoveryCode: recoveryCode,
       };
-      console.log("finalres", result);
+      //console.log("finalres", result);
       recoveryResponse = Promise.resolve(result);
     } else {
       recoveryResponse = Promise.reject(
@@ -60,7 +60,7 @@ exports.recoverPwdControl = async (req, res) => {
   };
   //send code to mail
   const sendEmail = async (result) => {
-    console.log("send email", result);
+    //console.log("send email", result);
     let sendEmailResult;
     //construst transport
     let transporter = nodemailer.createTransport({
@@ -106,7 +106,7 @@ exports.recoverPwdControl = async (req, res) => {
     .then(generateRecoveryCode)
     .then(sendEmail)
     .then((result) => {
-      console.log("Recovery code Result", result);
+      //console.log("Recovery code Result", result);
       res
         .status(200)
         .json(formatResponse(false, 200, "Recovery Sucess", result));
@@ -123,7 +123,7 @@ exports.resetPassword = async (req, res) => {
 
   //validate recoverycode
   const validateCode = async (foundUser) => {
-    console.log("validate code", foundUser.passwordRecoverCode, recoveryCode);
+    //console.log("validate code", foundUser.passwordRecoverCode, recoveryCode);
     let validateRes;
     validateRes =
       recoveryCode === foundUser.passwordRecoverCode
@@ -163,7 +163,7 @@ exports.resetPassword = async (req, res) => {
     .then(validateCode)
     .then(resetPassword)
     .then((result) => {
-      console.log("Result", result);
+      //console.log("Result", result);
       res
         .status(200)
         .json(formatResponse(false, 200, "Password Reset Success", result));

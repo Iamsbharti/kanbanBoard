@@ -11,7 +11,7 @@ exports.setSocketServer = (server) => {
   console.log("Socket server INIT");
   let io = socketio.listen(server);
 
-  let myio = io.of("/multiuser");
+  let myio = io.of("/");
 
   let onlineUsers = [];
   myio.on("connection", (socket) => {
@@ -27,19 +27,13 @@ exports.setSocketServer = (server) => {
             console.log("Auth-Error");
             socket.emit("Auth-Error", error);
           } else {
+            console.log("________________DECODED__________");
             const { userId, firstName, lastName } = decoded.data;
             let name = firstName + " " + lastName;
             socket.userId = userId;
             socket.name = name;
             console.log(`${name} is online`);
-            /**for self */
-            socket.emit(userId, "You are online");
-            /**push onlineuser to array*/
-            /*onloneUsers = onlineUsers.map((user) => {
-              if (user.userId !== userId) {
-                onlineUsers.push({ userId: userId, name: name });
-              }
-            });*/
+
             let userIdList = [];
             onlineUsers.map((usr) => userIdList.push(usr.userId));
             console.log("userIdList::", userIdList);
@@ -53,19 +47,22 @@ exports.setSocketServer = (server) => {
             socket.join(socket.room);
             /**broadcast the online users list */
             console.log("Emit online-users-list");
-            socket.to(socket.room).broadcast.emit("online-users", onlineUsers);
+
+            //socket.to(socket.room).broadcast.emit("online-users", onlineUsers);
             myio.emit("online-users", onlineUsers);
+            return onlineUsers;
           }
         });
       }
     });
     /**logout/disconnect user listener*/
-    socket.on("disconnect", (data) => {
-      console.log("User Disconnected", data);
-      onlineUsers = onlineUsers.filter((user) => user.userId != data.userId);
+    socket.on("disconnected", (userId) => {
+      console.log("User Disconnected", userId);
+      onlineUsers = onlineUsers.filter((user) => user.userId !== userId);
       console.log("Updated onlineusers::", onlineUsers);
       /**remove from socket and broadcat the updated list */
-      socket.to(socket.room).broadcast.emit("online-users", onlineUsers);
+      //socket.to(socket.room).broadcast.emit("online-users", onlineUsers);
+      myio.emit("online-users", onlineUsers);
       return onlineUsers;
     });
   });

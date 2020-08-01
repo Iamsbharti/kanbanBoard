@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const shortid = require("shortid");
 
 exports.generateTokens = async (userdata, cb) => {
-  console.log("Generate token");
+  //console.log("Generate token");
   try {
     let token = {
       jwtid: shortid.generate(),
@@ -17,7 +17,7 @@ exports.generateTokens = async (userdata, cb) => {
     };
     cb(null, generatedToken);
   } catch (error) {
-    console.log("Error:", error);
+    //console.log("Error:", error);
     cb(error, null);
   }
 };
