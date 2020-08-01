@@ -5,9 +5,10 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
 import { MultiUserService } from './multi-user.service';
+import { OnlineUsersComponent } from './online-users/online-users.component';
 
 @NgModule({
-  declarations: [FriendListComponent],
+  declarations: [FriendListComponent, OnlineUsersComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -16,7 +17,7 @@ import { MultiUserService } from './multi-user.service';
       { path: 'friendlist', component: FriendListComponent, pathMatch: 'full' },
     ]),
   ],
-  exports: [FriendListComponent],
+  exports: [FriendListComponent, OnlineUsersComponent],
   providers: [MultiUserService],
 })
 export class MultiuserModule {}

@@ -4,7 +4,6 @@ import { ToastConfig, Toaster } from 'ngx-toast-notifications';
 import { Router, Route } from '@angular/router';
 import { UserService } from '../../user/user.service';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
-import { ENGINE_METHOD_DIGESTS } from 'constants';
 
 @Component({
   selector: 'app-tasklist',
@@ -33,6 +32,7 @@ export class TasklistComponent implements OnInit {
   public status: String;
   /**multiusers */
   public toggleOnlineUser: Boolean = true;
+  public toggleFriendList: Boolean = true;
   public onlineUser: any;
   public username: String;
   public onlineUsersList: any[];
@@ -62,7 +62,6 @@ export class TasklistComponent implements OnInit {
   ngOnInit(): void {
     //load task list on component load
     this.getAllTaskList();
-    this.showOnlineUsers();
   }
 
   /**set inline users list */
@@ -70,11 +69,14 @@ export class TasklistComponent implements OnInit {
     console.log('online users::', users);
     this.onlineUser = users;
   }
+  /**toggle friend list */
+  public showFriendList(): any {
+    console.log('Show friend list', this.onlineUser);
+    this.toggleFriendList = !this.toggleFriendList;
+  }
   /**toggle online userlist */
   public showOnlineUsers(): any {
-    console.log('show online users list');
     this.toggleOnlineUser = !this.toggleOnlineUser;
-    this._router.navigate(['taskList']);
   }
   /**open modal */
   open(content, ops, id) {

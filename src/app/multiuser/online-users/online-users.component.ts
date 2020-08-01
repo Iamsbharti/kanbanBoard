@@ -3,13 +3,15 @@ import { MultiUserService } from '../multi-user.service';
 import { Cookie } from 'ng2-cookies';
 
 @Component({
-  selector: 'app-friend-list',
-  templateUrl: './friend-list.component.html',
-  styleUrls: ['./friend-list.component.css'],
+  selector: 'app-online-users',
+  templateUrl: './online-users.component.html',
+  styleUrls: ['./online-users.component.css'],
 })
-export class FriendListComponent implements OnInit {
+export class OnlineUsersComponent implements OnInit {
   @Input() userId: any;
   @Input() username: any;
+  @Output()
+  onlineUsers: EventEmitter<Array<Object>> = new EventEmitter<Array<Object>>();
 
   private authToken: String;
   public onlineUsersList: any[];
@@ -42,7 +44,7 @@ export class FriendListComponent implements OnInit {
         }
       });
       //console.log('final list:', users);
-
+      this.onlineUsers.emit(users);
       this.onlineUsersList = users;
     });
   }

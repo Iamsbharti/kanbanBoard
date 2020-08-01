@@ -6,17 +6,17 @@ import {
 } from '@angular/common/http';
 import { Observable, throwError, onErrorResumeNext } from 'rxjs';
 import * as io from 'socket.io-client';
-import { UserService } from '../user/user.service';
+
 import { Cookie } from 'ng2-cookies';
 @Injectable({
   providedIn: 'root',
 })
 export class MultiUserService {
-  private socketUrl = 'http://localhost:4201';
+  private socketUrl = 'http://localhost:4201/multiusers';
   private apiBaseUrl = 'http://localhost:4201/api/v1';
   private authToken: any;
   private socket;
-  constructor(private _http: HttpClient, private userService: UserService) {
+  constructor(private _http: HttpClient) {
     /**init client socket */
     this.socket = io(this.socketUrl);
   }
@@ -25,13 +25,6 @@ export class MultiUserService {
     console.log('Http Error:', error.message);
     return Observable.throw(error.message);
   }
-
-  /*//define header for api authentication
-  public httpHeaderOptions = {
-    headers: new HttpHeaders({
-      authToken: this.authToken,
-    }),
-  };*/
 
   /**define listeners and emitters */
   /**1: Listen to authentication handshake */
