@@ -35,3 +35,7 @@ img {
   width: 200px;
   height: 200px;
 }
+.logout {
+  display: flex;
+  align-items: flex-end;
+}

@@ -4,7 +4,7 @@ import {
   HttpErrorResponse,
   HttpHeaders,
 } from '@angular/common/http';
-import { Observable, throwError, onErrorResumeNext } from 'rxjs';
+import { Observable, throwError, onErrorResumeNext, observable } from 'rxjs';
 import * as io from 'socket.io-client';
 
 import { Cookie } from 'ng2-cookies';
@@ -61,5 +61,18 @@ export class MultiUserService {
     Cookie.delete('authToken');
     Cookie.delete('email');
     Cookie.delete('userId');
+  };
+  /**emit friend request */
+  public sendFrendRequest = (friendRequest) => {
+    console.log('Send friend Request:');
+    this.socket.emit('sentFriendRequest', friendRequest);
+  };
+  /**listen for friend request */
+  public recieveFriendRequest = (recieverId) => {
+    return Observable.create((observable) => {
+      this.socket.on(recieverId, (data) => {
+        observable.next(data);
+      });
+    });
   };
 }

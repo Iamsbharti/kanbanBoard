@@ -47,13 +47,20 @@ exports.setSocketServer = (server) => {
             socket.join(socket.room);
             /**broadcast the online users list */
             console.log("Emit online-users-list");
-
             //socket.to(socket.room).broadcast.emit("online-users", onlineUsers);
             myio.emit("online-users", onlineUsers);
             return onlineUsers;
           }
         });
       }
+    });
+    /**broad case online users */
+    myio.emit("online-users", onlineUsers);
+    /**listen for friend request */
+    socket.on("sentFriendRequest", (friendRequest) => {
+      console.log("Recieved Friend Request::", friendRequest);
+      const { recieverId, recieverName, senderId, senderName } = friendRequest;
+      myio.emit(recieverId, friendRequest);
     });
     /**logout/disconnect user listener*/
     socket.on("disconnected", (userId) => {
