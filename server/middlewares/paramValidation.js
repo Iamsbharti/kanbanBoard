@@ -242,7 +242,7 @@ exports.updateSubTaskValidation = (req, res, next) => {
   }
   next();
 };
-exports.getFriendRequests = (req, res, next) => {
+exports.getFriendRequestsValidation = (req, res, next) => {
   console.log("get fr param validation");
   const frSchema = joi.object({
     senderId: joi.string().required(),

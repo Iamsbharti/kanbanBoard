@@ -19,6 +19,7 @@ const {
   updateTaskListValidation,
   updateTaskValidation,
   updateSubTaskValidation,
+  getFriendRequestsValidation,
 } = require("../middlewares/paramValidation");
 const { isAuthorized } = require("../middlewares/authorization");
 const {
@@ -32,7 +33,8 @@ const {
   updateTask,
   updateSubTask,
 } = require("../controller/taskListControl");
-const { isUndefined } = require("util");
+
+const { getFriendList } = require("../controller/socketControl");
 
 /**Sign up route */
 router.post("/signup", signupParamValidation, signUpControl);
@@ -85,5 +87,12 @@ router.post(
   isAuthorized,
   updateSubTaskValidation,
   updateSubTask
+);
+/**get friendRequests */
+router.post(
+  "/getFriendRequests",
+  isAuthorized,
+  getFriendRequestsValidation,
+  getFriendList
 );
 module.exports = router;
