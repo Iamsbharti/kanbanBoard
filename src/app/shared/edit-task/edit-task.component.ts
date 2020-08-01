@@ -32,6 +32,7 @@ export class EditTaskComponent implements OnInit {
   public toggleTasks: Boolean = false;
   public toggleStatusSelection: Boolean = false;
   public selected: String;
+  public selectedTask: String;
   public statusOptions: String[];
   //component will emit tasklist reload
 
@@ -59,14 +60,15 @@ export class EditTaskComponent implements OnInit {
     if (this.operationName === 'Edit Task') {
       console.log('ops edit task::', this.selectTasks);
       console.log('ops edit task');
-      this.toggleTaskList = false;
-      this.toggleTasks = true;
       this.selectTasks.map((list) => {
         if (list.taskListId === this.taskListId) {
           console.log('taskname::', list.name);
-          return (this.selected = list.name);
+          this.selectedTask = list.name;
         }
       });
+      this.toggleTaskList = false;
+      this.toggleTasks = true;
+      console.log('selected value::', this.selectedTask);
     }
     if (this.operationName === 'Edit SubTask') {
       console.log('ops edit subtask::', this.selectTasks);
@@ -89,6 +91,13 @@ export class EditTaskComponent implements OnInit {
         /**updated tasks */
         this.selectTasks = response.data;
         console.log('All tasks::', this.selectTasks);
+        this.selectTasks.map((list) => {
+          if (list.taskId === this.taskId) {
+            console.log('taskfor subtask::', list.name);
+            this.selected = list.name;
+          }
+        });
+        console.log('selected task::', this.selected);
       },
       (error) => {
         console.warn('Error::', error.error);
@@ -109,7 +118,7 @@ export class EditTaskComponent implements OnInit {
         update: {
           name: this.name,
           status: this.status,
-          taskListId: this.selected,
+          taskListId: this.selectedTask,
         },
       };
       console.log('update taskinfo::', taskInfo);
