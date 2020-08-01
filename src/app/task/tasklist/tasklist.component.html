@@ -1,9 +1,9 @@
 <div class="container">
   <div class="taskListHeader">
-    <img
-      src="/assets/addListIcon.png"
-      (click)="open(createModal, 'New TaskList', '')"
-    />
+    <span (click)="open(createModal, 'New TaskList', '')">
+      <img class="addList" src="/assets/addListIcon.png" />
+      <code>Add Task List</code>
+    </span>
   </div>
   <div class="row">
     <div class="col-md-5 mt-4" *ngFor="let list of taskLists">
