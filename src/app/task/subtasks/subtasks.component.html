@@ -6,6 +6,13 @@
       src="/assets/removetaskicon.png"
       (click)="emitSubTaskDeletion(task.taskId, task.subTaskId)"
     />
+    <img
+      class="add"
+      src="/assets/edit.png"
+      (click)="
+        emitEditSubTask(task.taskId, task.name, task.subTaskId, task.status)
+      "
+    />
     <span class="badge badge-pill badge-secondary ml-3 status">{{
       task.status
     }}</span>

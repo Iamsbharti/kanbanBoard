@@ -29,6 +29,34 @@
         }}</option>
       </select>
     </div>
+    <div [hidden]="toggleTasks">
+      <select
+        class="form-control mt-1"
+        #list
+        required
+        [(ngModel)]="selected"
+        name="selected"
+        #_tsk="ngModel"
+      >
+        <option *ngFor="let task of selectTasks" [value]="task.taskId">{{
+          task.name
+        }}</option>
+      </select>
+    </div>
+    <div class="status" [hidden]="toggleStatusSelection">
+      <select
+        class="form-control mt-1"
+        #list
+        required
+        [(ngModel)]="status"
+        name="status"
+        #_tsk="ngModel"
+      >
+        <option *ngFor="let status of statusOptions" [value]="status">{{
+          status
+        }}</option>
+      </select>
+    </div>
     <div
       [hidden]="errorResponse"
       class="badge badge-danger"

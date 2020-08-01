@@ -13,12 +13,15 @@
     <img
       class="add"
       src="/assets/edit.png"
-      (click)="emitEditTask(task.taskId, task.name, task.taskListId)"
+      (click)="
+        emitEditTask(task.taskId, task.name, task.taskListId, task.status)
+      "
     />
     <span class="badge badge-pill badge-primary ml-3">{{ task.status }}</span>
     <app-subtasks
       [taskId]="task.taskId"
       (delete)="deleteSubTask($event)"
+      (edit)="editSubTask($event, task.taskListId)"
     ></app-subtasks>
   </li>
 </ul>

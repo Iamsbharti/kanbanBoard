@@ -12,6 +12,7 @@ export class EditTaskComponent implements OnInit {
   @Input() userId: any;
   @Input() operationName: String;
   @Input() name: String;
+  @Input() status: String;
   /**task field */
   @Input() taskListId: any;
 
@@ -21,13 +22,17 @@ export class EditTaskComponent implements OnInit {
   /**subtask field */
   @Input() subTaskName: any;
   @Input() taskId: any;
+  @Input() subTaskId: any;
 
   public editTaskResponse: String;
   public errorResponse: Boolean = true;
   public successResponse: Boolean = true;
   public tasklist: any;
   public toggleTaskList: Boolean = false;
+  public toggleTasks: Boolean = false;
+  public toggleStatusSelection: Boolean = false;
   public selected: String;
+  public statusOptions: String[];
   //component will emit tasklist reload
 
   @Output()
@@ -42,12 +47,54 @@ export class EditTaskComponent implements OnInit {
   constructor(private taskService: TasklistService, private _toast: Toaster) {}
 
   ngOnInit(): void {
-    console.log('selectTasks::', this.selectTasks);
+    this.statusOptions = ['open', 'done'];
+    //this.selected = this.selectTasks[0];
+    /**toggle selection item based on task ops */
     if (this.operationName === 'Edit TaskList') {
+      console.log('ops edit tasklist::', this.selectTasks);
       this.toggleTaskList = true;
+      this.toggleTasks = true;
+      this.toggleStatusSelection = true;
+    }
+    if (this.operationName === 'Edit Task') {
+      console.log('ops edit task::', this.selectTasks);
+      console.log('ops edit task');
+      this.toggleTaskList = false;
+      this.toggleTasks = true;
+      this.selectTasks.map((list) => {
+        if (list.taskListId === this.taskListId) {
+          console.log('taskname::', list.name);
+          return (this.selected = list.name);
+        }
+      });
+    }
+    if (this.operationName === 'Edit SubTask') {
+      console.log('ops edit subtask::', this.selectTasks);
+      console.log('ops edit subtasks');
+      this.toggleTaskList = true;
+      this.toggleTasks = false;
+      this.getAllTask();
     }
   }
-
+  /**fetch all tasks for selection use while updating subtasks */
+  public getAllTask(): any {
+    let taskInfo = {
+      taskListId: this.taskListId,
+      userId: this.userId,
+    };
+    console.log('input:', taskInfo);
+    this.taskService.getTasks(taskInfo).subscribe(
+      (response) => {
+        console.log('get all task res::', response.message);
+        /**updated tasks */
+        this.selectTasks = response.data;
+        console.log('All tasks::', this.selectTasks);
+      },
+      (error) => {
+        console.warn('Error::', error.error);
+      }
+    );
+  }
   public editTask(): any {
     console.log('editing task');
     /**create a single task */
@@ -61,7 +108,7 @@ export class EditTaskComponent implements OnInit {
         operation: 'edit',
         update: {
           name: this.name,
-          status: 'open',
+          status: this.status,
           taskListId: this.selected,
         },
       };
@@ -94,18 +141,22 @@ export class EditTaskComponent implements OnInit {
       );
     }
     if (this.operationName.includes('Edit SubTask')) {
-      console.log('create new subtask');
+      console.log('edit new subtask');
       let taskInfo = {
         taskId: this.taskId,
-        name: this.name,
-        status: 'open',
+        subTaskId: this.subTaskId,
+        operation: 'edit',
+        update: {
+          name: this.name,
+          status: this.status,
+          taskId: this.selected,
+        },
       };
       console.log('subtaskinfor::', taskInfo);
-      this.taskService.createSubTask(taskInfo).subscribe(
+      this.taskService.updateSubTask(taskInfo).subscribe(
         (response) => {
-          console.log('Create task response::', response.message);
-
-          /**New subtask Create success */
+          console.log('update task response::', response.message);
+          /**subtask update success */
           if (response.status === 200) {
             this._toast.open({ text: response.message, type: 'success' });
             this.errorResponse = false;

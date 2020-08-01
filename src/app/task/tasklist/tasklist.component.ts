@@ -13,7 +13,6 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 export class TasklistComponent implements OnInit {
   //init fields
   public taskLists: any[];
-  public tasks: any;
   public subtasks: any;
   public fetchedAlltaskLists: String;
   public userId: String;
@@ -27,6 +26,9 @@ export class TasklistComponent implements OnInit {
   /**edit */
   public name: String;
   public selectTasks: any[];
+  public subTaskId: String;
+  public tasks: any[];
+  public status: String;
   /**component will emit event ot update
    * task and subtask array in their respective compoenents
    */
@@ -80,7 +82,7 @@ export class TasklistComponent implements OnInit {
     console.log('Modal closed::', this.closeResult);
   }
   /**open edit modal */
-  openEdit(content, ops, id, name) {
+  async openEdit(content, ops, id, name) {
     console.log('modal edit open::', ops, id);
     this.operationName = ops;
     console.log(ops == 'Edit Task');
@@ -95,16 +97,28 @@ export class TasklistComponent implements OnInit {
        * and send it over to edit-component to complete
        * the edit operation
        */
-      const [taskId, name, taskListId] = id.split(':');
+      const [taskId, name, taskListId, status] = id.split(':');
       this.taskId = taskId;
       this.name = name;
       this.taskListId = taskListId;
+      this.status = status;
       this.selectTasks = this.taskLists;
     }
     if (ops == 'Edit SubTask') {
       console.log('edit subtask case');
-      this.taskId = id;
+      /**split the incoming values from task-compnent
+       * and send it over to edit-component to complete
+       * the edit operation
+       */
+
+      const [taskId, name, subTaskId, status, taskListId] = id.split(':');
+      console.log('list if from tasks::', taskListId);
+      this.taskId = taskId;
       this.name = name;
+      this.subTaskId = subTaskId;
+      this.taskListId = taskListId;
+      this.status = status;
+      this.selectTasks = [];
     }
 
     console.log('tasklistid::', this.taskListId);
@@ -198,8 +212,11 @@ export class TasklistComponent implements OnInit {
   }
   /**edit task listeners from task-component */
   public editTask(values, modal): any {
-    //const [taskId, name] = values.split(':');
     this.openEdit(modal, 'Edit Task', values, name);
+  }
+  /**edit subtask listeners from sub-task-> task-component */
+  public editSubTask(values, modal): any {
+    this.openEdit(modal, 'Edit SubTask', values, name);
   }
   /**delete tasklist */
   public deleteTaskList(taskListId: String): any {
@@ -240,7 +257,7 @@ export class TasklistComponent implements OnInit {
   public postEditTask(value): any {
     this.getAllTaskList();
   }
-  public editSubTask(value): any {
+  public postEditSubTask(value): any {
     this.getAllTaskList();
   }
 }
