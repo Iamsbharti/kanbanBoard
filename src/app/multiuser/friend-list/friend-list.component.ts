@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MultiUserService } from '../multi-user.service';
-import { UserService } from 'src/app/user/user.service';
+import { Cookie } from 'ng2-cookies';
+
 @Component({
   selector: 'app-friend-list',
   templateUrl: './friend-list.component.html',
@@ -13,13 +14,11 @@ export class FriendListComponent implements OnInit {
   onlineUsers: EventEmitter<Array<Object>> = new EventEmitter<Array<Object>>();
   private authToken: String;
   public onlineUsersList: any[];
-  constructor(
-    private multiUserService: MultiUserService,
-    private userService: UserService
-  ) {}
+  constructor(private multiUserService: MultiUserService) {
+    this.authToken = Cookie.get('authToken');
+  }
 
   ngOnInit(): void {
-    this.authToken = this.userService.getAutheticatedUserInfo().authToken;
     this.handeShakeAuthentication();
   }
 
@@ -34,8 +33,16 @@ export class FriendListComponent implements OnInit {
     console.log('get online users list');
     this.multiUserService.getOnlineUserList().subscribe((data) => {
       console.log('Online users from socket::', data);
-      this.onlineUsers.emit(data);
-      this.onlineUsersList = data;
+      /**filter out the current user */
+      let users = [];
+      data.map((d) => {
+        if (d.userId !== this.userId) {
+          users.push(d);
+        }
+      });
+      console.log('final list:', users);
+      this.onlineUsers.emit(users);
+      this.onlineUsersList = users;
     });
   }
 }

@@ -7,27 +7,32 @@ import {
 import { Observable, throwError, onErrorResumeNext } from 'rxjs';
 import * as io from 'socket.io-client';
 import { UserService } from '../user/user.service';
+import { Cookie } from 'ng2-cookies';
 @Injectable({
   providedIn: 'root',
 })
 export class MultiUserService {
   private socketUrl = 'http://localhost:4201/multiuser';
   private apiBaseUrl = 'http://localhost:4201/api/v1';
-  private authToken: String;
+  private authToken: any;
   private socket;
   constructor(private _http: HttpClient, private userService: UserService) {
     /**init client socket */
     this.socket = io(this.socketUrl);
+    if (this.userService.getAutheticatedUserInfo().authToken !== undefined) {
+      this.authToken = this.userService.getAutheticatedUserInfo().authToken;
+    }
   }
   //handle exceptions
   public handleError(error: HttpErrorResponse) {
     console.log('Http Error:', error.message);
     return Observable.throw(error.message);
   }
+
   //define header for api authentication
   public httpHeaderOptions = {
     headers: new HttpHeaders({
-      authToken: this.userService.getAutheticatedUserInfo().authToken,
+      authToken: this.authToken,
     }),
   };
 
@@ -52,5 +57,17 @@ export class MultiUserService {
         observer.next(data);
       });
     });
+  };
+  /**emitt disconnect event with userId */
+  public disconnectUser = (userId) => {
+    console.log('Disconnecting user', userId);
+    this.socket.emit('disconnect', userId);
+    /**delete cookie and  localstorage*/
+    console.log('clearing localstorage and cookie');
+    localStorage.clear();
+    Cookie.delete('name');
+    Cookie.delete('authToken');
+    Cookie.delete('email');
+    Cookie.delete('userId');
   };
 }

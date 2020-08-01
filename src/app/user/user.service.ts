@@ -40,7 +40,8 @@ export class UserService {
   //get authenticated user info
   public getAutheticatedUserInfo(): any {
     console.log('get autheticated user info');
-    return JSON.parse(localStorage.getItem('userInfo'));
+    let lc = JSON.parse(localStorage.getItem('userInfo'));
+    return lc === null ? '' : lc;
   }
 
   //recover password

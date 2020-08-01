@@ -6,3 +6,9 @@
 .title {
   margin-top: 10px;
 }
+a {
+  cursor: pointer;
+}
+a:hover {
+  color: rgb(167, 130, 75);
+}

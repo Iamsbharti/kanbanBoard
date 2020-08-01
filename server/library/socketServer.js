@@ -35,15 +35,18 @@ exports.setSocketServer = (server) => {
             /**for self */
             socket.emit(userId, "You are online");
             /**push onlineuser to array*/
-            onlineUsers.map((user) => {
+            /*onloneUsers = onlineUsers.map((user) => {
               if (user.userId !== userId) {
                 onlineUsers.push({ userId: userId, name: name });
               }
-            });
-            if (onlineUsers.length === 0) {
+            });*/
+            let userIdList = [];
+            onlineUsers.map((usr) => userIdList.push(usr.userId));
+            console.log("userIdList::", userIdList);
+            if (!userIdList.includes(userId)) {
+              console.log(`${userId}-not found in list`);
               onlineUsers.push({ userId: userId, name: name });
             }
-
             console.log(onlineUsers);
             /**set room */
             socket.room = "kanbanboard";
@@ -58,7 +61,7 @@ exports.setSocketServer = (server) => {
     });
     /**logout/disconnect user listener*/
     socket.on("disconnect", (data) => {
-      console.log("User Disconnected");
+      console.log("User Disconnected", data);
       onlineUsers = onlineUsers.filter((user) => user.userId != data.userId);
       console.log("Updated onlineusers::", onlineUsers);
       /**remove from socket and broadcat the updated list */
