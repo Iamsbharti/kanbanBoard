@@ -9,6 +9,7 @@ import { SharedModule } from '../shared/shared.module';
 import { TasksComponent } from './tasks/tasks.component';
 import { SubtasksComponent } from './subtasks/subtasks.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { MultiuserModule } from '../multiuser/multiuser.module';
 @NgModule({
   declarations: [TasklistComponent, TasksComponent, SubtasksComponent],
   imports: [
@@ -17,6 +18,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     HttpClientModule,
     SharedModule,
     NgbModule,
+    MultiuserModule,
     RouterModule.forRoot([
       { path: 'taskList', component: TasklistComponent, pathMatch: 'full' },
     ]),

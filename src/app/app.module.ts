@@ -11,7 +11,7 @@ import { TaskModule } from './task/task.module';
 import { SharedModule } from './shared/shared.module';
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
+import { MultiuserModule } from './multiuser/multiuser.module';
 @NgModule({
   declarations: [AppComponent, HomeComponent],
   imports: [
@@ -22,6 +22,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     SharedModule,
     NgbModule,
     FormsModule,
+    MultiuserModule,
     BrowserAnimationsModule,
     ToastNotificationsModule.forRoot({
       duration: 2000,
