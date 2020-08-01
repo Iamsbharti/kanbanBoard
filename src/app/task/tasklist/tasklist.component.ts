@@ -66,17 +66,19 @@ export class TasklistComponent implements OnInit {
 
   /**set inline users list */
   public setOnlineUsers(users): any {
-    console.log('online users::', users);
+    console.log('online users::');
     this.onlineUser = users;
   }
   /**toggle friend list */
   public showFriendList(): any {
-    console.log('Show friend list', this.onlineUser);
+    console.log('Show friend list');
     this.toggleFriendList = !this.toggleFriendList;
+    this.toggleOnlineUser = true;
   }
   /**toggle online userlist */
   public showOnlineUsers(): any {
     this.toggleOnlineUser = !this.toggleOnlineUser;
+    this.toggleFriendList = true;
   }
   /**open modal */
   open(content, ops, id) {
@@ -171,7 +173,7 @@ export class TasklistComponent implements OnInit {
         console.log('get all task list', response.message);
         this.fetchedAlltaskLists = response.message;
         /**store all tasklists */
-        console.log('tasklists return::', response.data);
+        //console.log('tasklists return::', response.data);
         this.taskLists = response.data;
       },
       (error) => {
@@ -184,38 +186,38 @@ export class TasklistComponent implements OnInit {
 
   /**listen for newly created task list and push it to existing array */
   public addNewTaskList(newTaskList: any): any {
-    console.log('refresh new taskList::', newTaskList.name);
-    console.log('Adding to current list');
+    //console.log('refresh new taskList::', newTaskList.name);
+    //console.log('Adding to current list');
     return this.taskLists.push(newTaskList);
   }
   /**listen for newly created task  and emitt event to update it */
   public addNewTask(newTask: any): any {
-    console.log('addnew task listeners::', newTask);
-    console.log(typeof newTask);
+    //console.log('addnew task listeners::', newTask);
+    //console.log(typeof newTask);
     this.getAllTaskList();
     this.notifyNewTask.emit(newTask);
   }
   /**listen for newly created task list and emit event to update it */
   public addNewSubTask(newSubTask: any): any {
-    console.log(typeof newSubTask);
-    console.log(newSubTask);
+    //console.log(typeof newSubTask);
+    //console.log(newSubTask);
     this.getAllTaskList();
     this.notifyNewSubTask.emit(newSubTask);
   }
 
   /**toggle create subtask popup */
   public openCreateSubTaskForm(taskId, modal): any {
-    console.log('Emit from task component::', taskId);
+    //console.log('Emit from task component::', taskId);
     this.taskId = taskId;
     this.open(modal, 'New SubTask', taskId);
   }
 
   /**delete task listeners from task component*/
   public deleteTask(values): any {
-    console.log('Delete task listeners::', values, this.userId);
+    //console.log('Delete task listeners::', values, this.userId);
     /**call delete service */
     let [taskId, taskListId] = values.split(':');
-    console.log(taskListId, taskId);
+    //console.log(taskListId, taskId);
     let taskInfo = {
       taskListId: taskListId,
       taskId: taskId,
@@ -224,7 +226,7 @@ export class TasklistComponent implements OnInit {
     };
     this.taskListService.updateTask(taskInfo).subscribe(
       (response) => {
-        console.log('Delete api reponse::', response.message);
+        //console.log('Delete api reponse::', response.message);
         /**success toast  */
         this._toast.open({ text: response.message, type: 'success' });
         this.getAllTaskList();
@@ -245,7 +247,7 @@ export class TasklistComponent implements OnInit {
   }
   /**delete tasklist */
   public deleteTaskList(taskListId: String): any {
-    console.log('delete tasklist::', taskListId);
+    //console.log('delete tasklist::', taskListId);
     let taskListInfo = {
       userId: this.userId,
       taskListId: taskListId,
@@ -253,7 +255,7 @@ export class TasklistComponent implements OnInit {
     };
     this.taskListService.updateTaskList(taskListInfo).subscribe(
       (response) => {
-        console.log('Delete task list response::', response.message);
+        //console.log('Delete task list response::', response.message);
         this._toast.open({ text: response.message, type: 'success' });
         /**delete the entry from current tasklist */
         this.taskLists = this.taskLists.filter(
@@ -268,9 +270,9 @@ export class TasklistComponent implements OnInit {
   }
   /**edit task list */
   public editTaskLists(value): any {
-    console.log('edit tasklist listener::', value);
+    //console.log('edit tasklist listener::', value);
     const [name, taskListId] = value.split(':');
-    console.log('to edit::', name, taskListId);
+    //console.log('to edit::', name, taskListId);
     /**update tasklist name */
     this.taskLists.filter((list) => {
       if (list.taskListId === taskListId) {
