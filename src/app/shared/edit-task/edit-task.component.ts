@@ -17,16 +17,17 @@ export class EditTaskComponent implements OnInit {
 
   /**tasklist field */
   @Input() taskListName: any;
-  @Input() taskLists: [];
+  @Input() selectTasks: any[];
   /**subtask field */
   @Input() subTaskName: any;
   @Input() taskId: any;
 
-  public createNewtaskResponse: String;
+  public editTaskResponse: String;
   public errorResponse: Boolean = true;
   public successResponse: Boolean = true;
   public tasklist: any;
   public toggleTaskList: Boolean = false;
+  public selected: String;
   //component will emit tasklist reload
 
   @Output()
@@ -41,6 +42,7 @@ export class EditTaskComponent implements OnInit {
   constructor(private taskService: TasklistService, private _toast: Toaster) {}
 
   ngOnInit(): void {
+    console.log('selectTasks::', this.selectTasks);
     if (this.operationName === 'Edit TaskList') {
       this.toggleTaskList = true;
     }
@@ -54,21 +56,26 @@ export class EditTaskComponent implements OnInit {
       console.log('edit task');
       let taskInfo = {
         taskListId: this.taskListId,
+        taskId: this.taskId,
         userId: this.userId,
-        name: this.name,
-        status: 'open',
+        operation: 'edit',
+        update: {
+          name: this.name,
+          status: 'open',
+          taskListId: this.selected,
+        },
       };
-      console.log('taskinfo::', taskInfo);
-      this.taskService.createTask(taskInfo).subscribe(
+      console.log('update taskinfo::', taskInfo);
+      this.taskService.updateTask(taskInfo).subscribe(
         (response) => {
-          console.log('Create task response::', response.message);
+          console.log('update task response::', response.message);
 
           /**New task Create success */
           if (response.status === 200) {
             this._toast.open({ text: response.message, type: 'success' });
             this.errorResponse = false;
             this.successResponse = true;
-            this.createNewtaskResponse = response.message;
+            this.editTaskResponse = response.message;
             console.log('emitt new task change', response.data);
             this.notifyEditTask.emit(response.data);
             /**emit close modal event */
@@ -79,8 +86,8 @@ export class EditTaskComponent implements OnInit {
           console.warn('Error::', error.error);
           /**compute any error while */
           this.errorResponse = false;
-          this.createNewtaskResponse = error.error.message;
-          console.log('resposen::', this.createNewtaskResponse);
+          this.editTaskResponse = error.error.message;
+          console.log('resposen::', this.editTaskResponse);
 
           this._toast.open({ text: error.error.message, type: 'danger' });
         }
@@ -103,7 +110,7 @@ export class EditTaskComponent implements OnInit {
             this._toast.open({ text: response.message, type: 'success' });
             this.errorResponse = false;
             this.successResponse = true;
-            this.createNewtaskResponse = response.message;
+            this.editTaskResponse = response.message;
             //this.notifyNewTaskList.emit(response.data);
             this.notifyEditSubTask.emit(response.data);
             /**emit close modal event */
@@ -114,8 +121,8 @@ export class EditTaskComponent implements OnInit {
           console.warn('Error::', error.error);
           /**compute any error while */
           this.errorResponse = false;
-          this.createNewtaskResponse = error.error.message;
-          console.log('resposen-subtask::', this.createNewtaskResponse);
+          this.editTaskResponse = error.error.message;
+          console.log('resposen-subtask::', this.editTaskResponse);
           this._toast.open({ text: error.error.message, type: 'danger' });
         }
       );
@@ -139,7 +146,7 @@ export class EditTaskComponent implements OnInit {
             this._toast.open({ text: response.message, type: 'success' });
             this.errorResponse = false;
             this.successResponse = true;
-            this.createNewtaskResponse = response.message;
+            this.editTaskResponse = response.message;
             console.log('emmit  tasklist edit');
             this.notifyEditTaskList.emit(
               `${this.name + ':' + this.taskListId}`
@@ -153,8 +160,8 @@ export class EditTaskComponent implements OnInit {
           console.warn('Error::', error.error);
           /**compute any error while update*/
           this.errorResponse = false;
-          this.createNewtaskResponse = error.error.message;
-          console.log('resposen-taklist::', this.createNewtaskResponse);
+          this.editTaskResponse = error.error.message;
+          console.log('resposen-taklist::', this.editTaskResponse);
           this._toast.open({ text: error.error.message, type: 'danger' });
         }
       );

@@ -10,6 +10,11 @@
       src="/assets/removetaskicon.png"
       (click)="emitTaskDeletion(task.taskId, task.taskListId)"
     />
+    <img
+      class="add"
+      src="/assets/edit.png"
+      (click)="emitEditTask(task.taskId, task.name, task.taskListId)"
+    />
     <span class="badge badge-pill badge-primary ml-3">{{ task.status }}</span>
     <app-subtasks
       [taskId]="task.taskId"

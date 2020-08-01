@@ -33,6 +33,7 @@
           [userId]="list.userId"
           (notify)="openCreateSubTaskForm($event, createModal)"
           (delete)="deleteTask($event)"
+          (edit)="editTask($event, editModal)"
         >
         </app-tasks>
       </div>
@@ -82,9 +83,9 @@
         [userId]="userId"
         [taskId]="taskId"
         [name]="name"
-        [taskLists]="taskLists"
+        [selectTasks]="selectTasks"
         (notifyEditTaskList)="editTaskLists($event)"
-        (notifyEditTask)="editTask($event)"
+        (notifyEditTask)="postEditTask($event)"
         (notifyEditSubTask)="editSubTask($event)"
         (closeModal)="modal.close()"
       ></app-edit-task>

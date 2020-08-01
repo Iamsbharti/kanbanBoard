@@ -26,6 +26,7 @@ export class TasklistComponent implements OnInit {
   public closeResult: string;
   /**edit */
   public name: String;
+  public selectTasks: any[];
   /**component will emit event ot update
    * task and subtask array in their respective compoenents
    */
@@ -88,6 +89,18 @@ export class TasklistComponent implements OnInit {
       this.taskListId = id;
       this.name = name;
     }
+    if (ops == 'Edit Task') {
+      console.log('Edit task option', id);
+      /**split the incoming values from task-compnent
+       * and send it over to edit-component to complete
+       * the edit operation
+       */
+      const [taskId, name, taskListId] = id.split(':');
+      this.taskId = taskId;
+      this.name = name;
+      this.taskListId = taskListId;
+      this.selectTasks = this.taskLists;
+    }
     if (ops == 'Edit SubTask') {
       console.log('edit subtask case');
       this.taskId = id;
@@ -109,15 +122,6 @@ export class TasklistComponent implements OnInit {
     console.log('Modal closed::', this.closeResult);
   }
 
-  /**Create task List */
-  public createTaskList(): any {
-    let taskListData = {};
-    this.taskListService.createTaskList(taskListData).subscribe(
-      (response) => {},
-      (error) => {}
-    );
-  }
-
   /**get all taskLists */
   public getAllTaskList(): any {
     let userdata = {
@@ -130,9 +134,6 @@ export class TasklistComponent implements OnInit {
         /**store all tasklists */
         console.log('tasklists return::', response.data);
         this.taskLists = response.data;
-        /**toast */
-        //this._toast.open({ text: response.message, type: 'success' });
-        //console.log('taskList', this.taskLists);
       },
       (error) => {
         console.warn('Error fetching task list', error, error);
@@ -166,34 +167,11 @@ export class TasklistComponent implements OnInit {
   /**toggle create subtask popup */
   public openCreateSubTaskForm(taskId, modal): any {
     console.log('Emit from task component::', taskId);
-    //open modal (click)="open(createModal, 'Create New Task', list.taskListId)"
     this.taskId = taskId;
     this.open(modal, 'New SubTask', taskId);
   }
-  /**reload task */
-  public reloadTask(load): any {
-    console.log('reload tasks', load);
-    this.getAllTaskList();
-  }
-  public getAllTask(taskListId): any {
-    let taskInfo = {
-      taskListId: taskListId,
-      userId: this.userId,
-    };
-    console.log('input-reload task:', taskInfo);
-    this.taskListService.getTasks(taskInfo).subscribe(
-      (response) => {
-        console.log('get all task res::', response.message);
-        /**updated tasks */
-        this.tasks = response.data;
-        //console.log('All tasks::', this.tasks);
-      },
-      (error) => {
-        console.warn('Error::', error.error);
-      }
-    );
-  }
-  /**delete task listeners*/
+
+  /**delete task listeners from task component*/
   public deleteTask(values): any {
     console.log('Delete task listeners::', values, this.userId);
     /**call delete service */
@@ -217,6 +195,11 @@ export class TasklistComponent implements OnInit {
         this._toast.open({ text: error.error.message, type: 'danger' });
       }
     );
+  }
+  /**edit task listeners from task-component */
+  public editTask(values, modal): any {
+    //const [taskId, name] = values.split(':');
+    this.openEdit(modal, 'Edit Task', values, name);
   }
   /**delete tasklist */
   public deleteTaskList(taskListId: String): any {
@@ -254,7 +237,7 @@ export class TasklistComponent implements OnInit {
       }
     });
   }
-  public editTask(value): any {
+  public postEditTask(value): any {
     this.getAllTaskList();
   }
   public editSubTask(value): any {

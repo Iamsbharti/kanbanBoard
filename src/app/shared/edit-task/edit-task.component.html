@@ -20,12 +20,11 @@
         class="form-control mt-1"
         #list
         required
-        [(ngModel)]="tasklist"
-        name="tasklist"
-        defaultvalue="select one"
+        [(ngModel)]="selected"
+        name="selected"
         #_tsk="ngModel"
       >
-        <option *ngFor="let task of taskLists" [value]="task">{{
+        <option *ngFor="let task of selectTasks" [value]="task.taskListId">{{
           task.name
         }}</option>
       </select>
@@ -38,7 +37,7 @@
         'badge badge-success': successResponse
       }"
     >
-      {{ createNewtaskResponse }}
+      {{ editTaskResponse }}
     </div>
   </div>
   <button class="mt-2">

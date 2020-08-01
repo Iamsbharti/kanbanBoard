@@ -17,6 +17,8 @@ export class TasksComponent implements OnInit {
   notify: EventEmitter<String> = new EventEmitter<String>();
   @Output()
   delete: EventEmitter<String> = new EventEmitter<String>();
+  @Output()
+  edit: EventEmitter<String> = new EventEmitter<String>();
 
   public tasks: [Object];
   public toggleCreateTaskForm: Boolean = false;
@@ -62,6 +64,11 @@ export class TasksComponent implements OnInit {
   public emitTaskDeletion(taskId, taskListId): any {
     console.log('Emit deletetion', taskId, taskListId);
     this.delete.emit(`${taskId}:${taskListId}`);
+  }
+  /**emit edit task event */
+  public emitEditTask(taskId, name, taskListId): any {
+    console.log('Emit edit task::', taskId, name, taskListId);
+    this.edit.emit(`${taskId}:${name}:${taskListId}`);
   }
   /**delete sub task */
   public deleteSubTask(values): any {
