@@ -67,7 +67,10 @@ export class FriendListComponent implements OnInit {
       console.log(req.status);
       switch (req.status) {
         case 'pending':
-          if (req.senderId == this.userId) {
+          if (
+            req.senderId == this.userId &&
+            !this.pendingFriendLists.includes(req.senderId)
+          ) {
             this.pendingFriendLists.push(req);
           }
           this.toApproveRequest.push(req);
