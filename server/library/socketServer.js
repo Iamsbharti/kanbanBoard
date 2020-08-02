@@ -10,7 +10,8 @@ const eventEmitter = new events.EventEmitter();
 exports.setSocketServer = (server) => {
   console.log("Socket server INIT");
   let io = socketio.listen(server);
-
+  /**cors fix */
+  io.origins("*:*");
   let myio = io.of("/multiusers");
 
   let onlineUsers = [];
