@@ -1,15 +1,13 @@
 const FriendRequest = require("../models/FriendRequest");
 const { formatResponse } = require("../library/formatResponse");
-const { send } = require("process");
-const { update } = require("../models/FriendRequest");
-const { consoleTestResultHandler } = require("tslint/lib/test");
+
 exports.getFriendList = async (req, res) => {
   console.log("Get friend list control");
   const EXCLUDE = "-__v -_id";
   const { senderId } = req.body;
   /**get friend request information */
   const query = { senderId: senderId };
-  /*FriendRequest.find(query)
+  FriendRequest.find(query)
     .select(EXCLUDE)
     .lean()
     .exec((error, friendRequests) => {
@@ -27,9 +25,7 @@ exports.getFriendList = async (req, res) => {
             formatResponse(false, 200, "FriendRequests Fetched", friendRequests)
           );
       }
-    });*/
-  let result = await FriendRequest.find({ senderId: senderId });
-  res.send(result);
+    });
 };
 /**save friend request */
 exports.saveFriendRequest = async (friendRequest) => {
