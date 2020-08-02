@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 const events = require("events");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-const { saveFriendRequest } = require("../controller/friendReqSocketControl");
+const FriendRequest = require("../models/FriendRequest");
+
 //init eventemitter
 const eventEmitter = new events.EventEmitter();
 
@@ -63,8 +64,8 @@ exports.setSocketServer = (server) => {
       const { recieverId, recieverName, senderId, senderName } = friendRequest;
 
       /**save friend request kepp it separate from socket flow*/
-      //setTimeout(() => eventEmitter.emit("save-request", friendRequest), 1200);
-      eventEmitter.emit("save-request", friendRequest);
+      setTimeout(() => eventEmitter.emit("save-request", friendRequest), 1200);
+      //eventEmitter.emit("save-request", friendRequest);
 
       /**broad cast the friend request reciever  */
       myio.emit(recieverId, friendRequest);
@@ -83,7 +84,22 @@ exports.setSocketServer = (server) => {
     /**save-request listener */
     eventEmitter.on("save-request", (friendRequest) => {
       console.log("SAVING FR.......");
-      saveFriendRequest(friendRequest);
+      console.log("save friend request");
+      const { recieverId, recieverName, senderId, senderName } = friendRequest;
+      let newFriendRequest = {
+        uniqueCombination: `${senderId}:${recieverId}`,
+        recieverId: recieverId,
+        recieverName: recieverName,
+        senderId: senderId,
+        senderName: senderName,
+      };
+      FriendRequest.create(newFriendRequest, (error, created) => {
+        if (error !== null) {
+          console.warn("Error::", error.message);
+        } else {
+          console.log("FR created::", created.uniqueCombination);
+        }
+      });
     });
   });
 };

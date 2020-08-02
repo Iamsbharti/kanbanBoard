@@ -68,7 +68,7 @@ export class MultiUserService {
     Cookie.delete('userId');
   };
   /**emit friend request */
-  public sendFrendRequest = (friendRequest) => {
+  public sendFriendRequest = (friendRequest) => {
     console.log('Send friend Request:');
     this.socket.emit('sentFriendRequest', friendRequest);
   };

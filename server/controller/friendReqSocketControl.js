@@ -6,8 +6,18 @@ exports.getFriendList = async (req, res) => {
   const EXCLUDE = "-__v -_id";
   const { senderId } = req.body;
   /**get friend request information */
-  const query = { senderId: senderId };
-  FriendRequest.find(query)
+
+  let reqQuery = {
+    $or: [
+      {
+        $and: [{ senderId: senderId }],
+      },
+      {
+        $and: [{ recieverId: senderId }],
+      },
+    ],
+  };
+  FriendRequest.find(reqQuery)
     .select(EXCLUDE)
     .lean()
     .exec((error, friendRequests) => {
@@ -41,18 +51,17 @@ exports.saveFriendRequest = async (friendRequest) => {
   //console.log("newreq", newFriendRequest);
   const query = { uniqueCombination: `${senderId}:${recieverId}` };
   /**restrict duplicate entries due to twice socket listeners call */
-  let result = await FriendRequest.findOneAndUpdate(
+  /*let result = await FriendRequest.findOneAndUpdate(
     { query },
     { $set: newFriendRequest },
     { useFindAndModify: false }
-  );
+  );*/
   //console.log("Result::", result);
-  if (result == null) {
-    try {
-      let createdResult = await FriendRequest.create(newFriendRequest);
-      console.log("Created:", createdResult);
-    } catch (error) {
-      console.error("Error::", error.message);
-    }
+
+  try {
+    let createdResult = await FriendRequest.create(newFriendRequest);
+    console.log("Created:", createdResult);
+  } catch (error) {
+    console.error("Error::", error.message);
   }
 };

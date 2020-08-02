@@ -1,12 +1,27 @@
 <div>
-  <!--
-   <ul class="list-group-flush list-group-item-light onlineUsers">
-    <li class="list-group-item" *ngFor="let user of onlineUsersList">
-      {{ user.name }}
-      <button type="button" class="btn btn-light">Add Friend</button>
+  <span class="badge badge-dark mt-2">Friend Requests</span>
+  <ul class="list-group-flush list-group-item-light onlineUsers">
+    <li class="list-group-item" *ngFor="let friend of pendingFriendLists">
+      {{ friend.recieverName }}
+      <span class="badge badge-pill badge-primary ml-3">{{
+        friend.status
+      }}</span>
     </li>
   </ul>
- -->
-  <p>Friend Requests</p>
-  <p>Friend lists</p>
+  <span class="badge badge-success">Friends</span>
+  <ul class="list-group-flush list-group-item-light onlineUsers">
+    <li class="list-group-item" *ngFor="let friend of friendsList">
+      {{ friend.recieverName }}
+      <span class="badge badge-pill badge-primary ml-3">{{
+        friend.status
+      }}</span>
+    </li>
+  </ul>
+  <span class="badge badge-dark">Take Actions</span>
+  <ul class="list-group-flush list-group-item-light onlineUsers">
+    <li class="list-group-item" *ngFor="let friend of toApproveRequest">
+      {{ friend.senderName }}
+      <button>Approve</button><button class="ml-3">Reject</button>
+    </li>
+  </ul>
 </div>

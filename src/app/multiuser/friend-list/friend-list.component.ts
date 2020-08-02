@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MultiUserService } from '../multi-user.service';
 import { Cookie } from 'ng2-cookies';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-friend-list',
@@ -62,20 +63,23 @@ export class FriendListComponent implements OnInit {
       console.log(req.status);
       switch (req.status) {
         case 'pending':
-          console.log('p1');
-          this.pendingFriendLists.push(req);
+          if (req.senderId == this.userId) {
+            this.pendingFriendLists.push(req);
+          }
           this.toApproveRequest.push(req);
           break;
         case 'accepted':
-          console.log('p2');
           this.friendsList.push(req);
           break;
         case 'rejected':
-          console.log('p3');
           this.rejectedLists.push(req);
           break;
       }
     });
+    this.toApproveRequest = this.toApproveRequest.filter(
+      (usr) => usr.recieverId == this.userId
+    );
+
     console.log('pendingFriendLists::', this.pendingFriendLists);
     console.log('toApproveRequest::', this.toApproveRequest);
     console.log('friendsList::', this.friendsList);

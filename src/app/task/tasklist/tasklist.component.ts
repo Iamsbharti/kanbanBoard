@@ -4,6 +4,7 @@ import { ToastConfig, Toaster } from 'ngx-toast-notifications';
 import { Router, Route } from '@angular/router';
 import { UserService } from '../../user/user.service';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tasklist',
@@ -54,9 +55,13 @@ export class TasklistComponent implements OnInit {
     private userService: UserService,
     private modalService: NgbModal
   ) {
-    const { authToken } = userService.getAutheticatedUserInfo();
+    const {
+      authToken,
+      firstName,
+      lastName,
+    } = userService.getAutheticatedUserInfo();
     this.userId = userService.getAutheticatedUserInfo().userId;
-    this.username = userService.getAutheticatedUserInfo().firstName;
+    this.username = firstName + ' ' + lastName;
     this.authToken = authToken;
   }
 

@@ -61,7 +61,7 @@ export class OnlineUsersComponent implements OnInit {
       senderId: this.userId,
       senderName: this.username,
     };
-    this.multiUserService.sendFrendRequest(friendList);
+    this.multiUserService.sendFriendRequest(friendList);
     console.log('fiendlist::', friendList);
   }
   public recieveFriendRequestByUserId(): any {
