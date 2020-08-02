@@ -71,7 +71,6 @@ export class OnlineUsersComponent implements OnInit {
       .subscribe((data) => {
         console.log('recieved friend request for ', data);
         const { recieverId, recieverName, senderId, senderName } = data;
-
         this._toaster.open({
           text: `${senderName} sent you an friend request`,
           type: 'success',

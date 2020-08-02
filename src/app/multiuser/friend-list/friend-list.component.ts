@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MultiUserService } from '../multi-user.service';
 import { Cookie } from 'ng2-cookies';
-import { ThrowStmt } from '@angular/compiler';
+import { ToastConfig, Toaster } from 'ngx-toast-notifications';
 
 @Component({
   selector: 'app-friend-list',
@@ -20,13 +20,17 @@ export class FriendListComponent implements OnInit {
   public toApproveRequest: any = []; //status --pending && recieverId==this.userId
   public rejectedLists: any = []; //status --rejected
 
-  constructor(private multiUserService: MultiUserService) {
+  constructor(
+    private multiUserService: MultiUserService,
+    private _toaster: Toaster
+  ) {
     this.authToken = Cookie.get('authToken');
   }
 
   ngOnInit(): void {
     //this.handeShakeAuthentication();
     this.getFriends();
+    this.getFriendRequestList();
   }
 
   public handeShakeAuthentication(): any {
@@ -83,5 +87,12 @@ export class FriendListComponent implements OnInit {
     console.log('pendingFriendLists::', this.pendingFriendLists);
     console.log('toApproveRequest::', this.toApproveRequest);
     console.log('friendsList::', this.friendsList);
+  }
+  public getFriendRequestList(): any {
+    console.log('listen to friend friendlist');
+    this.multiUserService.getUpdatedFriendList().subscribe((data) => {
+      /**updated the existing friend's list after any request is added or approved*/
+      this.getFriends();
+    });
   }
 }

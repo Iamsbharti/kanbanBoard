@@ -37,31 +37,32 @@ exports.getFriendList = async (req, res) => {
       }
     });
 };
-/**save friend request */
-exports.saveFriendRequest = async (friendRequest) => {
-  console.log("save friend request");
-  const { recieverId, recieverName, senderId, senderName } = friendRequest;
-  let newFriendRequest = {
-    uniqueCombination: `${senderId}:${recieverId}`,
-    recieverId: recieverId,
-    recieverName: recieverName,
-    senderId: senderId,
-    senderName: senderName,
+exports.getUpdatedFriendList = async (senderId) => {
+  console.log("Get friend list control");
+  const EXCLUDE = "-__v -_id";
+  /**get friend request information */
+  let reqQuery = {
+    $or: [
+      {
+        $and: [{ senderId: senderId }],
+      },
+      {
+        $and: [{ recieverId: senderId }],
+      },
+    ],
   };
-  //console.log("newreq", newFriendRequest);
-  const query = { uniqueCombination: `${senderId}:${recieverId}` };
-  /**restrict duplicate entries due to twice socket listeners call */
-  /*let result = await FriendRequest.findOneAndUpdate(
-    { query },
-    { $set: newFriendRequest },
-    { useFindAndModify: false }
-  );*/
-  //console.log("Result::", result);
-
-  try {
-    let createdResult = await FriendRequest.create(newFriendRequest);
-    console.log("Created:", createdResult);
-  } catch (error) {
-    console.error("Error::", error.message);
-  }
+  /*let result;
+  FriendRequest.find(reqQuery)
+    .select(EXCLUDE)
+    .lean()
+    .exec((error, friendRequests) => {
+      console.log("error/FR::", error);
+      if (error !== null) {
+        result = error;
+      } else {
+        result = friendRequests;
+      }
+    });*/
+  let result = await FriendRequest.find(reqQuery).select(EXCLUDE).lean().exec();
+  return result;
 };

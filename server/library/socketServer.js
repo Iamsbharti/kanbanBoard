@@ -4,7 +4,9 @@ const events = require("events");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const FriendRequest = require("../models/FriendRequest");
-
+const {
+  getUpdatedFriendList,
+} = require("../controller/friendReqSocketControl");
 //init eventemitter
 const eventEmitter = new events.EventEmitter();
 
@@ -76,30 +78,30 @@ exports.setSocketServer = (server) => {
       onlineUsers = onlineUsers.filter((user) => user.userId !== userId);
       console.log("Updated onlineusers::", onlineUsers);
       /**remove from socket and broadcat the updated list */
-      //socket.to(socket.room).broadcast.emit("online-users", onlineUsers);
       myio.emit("online-users", onlineUsers);
       return onlineUsers;
     });
-
-    /**save-request listener */
-    eventEmitter.on("save-request", (friendRequest) => {
-      console.log("SAVING FR.......");
-      console.log("save friend request");
-      const { recieverId, recieverName, senderId, senderName } = friendRequest;
-      let newFriendRequest = {
-        uniqueCombination: `${senderId}:${recieverId}`,
-        recieverId: recieverId,
-        recieverName: recieverName,
-        senderId: senderId,
-        senderName: senderName,
-      };
-      FriendRequest.create(newFriendRequest, (error, created) => {
-        if (error !== null) {
-          console.warn("Error::", error.message);
-        } else {
-          console.log("FR created::", created.uniqueCombination);
-        }
-      });
+  });
+  /**save-request listener */
+  eventEmitter.on("save-request", (friendRequest) => {
+    console.log("SAVING FR.......");
+    const { recieverId, recieverName, senderId, senderName } = friendRequest;
+    let newFriendRequest = {
+      uniqueCombination: `${senderId}:${recieverId}`,
+      recieverId: recieverId,
+      recieverName: recieverName,
+      senderId: senderId,
+      senderName: senderName,
+    };
+    FriendRequest.create(newFriendRequest, (error, created) => {
+      if (error !== null) {
+        console.warn("Error::", error.message);
+      } else {
+        console.log("FR created::", created.uniqueCombination);
+      }
     });
+    let updatedList = getUpdatedFriendList(senderId);
+    console.log("updatedlist::", senderId, updatedList);
+    myio.emit("friendlist-updates");
   });
 };

@@ -88,4 +88,12 @@ export class MultiUserService {
       this.httpHeaderOptions
     );
   }
+  /**listen for friendsList */
+  public getUpdatedFriendList(): any {
+    return Observable.create((observable) => {
+      this.socket.on('friendlist-updates', (data) => {
+        observable.next(data);
+      });
+    });
+  }
 }
