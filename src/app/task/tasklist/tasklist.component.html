@@ -39,8 +39,8 @@
     (click)="showFriendList()"
   >
     Friend List
-    <span class="badge badge-light" *ngIf="onlineUser">{{
-      onlineUser.length || 0
+    <span class="badge badge-light" *ngIf="friendList">{{
+      friendList.length || 0
     }}</span>
   </button>
   <app-online-users
@@ -53,6 +53,7 @@
     [hidden]="toggleFriendList"
     [userId]="userId"
     [username]="username"
+    (friends)="setFriendList($event)"
   ></app-friend-list>
   <div class="row">
     <div class="col-md-5 mt-4" *ngFor="let list of taskLists">

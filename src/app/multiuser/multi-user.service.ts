@@ -6,6 +6,7 @@ import {
 } from '@angular/common/http';
 import { Observable, throwError, onErrorResumeNext, observable } from 'rxjs';
 import * as io from 'socket.io-client';
+import { UserService } from '../user/user.service';
 
 import { Cookie } from 'ng2-cookies';
 @Injectable({
@@ -16,7 +17,7 @@ export class MultiUserService {
   private apiBaseUrl = 'http://localhost:4201/api/v1';
   private authToken: any;
   private socket;
-  constructor(private _http: HttpClient) {
+  constructor(private _http: HttpClient, private userService: UserService) {
     /**init client socket */
     this.socket = io(this.socketUrl);
   }
@@ -25,7 +26,11 @@ export class MultiUserService {
     console.log('Http Error:', error.message);
     return Observable.throw(error.message);
   }
-
+  public httpHeaderOptions = {
+    headers: new HttpHeaders({
+      authToken: this.userService.getAutheticatedUserInfo().authToken,
+    }),
+  };
   /**define listeners and emitters */
   /**1: Listen to authentication handshake */
   public autheticateUser = () => {
@@ -75,4 +80,12 @@ export class MultiUserService {
       });
     });
   };
+  /**fetch friend requests */
+  public getFriendRequests(senderId): any {
+    return this._http.post(
+      `${this.apiBaseUrl}/getFriendRequests`,
+      senderId,
+      this.httpHeaderOptions
+    );
+  }
 }

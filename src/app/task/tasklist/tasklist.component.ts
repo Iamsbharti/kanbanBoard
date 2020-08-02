@@ -34,6 +34,7 @@ export class TasklistComponent implements OnInit {
   public toggleOnlineUser: Boolean = true;
   public toggleFriendList: Boolean = true;
   public onlineUser: any;
+  public friendList: any;
   public username: String;
   public onlineUsersList: any[];
   public authToken = String;
@@ -74,6 +75,11 @@ export class TasklistComponent implements OnInit {
     console.log('Show friend list');
     this.toggleFriendList = !this.toggleFriendList;
     this.toggleOnlineUser = true;
+  }
+  /**set friend list */
+  public setFriendList(friends): any {
+    console.log('Set friend list::', friends);
+    this.friendList = friends;
   }
   /**toggle online userlist */
   public showOnlineUsers(): any {
