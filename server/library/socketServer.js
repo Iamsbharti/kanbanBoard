@@ -62,7 +62,8 @@ exports.setSocketServer = (server) => {
       const { recieverId, recieverName, senderId, senderName } = friendRequest;
 
       /**save friend request kepp it separate from socket flow*/
-      setTimeout(() => eventEmitter.emit("save-request", friendRequest), 1200);
+      //setTimeout(() => eventEmitter.emit("save-request", friendRequest), 1200);
+      eventEmitter.emit("save-request", friendRequest);
 
       /**broad cast the friend request reciever  */
       myio.emit(recieverId, friendRequest);
@@ -80,6 +81,7 @@ exports.setSocketServer = (server) => {
 
     /**save-request listener */
     eventEmitter.on("save-request", (friendRequest) => {
+      console.log("SAVING FR.......");
       saveFriendRequest(friendRequest);
     });
   });

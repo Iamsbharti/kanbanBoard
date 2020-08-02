@@ -1,7 +1,11 @@
 const mongoose = require("mongoose");
 
 const friendRequestSchema = mongoose.Schema({
-  senderID: {
+  uniqueCombination: {
+    type: String,
+    unique: 1,
+  },
+  senderId: {
     type: String,
     required: true,
   },
