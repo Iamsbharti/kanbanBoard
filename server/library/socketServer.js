@@ -106,11 +106,9 @@ exports.setSocketServer = (server) => {
         console.warn("Error::", error.message);
       } else {
         console.log("FR created::", created.uniqueCombination);
+        myio.emit("friendlist-updates");
       }
     });
-    let updatedList = getUpdatedFriendList(senderId);
-    console.log("updatedlist::", senderId, updatedList);
-    myio.emit("friendlist-updates");
   });
   /**update-fr-request listener */
   eventEmitter.on("update-fr-request", (friendRequest) => {
