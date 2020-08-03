@@ -13,6 +13,9 @@ export class FriendListComponent implements OnInit {
   @Input() username: any;
   @Output()
   friends: EventEmitter<any> = new EventEmitter<any>();
+  @Output()
+  selectedFriend: EventEmitter<any> = new EventEmitter<any>();
+
   private authToken: String;
   public resultList: any = [];
   public friendsList: any = []; //status -accepted
@@ -37,7 +40,7 @@ export class FriendListComponent implements OnInit {
   }
 
   public handeShakeAuthentication(): any {
-    console.log('listen to hand shake', this.authToken.length);
+    //console.log('listen to hand shake', this.authToken.length);
     this.multiUserService.autheticateUser().subscribe((data) => {
       this.multiUserService.setUser(this.authToken);
       this.getFriends();
@@ -45,14 +48,14 @@ export class FriendListComponent implements OnInit {
   }
   /**get friend list by API end point */
   public getFriends(): any {
-    console.log('get online users list', this.userId);
+    //console.log('get online users list', this.userId);
     let user = {
       senderId: this.userId,
     };
     this.multiUserService.getFriendRequests(user).subscribe(
       (response) => {
-        console.log('friend reques::', response.message);
-        console.log('friend reques::', typeof response.data);
+        //console.log('friend reques::', response.message);
+        //console.log('friend reques::', typeof response.data);
 
         if (response.status === 200) {
           this.resultList = response.data;
@@ -67,7 +70,7 @@ export class FriendListComponent implements OnInit {
   }
   /**compute different type of friend list */
   public refineLists(friends): any {
-    console.log('refining list:: for different groups', friends);
+    //console.log('refining list:: for different groups', friends);
     friends.map((req) => {
       switch (req.status) {
         case 'pending':
@@ -101,8 +104,8 @@ export class FriendListComponent implements OnInit {
     this.toApproveRequest = this.toApproveRequest.filter(
       (usr) => usr.recieverId == this.userId
     );
-    console.log('to approve list::', this.toApproveRequest);
-    console.log('friend list::', this.friendsList);
+    //console.log('to approve list::', this.toApproveRequest);
+    //console.log('friend list::', this.friendsList);
   }
   /**listen for any friend request made for this user and update the friend list */
   public getFriendRequestList(): any {
@@ -113,7 +116,7 @@ export class FriendListComponent implements OnInit {
   }
   /**approve/reject friend request */
   public updateFRequest(request, action): any {
-    console.log('Clicked updateFRequest:', action);
+    //console.log('Clicked updateFRequest:', action);
     let updatedFriendRequest = { ...request, status: action };
     /**emit the updated request */
     this.multiUserService.updateFriendRequest(updatedFriendRequest);
@@ -162,5 +165,12 @@ export class FriendListComponent implements OnInit {
       /**get the updated friendlist from server*/
       this.getFriends();
     });
+  }
+  /**Invoke addition to friendsItem  */
+  public openFriendsItem(friend): any {
+    const { recieverId, senderId } = friend;
+    let friendUserId = recieverId === this.userId ? senderId : recieverId;
+    console.log('userId of selected friend::', friendUserId);
+    this.selectedFriend.emit(friendUserId);
   }
 }

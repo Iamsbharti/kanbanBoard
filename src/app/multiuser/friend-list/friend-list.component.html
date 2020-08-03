@@ -10,7 +10,11 @@
   </ul>
   <span class="badge badge-success">Friends</span>
   <ul class="list-group-flush list-group-item-light onlineUsers">
-    <li class="list-group-item" *ngFor="let friend of friendsList">
+    <li
+      class="list-group-item"
+      *ngFor="let friend of friendsList"
+      (click)="openFriendsItem(friend)"
+    >
       {{ friend }}
     </li>
   </ul>

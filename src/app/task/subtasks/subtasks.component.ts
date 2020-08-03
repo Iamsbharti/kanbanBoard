@@ -25,7 +25,7 @@ export class SubtasksComponent implements OnInit {
     this.taskService.getSubTasks(taskInfo).subscribe(
       (response) => {
         /**get subtasks */
-        console.log('Subtasks Response::', response.message);
+        //console.log('Subtasks Response::', response.message);
         if (response.status === 200) this.subtasks = response.data;
       },
       (error) => {
@@ -34,17 +34,17 @@ export class SubtasksComponent implements OnInit {
     );
   }
   public addNewSubTask(newSubTask): any {
-    console.log('New sub task in subtask component::', newSubTask);
+    //console.log('New sub task in subtask component::', newSubTask);
     this.subtasks.push(newSubTask);
   }
   /**emit subtask deletion */
   public emitSubTaskDeletion(taskId, subTaskId): any {
-    console.log('Emit sub task deletetion', taskId, subTaskId);
+    //console.log('Emit sub task deletetion', taskId, subTaskId);
     this.delete.emit(`${taskId}:${subTaskId}`);
   }
   /**emit subtask edit */
   public emitEditSubTask(taskId, name, subTaskId, status): any {
-    console.log('Emit edit sub task::', taskId, name, subTaskId);
+    //console.log('Emit edit sub task::', taskId, name, subTaskId);
     this.edit.emit(`${taskId}:${name}:${subTaskId}:${status}`);
   }
 }

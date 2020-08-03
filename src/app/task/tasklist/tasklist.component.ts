@@ -72,18 +72,18 @@ export class TasklistComponent implements OnInit {
 
   /**set inline users list */
   public setOnlineUsers(users): any {
-    console.log('online users::');
+    //console.log('online users::');
     this.onlineUser = users;
   }
   /**toggle friend list */
   public showFriendList(): any {
-    console.log('Show friend list');
+    //console.log('Show friend list');
     this.toggleFriendList = !this.toggleFriendList;
     this.toggleOnlineUser = true;
   }
   /**set friend list */
   public setFriendList(friends): any {
-    console.log('Set friend list::', friends);
+    //console.log('Set friend list::', friends);
     this.friendList = friends;
   }
   /**toggle online userlist */
@@ -93,20 +93,20 @@ export class TasklistComponent implements OnInit {
   }
   /**open modal */
   open(content, ops, id) {
-    console.log('modal open::', ops, id);
+    //console.log('modal open::', ops, id);
     this.operationName = ops;
-    console.log(ops == 'New Task');
+    //console.log(ops == 'New Task');
     if (ops == 'New Task') {
-      console.log('new task case');
+      //console.log('new task case');
       this.taskListId = id;
     }
     if (ops == 'New SubTask') {
-      console.log('new subtask case');
+      //console.log('new subtask case');
       this.taskId = id;
     }
 
-    console.log('tasklistid::', this.taskListId);
-    console.log('taskid::', this.taskId);
+    //console.log('tasklistid::', this.taskListId);
+    //console.log('taskid::', this.taskId);
     this.modalService
       .open(content, { ariaLabelledBy: 'modal-create' })
       .result.then(
@@ -117,20 +117,20 @@ export class TasklistComponent implements OnInit {
           this.closeResult = `Dismissed`;
         }
       );
-    console.log('Modal closed::', this.closeResult);
+    //console.log('Modal closed::', this.closeResult);
   }
   /**open edit modal */
   async openEdit(content, ops, id, name) {
-    console.log('modal edit open::', ops, id);
+    //console.log('modal edit open::', ops, id);
     this.operationName = ops;
-    console.log(ops == 'Edit Task');
+    //console.log(ops == 'Edit Task');
     if (ops == 'Edit TaskList') {
-      console.log('Edit TaskList case');
+      //console.log('Edit TaskList case');
       this.taskListId = id;
       this.name = name;
     }
     if (ops == 'Edit Task') {
-      console.log('Edit task option', id);
+      //console.log('Edit task option', id);
       /**split the incoming values from task-compnent
        * and send it over to edit-component to complete
        * the edit operation
@@ -143,14 +143,14 @@ export class TasklistComponent implements OnInit {
       this.selectTasks = this.taskLists;
     }
     if (ops == 'Edit SubTask') {
-      console.log('edit subtask case');
+      //console.log('edit subtask case');
       /**split the incoming values from task-compnent
        * and send it over to edit-component to complete
        * the edit operation
        */
 
       const [taskId, name, subTaskId, status, taskListId] = id.split(':');
-      console.log('list if from tasks::', taskListId);
+      //console.log('list if from tasks::', taskListId);
       this.taskId = taskId;
       this.name = name;
       this.subTaskId = subTaskId;
@@ -159,8 +159,8 @@ export class TasklistComponent implements OnInit {
       this.selectTasks = [];
     }
 
-    console.log('tasklistid::', this.taskListId);
-    console.log('taskid::', this.taskId);
+    //console.log('tasklistid::', this.taskListId);
+    //console.log('taskid::', this.taskId);
     this.modalService
       .open(content, { ariaLabelledBy: 'modal-edit' })
       .result.then(
@@ -171,7 +171,7 @@ export class TasklistComponent implements OnInit {
           this.closeResult = `Dismissed`;
         }
       );
-    console.log('Modal closed::', this.closeResult);
+    //console.log('Modal closed::', this.closeResult);
   }
 
   /**get all taskLists */
@@ -297,5 +297,8 @@ export class TasklistComponent implements OnInit {
   }
   public postEditSubTask(value): any {
     this.getAllTaskList();
+  }
+  public getFriendsItems(friendUserId): any {
+    console.log('listen to friend selection::', friendUserId);
   }
 }

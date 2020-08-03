@@ -34,7 +34,7 @@ export class MultiUserService {
   /**define listeners and emitters */
   /**1: Listen to authentication handshake */
   public autheticateUser = () => {
-    console.log('Auth user listener');
+    //console.log('Auth user listener');
     return Observable.create((observer) => {
       this.socket.on('authenticate', (data) => {
         observer.next(data);
@@ -43,12 +43,12 @@ export class MultiUserService {
   };
   /**2 send/emit authToken for authentication */
   public setUser = (authToken) => {
-    console.log('Emmit user authentication');
+    //console.log('Emmit user authentication');
     this.socket.emit('set-user', authToken);
   };
   /**3 Get Online Userlist by listning to online-users broadcase */
   public getOnlineUserList = () => {
-    console.log('get online user service');
+    //console.log('get online user service');
     return Observable.create((observer) => {
       this.socket.on('online-users', (data) => {
         observer.next(data);
@@ -57,10 +57,10 @@ export class MultiUserService {
   };
   /**emitt disconnect event with userId */
   public disconnectUser = (userId) => {
-    console.log('Disconnecting user', userId);
+    //console.log('Disconnecting user', userId);
     this.socket.emit('disconnected', userId);
     /**delete cookie and  localstorage*/
-    console.log('clearing localstorage and cookie');
+    //console.log('clearing localstorage and cookie');
     localStorage.clear();
     Cookie.delete('name');
     Cookie.delete('authToken');
@@ -69,7 +69,7 @@ export class MultiUserService {
   };
   /**emit friend request */
   public sendFriendRequest = (friendRequest) => {
-    console.log('Send friend Request:');
+    //console.log('Send friend Request:');
     this.socket.emit('sentFriendRequest', friendRequest);
   };
   /**listen for friend request */
@@ -98,7 +98,7 @@ export class MultiUserService {
   }
   /**emit request approve/rejection FR */
   public updateFriendRequest = (friendRequest) => {
-    console.log('Emit actions on fr request');
+    //console.log('Emit actions on fr request');
     this.socket.emit('update-friend-request', friendRequest);
   };
   /**listen for friend request approval/rejection for appropiate sender */

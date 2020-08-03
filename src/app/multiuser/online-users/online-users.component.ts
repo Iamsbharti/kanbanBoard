@@ -30,14 +30,14 @@ export class OnlineUsersComponent implements OnInit {
   }
 
   public handeShakeAuthentication(): any {
-    console.log('listen to hand shake', this.authToken.length);
+    //console.log('listen to hand shake', this.authToken.length);
     this.multiUserService.autheticateUser().subscribe((data) => {
       this.multiUserService.setUser(this.authToken);
       this.getOnlineUsersList();
     });
   }
   public getOnlineUsersList(): any {
-    console.log('get online users list');
+    //console.log('get online users list');
     this.multiUserService.getOnlineUserList().subscribe((data) => {
       //console.log('Online users from socket::', data);
       /**filter out the current user */
@@ -53,7 +53,7 @@ export class OnlineUsersComponent implements OnInit {
     });
   }
   public addFriend(userId, username): any {
-    console.log('Add friend start', userId);
+    //console.log('Add friend start', userId);
     /**to and from denotes friend request sent to and from user */
     let friendList = {
       recieverId: userId,
@@ -62,14 +62,14 @@ export class OnlineUsersComponent implements OnInit {
       senderName: this.username,
     };
     this.multiUserService.sendFriendRequest(friendList);
-    console.log('fiendlist::', friendList);
+    //console.log('fiendlist::', friendList);
   }
   public recieveFriendRequestByUserId(): any {
-    console.log('listen to friend request');
+    //console.log('listen to friend request');
     this.multiUserService
       .recieveFriendRequest(this.userId)
       .subscribe((data) => {
-        console.log('recieved friend request for ', data);
+        //console.log('recieved friend request for ', data);
         const { recieverId, recieverName, senderId, senderName } = data;
         this._toaster.open({
           text: `${senderName} sent you an friend request`,

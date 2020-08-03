@@ -19,27 +19,27 @@ export class UserService {
 
   //signup
   public signUpService(newUser): any {
-    console.log('Signup api call', newUser);
+    //console.log('Signup api call', newUser);
     let signUpRes = this._http.post(`${this.baseurl}/signup`, newUser);
     return signUpRes;
   }
 
   //login
   public loginService(userData): any {
-    console.log('login api call', userData);
+    //console.log('login api call', userData);
     let loginres = this._http.post(`${this.baseurl}/login`, userData);
     return loginres;
   }
 
   //store authenticated user info
   public setAuthenticatedUser(data): any {
-    console.log('Set auth user info', data);
+    //console.log('Set auth user info', data);
     localStorage.setItem('userInfo', JSON.stringify(data));
   }
 
   //get authenticated user info
   public getAutheticatedUserInfo(): any {
-    console.log('get autheticated user info');
+    //console.log('get autheticated user info');
     let lc = JSON.parse(localStorage.getItem('userInfo'));
     //console.log('lc::', lc);
     return lc === null ? '' : lc;
@@ -47,7 +47,7 @@ export class UserService {
 
   //recover password
   public recoverPassword(user): any {
-    console.log('Recover password for', user);
+    //console.log('Recover password for', user);
     let recoverPwdRes = this._http.post(
       `${this.baseurl}/recoverPassword`,
       user
@@ -57,19 +57,19 @@ export class UserService {
 
   //reset Password
   public resetPassword(user): any {
-    console.log('reset password', user);
+    //console.log('reset password', user);
     let resetPwdRes = this._http.post(`${this.baseurl}/resetPassword`, user);
     return resetPwdRes;
   }
   //get country
   public getCountry(): any {
-    console.log('get country');
+    //console.log('get country');
     let countries = this._http.get('http://country.io/names.json');
     return countries;
   }
   //get country phone code
   public getCode(): any {
-    console.log('get code');
+    //console.log('get code');
     let code = this._http.get('http://country.io/phone.json');
     return code;
   }

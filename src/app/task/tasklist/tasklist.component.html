@@ -54,6 +54,7 @@
     [userId]="userId"
     [username]="username"
     (friends)="setFriendList($event)"
+    (selectedFriend)="getFriendsItems($event)"
   ></app-friend-list>
   <div class="row">
     <div class="col-md-5 mt-4" *ngFor="let list of taskLists">
