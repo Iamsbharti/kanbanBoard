@@ -13,6 +13,7 @@ export class EditTaskComponent implements OnInit {
   @Input() operationName: String;
   @Input() name: String;
   @Input() status: String;
+  @Input() loggedInUser: String;
   /**task field */
   @Input() taskListId: any;
 
@@ -75,8 +76,8 @@ export class EditTaskComponent implements OnInit {
       console.log('ops edit subtasks');
       this.toggleTaskList = true;
       this.toggleTasks = false;
-      this.getAllTask();
     }
+    this.getAllTask();
   }
   /**fetch all tasks for selection use while updating subtasks */
   public getAllTask(): any {
@@ -211,7 +212,6 @@ export class EditTaskComponent implements OnInit {
             this.notifyEditTaskList.emit(
               `${this.name + ':' + this.taskListId}`
             );
-            //setTimeout(() => this.notifyEditTaskList.emit(response.data), 130);
             /**emit close modal event */
             this.closeModal.emit();
           }

@@ -19,6 +19,7 @@ export class FriendListComponent implements OnInit {
   private authToken: String;
   public resultList: any = [];
   public friendsList: any = []; //status -accepted
+  public friendListObj: any = []; //for selection purpose
   public pendingFriendLists: any = []; //status --pending
   public toApproveRequest: any = []; //status --pending && recieverId==this.userId
   public rejectedLists: any = []; //status --rejected
@@ -87,14 +88,16 @@ export class FriendListComponent implements OnInit {
           this.toApproveRequest.push(req);
           break;
         case 'accepted':
+          /**include id for openFriendsItem */
           if (req.senderId === this.userId) {
-            this.friendsList.push(req.recieverName);
+            this.friendsList.push(`${req.recieverName}:${req.recieverId}`);
           }
           if (
             req.recieverId === this.userId &&
             !this.friendsList.includes(req.senderName)
           ) {
-            this.friendsList.push(req.senderName);
+            this.friendsList.push(`${req.senderName}:${req.senderId}`);
+            this.friendListObj.push(req);
           }
       }
     });
@@ -168,9 +171,7 @@ export class FriendListComponent implements OnInit {
   }
   /**Invoke addition to friendsItem  */
   public openFriendsItem(friend): any {
-    const { recieverId, senderId } = friend;
-    let friendUserId = recieverId === this.userId ? senderId : recieverId;
-    console.log('userId of selected friend::', friendUserId);
-    this.selectedFriend.emit(friendUserId);
+    console.log('friend::', friend);
+    this.selectedFriend.emit(friend);
   }
 }

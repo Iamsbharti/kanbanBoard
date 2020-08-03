@@ -1,34 +1,10 @@
-public refineLists(resultList): any {
-    console.log('refining list', resultList.length);
-    resultList.map((req) => {
-      console.log(req.status);
-      switch (req.status) {
-        case 'pending':
-          if (
-            req.senderId == this.userId &&
-            !this.pendingFriendLists.includes(req.senderId)
-          ) {
-            this.pendingFriendLists.push(req);
-          }
-          this.toApproveRequest.push(req);
-          break;
-        case 'accepted':
-          /**include except self & include based on comb*/
-          const [senderId, recieverId] = req.uniqueCombination.split(':');
-          if (req.recieverId !== this.userId) {
-            this.friendsList.push(req);
-          }
-          break;
-        case 'rejected':
-          this.rejectedLists.push(req);
-          break;
-      }
-    });
-    this.toApproveRequest = this.toApproveRequest.filter(
-      (usr) => usr.recieverId == this.userId
-    );
-
-    console.log('pendingFriendLists::', this.pendingFriendLists);
-    console.log('toApproveRequest::', this.toApproveRequest);
-    console.log('friendsList::', this.friendsList);
-  }
+  <app-create-task
+          [operationName]="operationName"
+          [taskListId]="taskListId"
+          [userId]="userId"
+          [taskId]="taskId"
+          (notifyNewTaskList)="addNewTaskList($event)"
+          (notifyNewTask)="addNewTask($event)"
+          (notifyNewSubTask)="addNewSubTask($event)"
+          (closeModal)="modal.close()"
+        ></app-create-task>

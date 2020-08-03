@@ -39,3 +39,9 @@ img {
   display: flex;
   align-items: flex-end;
 }
+.taskListHeader {
+  display: flex;
+  align-self: flex-start;
+  justify-content: flex-end;
+  margin-top: -21px;
+}

@@ -15,7 +15,7 @@
       *ngFor="let friend of friendsList"
       (click)="openFriendsItem(friend)"
     >
-      {{ friend }}
+      {{ friend.split(":")[0] }}
     </li>
   </ul>
   <span class="badge badge-info">Take Actions</span>

@@ -5,6 +5,7 @@ import { Router, Route } from '@angular/router';
 import { UserService } from '../../user/user.service';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { first } from 'rxjs/operators';
+import { timeStamp } from 'console';
 
 @Component({
   selector: 'app-tasklist',
@@ -13,8 +14,8 @@ import { first } from 'rxjs/operators';
 })
 export class TasklistComponent implements OnInit {
   //init fields
-  public taskLists: any[];
-  public subtasks: any;
+  public taskLists: any = [];
+  public subtasks: any = [];
   public fetchedAlltaskLists: String;
   public userId: String;
   /**new task info */
@@ -27,9 +28,9 @@ export class TasklistComponent implements OnInit {
 
   /**edit */
   public name: String;
-  public selectTasks: any[];
+  public selectTasks: any = [];
   public subTaskId: String;
-  public tasks: any[];
+  public tasks: any = [];
   public status: String;
   /**multiusers */
   public toggleOnlineUser: Boolean = true;
@@ -39,6 +40,13 @@ export class TasklistComponent implements OnInit {
   public username: String;
   public onlineUsersList: any[];
   public authToken = String;
+  /**-----------Modifications------- */
+  public selectedUserId: String;
+  public selectedTaskListId: String;
+  public selectedTaskId: String;
+  public selectedTaskName: String;
+  public selectedTaskStatus: String;
+  public selectedSubTaskId: String;
   /**component will emit event ot update
    * task and subtask array in their respective compoenents
    */
@@ -63,11 +71,12 @@ export class TasklistComponent implements OnInit {
     this.userId = userService.getAutheticatedUserInfo().userId;
     this.username = firstName + ' ' + lastName;
     this.authToken = authToken;
+    this.selectedUserId = this.userId;
   }
 
   ngOnInit(): void {
     //load task list on component load
-    this.getAllTaskList();
+    this.getAllTaskList(this.userId);
   }
 
   /**set inline users list */
@@ -99,10 +108,12 @@ export class TasklistComponent implements OnInit {
     if (ops == 'New Task') {
       //console.log('new task case');
       this.taskListId = id;
+      this.selectedTaskListId = id;
     }
     if (ops == 'New SubTask') {
       //console.log('new subtask case');
       this.taskId = id;
+      this.selectedTaskId = id;
     }
 
     //console.log('tasklistid::', this.taskListId);
@@ -120,30 +131,43 @@ export class TasklistComponent implements OnInit {
     //console.log('Modal closed::', this.closeResult);
   }
   /**open edit modal */
-  async openEdit(content, ops, id, name) {
-    //console.log('modal edit open::', ops, id);
+  openEdit(content, ops, id, name) {
+    console.log('modal edit open::', ops, id);
     this.operationName = ops;
-    //console.log(ops == 'Edit Task');
+    console.log(ops == 'Edit Task');
     if (ops == 'Edit TaskList') {
-      //console.log('Edit TaskList case');
+      console.log('Edit TaskList case');
       this.taskListId = id;
+      this.selectedTaskListId = id;
       this.name = name;
+      this.selectedTaskName = name;
+
+      console.log(
+        'selecteduser,selectedtasklistid,name::',
+        this.selectedUserId,
+        this.selectedTaskListId,
+        this.selectedTaskName
+      );
     }
     if (ops == 'Edit Task') {
-      //console.log('Edit task option', id);
+      console.log('Edit task option', id);
       /**split the incoming values from task-compnent
        * and send it over to edit-component to complete
        * the edit operation
        */
       const [taskId, name, taskListId, status] = id.split(':');
       this.taskId = taskId;
+      this.selectedTaskId = taskId;
       this.name = name;
+      this.selectedTaskName = name;
       this.taskListId = taskListId;
+      this.selectedTaskListId = taskListId;
       this.status = status;
+      this.selectedTaskStatus = status;
       this.selectTasks = this.taskLists;
     }
     if (ops == 'Edit SubTask') {
-      //console.log('edit subtask case');
+      console.log('edit subtask case');
       /**split the incoming values from task-compnent
        * and send it over to edit-component to complete
        * the edit operation
@@ -152,10 +176,15 @@ export class TasklistComponent implements OnInit {
       const [taskId, name, subTaskId, status, taskListId] = id.split(':');
       //console.log('list if from tasks::', taskListId);
       this.taskId = taskId;
+      this.selectedTaskId = taskId;
       this.name = name;
+      this.selectedTaskName = name;
       this.subTaskId = subTaskId;
+      this.selectedSubTaskId = subTaskId;
       this.taskListId = taskListId;
+      this.selectedTaskListId = taskListId;
       this.status = status;
+      this.selectedTaskStatus = status;
       this.selectTasks = [];
     }
 
@@ -175,9 +204,9 @@ export class TasklistComponent implements OnInit {
   }
 
   /**get all taskLists */
-  public getAllTaskList(): any {
+  public getAllTaskList(userId): any {
     let userdata = {
-      userId: this.userId,
+      userId: userId,
     };
     this.taskListService.getTaskLists(userdata).subscribe(
       (response) => {
@@ -185,7 +214,7 @@ export class TasklistComponent implements OnInit {
         this.fetchedAlltaskLists = response.message;
         /**store all tasklists */
         //console.log('tasklists return::', response.data);
-        this.taskLists = response.data;
+        this.taskLists.push(...response.data);
       },
       (error) => {
         console.warn('Error fetching task list', error, error);
@@ -205,14 +234,14 @@ export class TasklistComponent implements OnInit {
   public addNewTask(newTask: any): any {
     //console.log('addnew task listeners::', newTask);
     //console.log(typeof newTask);
-    this.getAllTaskList();
+    this.getAllTaskList(this.userId);
     this.notifyNewTask.emit(newTask);
   }
   /**listen for newly created task list and emit event to update it */
   public addNewSubTask(newSubTask: any): any {
     //console.log(typeof newSubTask);
     //console.log(newSubTask);
-    this.getAllTaskList();
+    this.getAllTaskList(this.userId);
     this.notifyNewSubTask.emit(newSubTask);
   }
 
@@ -240,7 +269,7 @@ export class TasklistComponent implements OnInit {
         //console.log('Delete api reponse::', response.message);
         /**success toast  */
         this._toast.open({ text: response.message, type: 'success' });
-        this.getAllTaskList();
+        this.getAllTaskList(this.userId);
       },
       (error) => {
         console.log('Error Deleting Task::', error.error);
@@ -250,6 +279,7 @@ export class TasklistComponent implements OnInit {
   }
   /**edit task listeners from task-component */
   public editTask(values, modal): any {
+    console.log('Edit task modal open::', values, modal);
     this.openEdit(modal, 'Edit Task', values, name);
   }
   /**edit subtask listeners from sub-task-> task-component */
@@ -293,12 +323,23 @@ export class TasklistComponent implements OnInit {
     });
   }
   public postEditTask(value): any {
-    this.getAllTaskList();
+    this.getAllTaskList(this.userId);
   }
   public postEditSubTask(value): any {
-    this.getAllTaskList();
+    this.getAllTaskList(this.userId);
   }
-  public getFriendsItems(friendUserId): any {
-    console.log('listen to friend selection::', friendUserId);
+  public getFriendsItems(selectedFriend): any {
+    console.log('listen to friend selection::', selectedFriend);
+    let [friendName, friendUserId] = selectedFriend.split(':');
+    /**fetch taskLists for friend and add to existing taskList array */
+    this.selectedUserId = friendUserId;
+    console.log('get all task tasklist for friends::');
+    this.getAllTaskList(friendUserId);
+    console.log('tasklist::', this.taskLists);
+    /**toast for friend's selection */
+    this._toast.open({
+      text: `opening tasks for ${friendName}`,
+      type: 'info',
+    });
   }
 }

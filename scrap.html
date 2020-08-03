@@ -1,5 +1,5 @@
 <div class="container">
-  <div>
+  <div class="taskListHeader">
     <span (click)="open(createModal, 'New TaskList', '')">
       <img class="addList" src="/assets/addListIcon.png" />
       <code>Add Task List</code>
@@ -28,9 +28,9 @@
     (click)="showOnlineUsers()"
   >
     Online Users
-    <span class="badge badge-light" *ngIf="onlineUser">{{
-      onlineUser.length || 0
-    }}</span>
+    <span class="badge badge-light" *ngIf="onlineUser"
+      >{{ onlineUser.length || 0 }}</span
+    >
   </button>
   <button
     type="button"
@@ -39,9 +39,9 @@
     (click)="showFriendList()"
   >
     Friend List
-    <span class="badge badge-light" *ngIf="friendList">{{
-      friendList.length || 0
-    }}</span>
+    <span class="badge badge-light" *ngIf="friendList"
+      >{{ friendList.length || 0 }}</span
+    >
   </button>
   <app-online-users
     [hidden]="toggleOnlineUser"
@@ -76,8 +76,8 @@
               class="add"
               src="/assets/edit.png"
               (click)="
-                openEdit(editModal, 'Edit TaskList', list.taskListId, list.name)
-              "
+                  openEdit(editModal, 'Edit TaskList', list.taskListId, list.name)
+                "
             />
           </span>
         </div>
@@ -139,7 +139,6 @@
           [name]="selectedTaskName"
           [status]="selectedTaskStatus"
           [selectTasks]="selectTasks"
-          [loggedInUser]="userId"
           (notifyEditTaskList)="editTaskLists($event)"
           (notifyEditTask)="postEditTask($event)"
           (notifyEditSubTask)="postEditSubTask($event)"
