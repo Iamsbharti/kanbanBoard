@@ -4,9 +4,8 @@ const events = require("events");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const FriendRequest = require("../models/FriendRequest");
-const {
-  getUpdatedFriendList,
-} = require("../controller/friendReqSocketControl");
+const { stat } = require("fs");
+
 //init eventemitter
 const eventEmitter = new events.EventEmitter();
 
@@ -131,11 +130,38 @@ exports.setSocketServer = (server) => {
         console.error("Error Updating FR::", error.message);
       } else {
         let { n } = updatedFR;
-        console.log("Updated FR::" - n + "doc updated");
+        console.log("Updated FR::", n + "doc updated");
+        updateUsersFriendList(status);
+        /**broadcast requestupdate to client */
+        console.log("Emit friend request updates");
+        myio.emit("friend-request-updates", friendRequest);
       }
     });
-    /**broadcast requestupdate to client */
-    console.log("Emit friend request updates");
-    myio.emit("friend-request-updates", friendRequest);
+
+    /**update the friend list in User(reciever & sender) if request is approved*/
+    const updateUsersFriendList = (status) => {
+      if (status === "accepted") {
+        let updateQuery = {
+          $or: [
+            {
+              $and: [{ userId: senderId }],
+            },
+            {
+              $and: [{ userId: recieverId }],
+            },
+          ],
+        };
+
+        let friendListUpdate = { friends: [senderId, recieverId] };
+        console.log("Updating User's friend List status----", status);
+        User.updateMany(updateQuery, friendListUpdate, (error, updated) => {
+          if (error !== null) {
+            console.error("Error Updating FriendLIst::", error.message);
+          } else {
+            console.log("Updated USERs FriendList", updated.n);
+          }
+        });
+      }
+    };
   });
 };

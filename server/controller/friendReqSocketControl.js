@@ -37,32 +37,3 @@ exports.getFriendList = async (req, res) => {
       }
     });
 };
-exports.getUpdatedFriendList = async (senderId) => {
-  console.log("Get friend list control");
-  const EXCLUDE = "-__v -_id";
-  /**get friend request information */
-  let reqQuery = {
-    $or: [
-      {
-        $and: [{ senderId: senderId }],
-      },
-      {
-        $and: [{ recieverId: senderId }],
-      },
-    ],
-  };
-  /*let result;
-  FriendRequest.find(reqQuery)
-    .select(EXCLUDE)
-    .lean()
-    .exec((error, friendRequests) => {
-      console.log("error/FR::", error);
-      if (error !== null) {
-        result = error;
-      } else {
-        result = friendRequests;
-      }
-    });*/
-  let result = await FriendRequest.find(reqQuery).select(EXCLUDE).lean().exec();
-  return result;
-};
