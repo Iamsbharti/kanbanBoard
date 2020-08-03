@@ -67,10 +67,18 @@ exports.setSocketServer = (server) => {
 
       /**save friend request kepp it separate from socket flow*/
       setTimeout(() => eventEmitter.emit("save-request", friendRequest), 1200);
-      //eventEmitter.emit("save-request", friendRequest);
 
-      /**broad cast the friend request reciever  */
+      /**broadcast the friend request reciever  */
       myio.emit(recieverId, friendRequest);
+    });
+    /**listen on friend request updates (approval/rejection) */
+    socket.on("update-friend-request", (friendRequest) => {
+      console.log("Recieved Friend Request Update::", friendRequest);
+      /**update friend request */
+      setTimeout(
+        () => eventEmitter.emit("update-fr-request", friendRequest),
+        1200
+      );
     });
     /**logout/disconnect user listener*/
     socket.on("disconnected", (userId) => {
@@ -103,5 +111,33 @@ exports.setSocketServer = (server) => {
     let updatedList = getUpdatedFriendList(senderId);
     console.log("updatedlist::", senderId, updatedList);
     myio.emit("friendlist-updates");
+  });
+  /**update-fr-request listener */
+  eventEmitter.on("update-fr-request", (friendRequest) => {
+    console.log("UPDATING FR_____");
+    const {
+      recieverId,
+      recieverName,
+      senderId,
+      senderName,
+      status,
+      uniqueCombination,
+    } = friendRequest;
+    /**update FriendRequest with status approved,rejected
+     * (based on action prop)
+     */
+    let updateQuery = { uniqueCombination: uniqueCombination };
+
+    FriendRequest.updateOne(updateQuery, friendRequest, (error, updatedFR) => {
+      if (error !== null) {
+        console.error("Error Updating FR::", error.message);
+      } else {
+        let { n } = updatedFR;
+        console.log("Updated FR::" - n + "doc updated");
+      }
+    });
+    /**broadcast requestupdate to client */
+    console.log("Emit friend request updates");
+    myio.emit("friend-request-updates", friendRequest);
   });
 };

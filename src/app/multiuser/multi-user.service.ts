@@ -96,4 +96,21 @@ export class MultiUserService {
       });
     });
   }
+  /**emit request approve/rejection FR */
+  public updateFriendRequest = (friendRequest) => {
+    console.log('Emit actions on fr request');
+    this.socket.emit('update-friend-request', friendRequest);
+  };
+  /**listen for friend request approval/rejection for appropiate sender */
+  public friendRequestAction(): any {
+    /**here fr component will update and toast for approval
+     * or rejection & fr list updates based appropiate
+     * senderId (i.e if senderId is userId)
+     */
+    return Observable.create((observable) => {
+      this.socket.on('friend-request-updates', (data) => {
+        observable.next(data);
+      });
+    });
+  }
 }

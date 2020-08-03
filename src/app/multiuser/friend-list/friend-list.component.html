@@ -11,18 +11,24 @@
   <span class="badge badge-success">Friends</span>
   <ul class="list-group-flush list-group-item-light onlineUsers">
     <li class="list-group-item" *ngFor="let friend of friendsList">
-      {{ friend.recieverName }}
-      <span class="badge badge-pill badge-primary ml-3">{{
-        friend.status
-      }}</span>
+      {{ friend }}
     </li>
   </ul>
   <span class="badge badge-dark">Take Actions</span>
   <ul class="list-group-flush list-group-item-light onlineUsers">
     <li class="list-group-item" *ngFor="let friend of toApproveRequest">
-      {{ friend.senderName.split(" ")[0] }}
-      <button class="btn btn-outline-dark btn-sm">Approve</button
-      ><button class="btn btn-outline-dark btn-sm ml-3">Reject</button>
+      {{ friend.senderName }}
+      <button
+        class="btn btn-outline-dark btn-sm"
+        (click)="updateFRequest(friend, 'accepted')"
+      >
+        Approve</button
+      ><button
+        class="btn btn-outline-dark btn-sm ml-3"
+        (click)="updateFRequest(friend, 'rejected')"
+      >
+        Reject
+      </button>
     </li>
   </ul>
 </div>
