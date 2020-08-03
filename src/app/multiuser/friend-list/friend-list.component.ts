@@ -151,7 +151,7 @@ export class FriendListComponent implements OnInit {
       if (recieverId === this.userId && status === 'accepted') {
         /**toast approver for success */
         this._toaster.open({
-          text: `${senderName} is you friend now`,
+          text: `${senderName} is now your friend`,
           type: 'success',
         });
         /**clean up approval list for this request on client side*/

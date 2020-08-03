@@ -26,7 +26,7 @@ import { MultiuserModule } from './multiuser/multiuser.module';
     MultiuserModule,
     BrowserAnimationsModule,
     ToastNotificationsModule.forRoot({
-      duration: 2000,
+      duration: 3500,
       type: 'primary',
       autoClose: true,
       position: 'top-right',
