@@ -119,8 +119,19 @@ export class CreateTaskComponent implements OnInit {
             this.errorResponse = false;
             this.successResponse = true;
             this.createNewtaskResponse = response.message;
-            //this.notifyNewTaskList.emit(response.data);
-            this.notifyNewSubTask.emit(response.data);
+            /**notify tasklist component for task updates */
+            let refreshUserId;
+            if (this.flagOperationForFriend) {
+              refreshUserId = this.userId;
+            } else {
+              refreshUserId = this.loggedInUser;
+            }
+            console.log('refreshing for::', refreshUserId);
+            this.notifyNewSubTask.emit(refreshUserId);
+            /**emit update notifiation to friends if any*/
+            let notification = `${this.username} created a SubTask`;
+            this.notifyFriends(notification);
+
             /**emit modal close event */
             this.closeModal.emit();
           }

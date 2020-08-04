@@ -109,12 +109,12 @@ export class TasksComponent implements OnInit {
         }
         console.log('refreshing for::', refreshUserId);
         this.getAllTask(refreshUserId, taskId);
+        this.notifyForSTaskDelete.emit();
       },
       (error) => {
         console.log('Error Deleting Task::', error.error);
         this._toast.open({ text: error.error.message, type: 'danger' });
       }
     );
-    this.notifyForSTaskDelete.emit();
   }
 }

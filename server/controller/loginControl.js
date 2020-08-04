@@ -31,8 +31,6 @@ exports.loginControl = async (req, res) => {
       let friendList = _userData.friends;
       friendList.map((fr, i) => {
         if (fr === _userData.userId) {
-          console.log("found::", fr, i);
-          /**remove from friend list */
           delete _userData.friends[i];
         }
       });

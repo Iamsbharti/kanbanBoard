@@ -247,11 +247,11 @@ export class TasklistComponent implements OnInit {
     //this.notifyNewTask.emit(newTask);
   }
   /**listen for newly created task list and emit event to update it */
-  public addNewSubTask(newSubTask: any): any {
+  public addNewSubTask(userId: any): any {
     //console.log(typeof newSubTask);
     //console.log(newSubTask);
-    this.getAllTaskList(this.userId);
-    this.notifyNewSubTask.emit(newSubTask);
+    this.getAllTaskList(userId);
+    //this.notifyNewSubTask.emit(newSubTask);
   }
 
   /**toggle create subtask popup */
@@ -417,7 +417,36 @@ export class TasklistComponent implements OnInit {
   }
   /**notification for sub task deeltion */
   public notifyFriendsSTaskDelete(value): any {
+    console.log('notification for sub task deletion');
     let notification = `${this.username} deleted a SubTask`;
     this.notifyFriends(notification);
+  }
+  /**listener for friendly task updates */
+  public friendlyUpdatesListener(): any {
+    let toastString;
+    let friendList = [];
+    console.log('Friendly task updates');
+    this.multiUserService.friendlyTaskUpdates().subscribe((updates) => {
+      console.log('updates listener::', updates);
+      if (typeof updates === 'string') {
+        toastString = updates;
+        console.log('toast string::', toastString);
+      } else {
+        friendList = updates;
+        console.log('friendlist::', updates);
+      }
+      console.log('is friend::', friendList, this.userId);
+      if (friendList.length !== 0) {
+        friendList.map((fr) => {
+          if (fr !== null && fr === this.userId) {
+            console.log('Found friend');
+            this._toast.open({ text: toastString, type: 'dark' });
+            //emit reload tasklist event
+            console.log("reloading task for  ,since it's a friend");
+            this.getAllTaskList(this.userId);
+          }
+        });
+      }
+    });
   }
 }
