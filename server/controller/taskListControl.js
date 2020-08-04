@@ -4,11 +4,8 @@ const { formatResponse } = require("../library/formatResponse");
 const Task = require("../models/Task");
 const SubTask = require("../models/SubTask");
 const User = require("../models/User");
-const { convertCompilerOptionsFromJson, Extension } = require("typescript");
-const { update } = require("../models/TaskList");
-const { query } = require("express");
 const EXCLUDE = "-__v -_id";
-
+const Historic_TaskList = require("../models/Historic_TaskList");
 /**Check for valid userId */
 const validUserId = async (userId) => {
   ////console.log("validate UserId:", userId);
@@ -49,14 +46,22 @@ exports.createTaskList = async (req, res) => {
       .json(formatResponse(true, 400, "Task Name already exists", name));
 
   /**create a new tasklist unique to a userId */
+  let uniqueTaskListId = shortid.generate();
   let newList = new TaskList({
     name: name,
     userId: userId,
-    taskListId: shortid.generate(),
+    taskListId: uniqueTaskListId,
   });
-
+  /**hoistoric tasklist schema */
+  let newHistoricSchema = new Historic_TaskList({
+    updateId: `${userId}:${uniqueTaskListId}:${Date.now()}`,
+    name: name,
+    taskListId: uniqueTaskListId,
+    userId: userId,
+  });
+  console.log("history-schema:;", newHistoricSchema);
   TaskList.create(newList, (error, createdList) => {
-    ////console.log("error", error, createdList);
+    console.log("error", error, createdList);
     if (error !== null) {
       res
         .status(500)
@@ -70,6 +75,11 @@ exports.createTaskList = async (req, res) => {
         .json(formatResponse(false, 200, "Task List Created", response));
     }
   });
+  /**maintain history */
+  let createdTaskListHistory = await Historic_TaskList.create(
+    newHistoricSchema
+  );
+  console.log("HISTORY UPDATED____", createdTaskListHistory.updateId);
 };
 exports.getAllTaskList = async (req, res) => {
   //console.log("get all task list control");
