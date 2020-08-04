@@ -257,3 +257,18 @@ exports.getFriendRequestsValidation = (req, res, next) => {
   }
   next();
 };
+exports.fetchHistoricDataValidation = (req, res, next) => {
+  console.log("Fetch historic data validation");
+  const frSchema = joi.object({
+    updateId: joi.string().required(),
+  });
+  let { error } = frSchema.validate(req.body);
+  if (error) {
+    return res
+      .status(400)
+      .json(
+        formatResponse(true, "Not Valid Input Params", error.details[0].message)
+      );
+  }
+  next();
+};

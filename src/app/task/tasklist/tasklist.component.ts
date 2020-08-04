@@ -462,4 +462,15 @@ export class TasklistComponent implements OnInit {
       }
     });
   }
+  public startUndoProcess(): any {
+    console.log('Start undo process::by the current user forthe current user');
+    console.log('loggedIn USER:', this.userId);
+    console.log('selected/friendID::', this.selectedUserId);
+    /**read the latest  updates done for the selctedUser
+     * which will be either current user or if he is viewing task for
+     * a friend
+     * -->call fetchhistoric data api
+     *
+     */
+  }
 }

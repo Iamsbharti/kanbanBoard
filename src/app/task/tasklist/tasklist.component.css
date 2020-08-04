@@ -53,5 +53,15 @@ img {
 .logout {
   display: flex;
   box-sizing: border-box;
+  margin: 0px;
+  padding: 0px;
   justify-content: flex-end;
+}
+.undo {
+  cursor: pointer;
+  font-weight: bold;
+  font-size: small;
+}
+.undo:hover {
+  color: rgb(209, 0, 0);
 }
