@@ -50,3 +50,8 @@ img {
   box-sizing: border-box;
   justify-content: center;
 }
+.logout {
+  display: flex;
+  box-sizing: border-box;
+  justify-content: flex-end;
+}

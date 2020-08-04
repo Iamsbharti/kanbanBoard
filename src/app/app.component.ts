@@ -1,6 +1,4 @@
 import { Component } from '@angular/core';
-import { MultiUserService } from './multiuser/multi-user.service';
-import { Cookie } from 'ng2-cookies';
 import { Router } from '@angular/router';
 @Component({
   selector: 'app-root',
@@ -9,14 +7,5 @@ import { Router } from '@angular/router';
 })
 export class AppComponent {
   title = 'kanbanBoard';
-  constructor(
-    private multiUserService: MultiUserService,
-    private _router: Router
-  ) {}
-  public userLogout(): any {
-    console.log('user logout');
-    this.multiUserService.disconnectUser(Cookie.get('userId'));
-    /**redirect to login page */
-    setTimeout(() => this._router.navigate(['/login']), 130);
-  }
+  constructor() {}
 }

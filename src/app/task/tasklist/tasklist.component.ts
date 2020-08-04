@@ -86,6 +86,12 @@ export class TasklistComponent implements OnInit {
     //load task list on component load
     this.getAllTaskList(this.userId);
   }
+  public userLogout(): any {
+    console.log('user logout');
+    this.multiUserService.disconnectUser(this.userId);
+    /**redirect to login page */
+    setTimeout(() => this._router.navigate(['/login']), 130);
+  }
   public handeShakeAuthentication(): any {
     console.log('listen to hand shake from task-list');
     this.taskListService.autheticateUser().subscribe((data) => {
