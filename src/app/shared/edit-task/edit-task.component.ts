@@ -142,7 +142,11 @@ export class EditTaskComponent implements OnInit {
             this.successResponse = true;
             this.editTaskResponse = response.message;
             console.log('emitt new task change', response.data);
+            /**notify tasklist component for task updates */
             this.notifyEditTask.emit(response.data);
+            /**emit update notifiation to friends if any*/
+            let notification = `${this.username} updated a Task`;
+            this.notifyFriends(notification);
             /**emit close modal event */
             this.closeModal.emit();
           }
@@ -180,8 +184,10 @@ export class EditTaskComponent implements OnInit {
             this.errorResponse = false;
             this.successResponse = true;
             this.editTaskResponse = response.message;
-            //this.notifyNewTaskList.emit(response.data);
             this.notifyEditSubTask.emit(response.data);
+            /**emit update notifiation to friends if any*/
+            let notification = `${this.username} updated a SubTask`;
+            this.notifyFriends(notification);
             /**emit close modal event */
             this.closeModal.emit();
           }
@@ -221,20 +227,8 @@ export class EditTaskComponent implements OnInit {
               `${this.name + ':' + this.taskListId}`
             );
             /**emit update notifiation to friends if any*/
-            console.log("friend'slist::", this.usersFriend.length);
-            //aurabh bharti updated sautyutrvwyer TaskList
-            if (this.usersFriend.length !== 0) {
-              console.log(
-                'notify friends for any changes --user has friends:',
-                this.usersFriend.length
-              );
-              let updates = `${this.username} updated a TaskList`;
-              console.log('updates string::', updates, this.usersFriend);
-              this.multiUserService.notifyFriendsForUpdates(
-                updates,
-                this.usersFriend
-              );
-            }
+            let notification = `${this.username} updated a TaskList`;
+            this.notifyFriends(notification);
 
             /**emit close modal event */
             this.closeModal.emit();
@@ -248,6 +242,16 @@ export class EditTaskComponent implements OnInit {
           console.log('resposen-taklist::', this.editTaskResponse);
           this._toast.open({ text: error.error.message, type: 'danger' });
         }
+      );
+    }
+  }
+  public notifyFriends(notification): any {
+    /**emit update notifiation to friends if any*/
+    if (this.usersFriend.length !== 0) {
+      console.log('updates string::', notification, this.usersFriend);
+      this.multiUserService.notifyFriendsForUpdates(
+        notification,
+        this.usersFriend
       );
     }
   }
