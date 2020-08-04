@@ -41,6 +41,7 @@ export class TasklistComponent implements OnInit {
   public onlineUsersList: any[];
   public authToken = String;
   public selectedFriendName = String;
+  public toggleBannerDisplay: Boolean = true;
   /**-----------Modifications------- */
   public selectedUserId: String;
   public selectedTaskListId: String;
@@ -333,9 +334,13 @@ export class TasklistComponent implements OnInit {
   public getFriendsItems(selectedFriend): any {
     console.log('listen to friend selection::', selectedFriend);
     let [friendName, friendUserId] = selectedFriend.split(':');
+    /**hide the friendlist div */
+    this.toggleFriendList = true;
     /**fetch taskLists for friend and add to existing taskList array */
     this.selectedUserId = friendUserId;
     this.selectedFriendName = friendName;
+    /**display banner */
+    this.toggleBannerDisplay = false;
     console.log('get all task tasklist for friends::');
     this.getAllTaskList(friendUserId);
     /**filter the current task list based on current USERID i.e
@@ -355,5 +360,15 @@ export class TasklistComponent implements OnInit {
   public reloadFriendlyUpdates(value): any {
     console.log('reload listener::', value);
     this.getAllTaskList(value);
+  }
+  /**refresh page for showLoggedInUsersTask i.e.
+   * switch from friend's view to seld
+   *
+   */
+  public showLoggedInUsersTask(userId): any {
+    console.log('reload for self');
+    this.getAllTaskList(userId);
+    /**hide friend's banner */
+    this.toggleBannerDisplay = true;
   }
 }

@@ -45,3 +45,8 @@ img {
   justify-content: flex-end;
   margin-top: -21px;
 }
+.displayBanner {
+  display: flex;
+  box-sizing: border-box;
+  justify-content: center;
+}
