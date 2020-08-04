@@ -28,6 +28,7 @@ export class TasklistComponent implements OnInit {
   /**edit */
   public name: String;
   public selectTasks: any = [];
+  public selectTasksList: any = [];
   public subTaskId: String;
   public tasks: any = [];
   public status: String;
@@ -160,13 +161,10 @@ export class TasklistComponent implements OnInit {
       const [taskId, name, taskListId, status] = id.split(':');
       this.taskId = taskId;
       this.selectedTaskId = taskId;
-      this.name = name;
       this.selectedTaskName = name;
-      this.taskListId = taskListId;
       this.selectedTaskListId = taskListId;
-      this.status = status;
       this.selectedTaskStatus = status;
-      this.selectTasks = this.taskLists;
+      this.selectTasksList = this.taskLists;
     }
     if (ops == 'Edit SubTask') {
       console.log('edit subtask case');
@@ -216,7 +214,8 @@ export class TasklistComponent implements OnInit {
         this.fetchedAlltaskLists = response.message;
         /**store all tasklists */
         //console.log('tasklists return::', response.data);
-        this.taskLists.push(...response.data);
+        //this.taskLists.push(...response.data);
+        this.taskLists = response.data;
       },
       (error) => {
         console.warn('Error fetching task list', error, error);
@@ -258,14 +257,15 @@ export class TasklistComponent implements OnInit {
   public deleteTask(values): any {
     //console.log('Delete task listeners::', values, this.userId);
     /**call delete service */
-    let [taskId, taskListId] = values.split(':');
+    let [taskId, taskListId, userId] = values.split(':');
     //console.log(taskListId, taskId);
     let taskInfo = {
       taskListId: taskListId,
       taskId: taskId,
-      userId: this.userId,
+      userId: userId,
       operation: 'delete',
     };
+    console.log('delete taskinfo::', taskInfo);
     this.taskListService.updateTask(taskInfo).subscribe(
       (response) => {
         //console.log('Delete api reponse::', response.message);
@@ -338,6 +338,12 @@ export class TasklistComponent implements OnInit {
     this.selectedFriendName = friendName;
     console.log('get all task tasklist for friends::');
     this.getAllTaskList(friendUserId);
+    /**filter the current task list based on current USERID i.e
+     * loggedIn user or selected friend
+     */
+    this.taskLists = this.taskLists.filter((list) => {
+      list.userId !== this.userId;
+    });
     console.log('tasklist::', this.taskLists);
     /**toast for friend's selection */
     this._toast.open({

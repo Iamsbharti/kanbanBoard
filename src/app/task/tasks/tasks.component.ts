@@ -63,9 +63,9 @@ export class TasksComponent implements OnInit {
     this.notify.emit(taskId);
   }
   /**emit subtask deletion */
-  public emitTaskDeletion(taskId, taskListId): any {
-    console.log('Emit deletetion', taskId, taskListId);
-    this.delete.emit(`${taskId}:${taskListId}`);
+  public emitTaskDeletion(taskId, taskListId, userId): any {
+    console.log('Emit deletetion', taskId, taskListId, userId);
+    this.delete.emit(`${taskId}:${taskListId}:${userId}`);
   }
   /**emit edit subtask*/
   public editSubTask(values, taskListId): any {

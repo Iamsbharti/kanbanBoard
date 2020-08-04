@@ -52,7 +52,7 @@ export class CreateTaskComponent implements OnInit {
       this.taskService.createTask(taskInfo).subscribe(
         (response) => {
           console.log('Create task response::', response.message);
-
+          console.log('error::', response);
           /**New task Create success */
           if (response.status === 200) {
             this._toast.open({ text: response.message, type: 'success' });
@@ -63,6 +63,9 @@ export class CreateTaskComponent implements OnInit {
             this.notifyNewTask.emit(response.data);
             /**emit close modal event */
             this.closeModal.emit();
+          }
+          if (response.error === true && response.status === 400) {
+            this._toast.open({ text: `${response.data}`, type: 'danger' });
           }
         },
         (error) => {
@@ -99,6 +102,9 @@ export class CreateTaskComponent implements OnInit {
             /**emit modal close event */
             this.closeModal.emit();
           }
+          if (response.error === true && response.status === 400) {
+            this._toast.open({ text: `${response.data}`, type: 'danger' });
+          }
         },
         (error) => {
           console.warn('Error::', error.error);
@@ -131,6 +137,9 @@ export class CreateTaskComponent implements OnInit {
             //setTimeout(() => this.notifyNewTaskList.emit(response.data), 130);
             /**emit modal close event */
             this.closeModal.emit();
+          }
+          if (response.error === true && response.status === 400) {
+            this._toast.open({ text: `${response.data}`, type: 'danger' });
           }
         },
         (error) => {

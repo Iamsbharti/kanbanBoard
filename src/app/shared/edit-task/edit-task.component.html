@@ -24,9 +24,11 @@
         name="selectedTask"
         #_tsk="ngModel"
       >
-        <option *ngFor="let task of selectTasks" [value]="task.taskListId">{{
-          task.name
-        }}</option>
+        <option
+          *ngFor="let task of selectTasksList"
+          [value]="task.taskListId"
+          >{{ task.name }}</option
+        >
       </select>
     </div>
     <div [hidden]="toggleTasks">

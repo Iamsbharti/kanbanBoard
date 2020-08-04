@@ -199,9 +199,7 @@ export class FriendListComponent implements OnInit {
             console.log('Found friend');
             this._toaster.open({ text: toastString, type: 'dark' });
             //emit reload tasklist event
-            console.log(
-              "reloading task for current upser ,since it's a friend"
-            );
+            console.log("reloading task for  ,since it's a friend");
             this.reloadTaskList.emit(this.userId);
           }
         });

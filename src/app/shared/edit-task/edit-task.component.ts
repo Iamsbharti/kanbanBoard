@@ -21,12 +21,13 @@ export class EditTaskComponent implements OnInit {
 
   /**tasklist field */
   @Input() taskListName: any;
-  @Input() selectTasks: any[];
+  @Input() selectTasksList: any[];
   /**subtask field */
   @Input() subTaskName: any;
   @Input() taskId: any;
   @Input() subTaskId: any;
   @Input() selectedFriendName: any;
+  @Input() selectTasks: any[];
 
   public editTaskResponse: String;
   public errorResponse: Boolean = true;
@@ -37,6 +38,7 @@ export class EditTaskComponent implements OnInit {
   public toggleStatusSelection: Boolean = false;
   public selected: String;
   public selectedTask: String;
+  public selectedTaskList: any = [];
   public statusOptions: String[];
 
   //component will emit tasklist reload
@@ -67,25 +69,25 @@ export class EditTaskComponent implements OnInit {
       this.toggleStatusSelection = true;
     }
     if (this.operationName === 'Edit Task') {
-      console.log('ops edit task::', this.selectTasks);
+      console.log('ops edit task::', this.selectTasksList);
       console.log('ops edit task');
-      this.selectTasks.map((list) => {
+      /*this.selectTasksList.map((list) => {
         if (list.taskListId === this.taskListId) {
           console.log('taskname::', list.name);
           this.selectedTask = list.name;
         }
-      });
+      });*/
       this.toggleTaskList = false;
       this.toggleTasks = true;
-      console.log('selected value::', this.selectedTask);
+      //console.log('selected value::', this.selectedTask);
     }
     if (this.operationName === 'Edit SubTask') {
       console.log('ops edit subtask::', this.selectTasks);
       console.log('ops edit subtasks');
       this.toggleTaskList = true;
       this.toggleTasks = false;
+      this.getAllTask();
     }
-    this.getAllTask();
   }
   /**fetch all tasks for selection use while updating subtasks */
   public getAllTask(): any {
@@ -102,8 +104,8 @@ export class EditTaskComponent implements OnInit {
         console.log('All tasks::', this.selectTasks);
         this.selectTasks.map((list) => {
           if (list.taskId === this.taskId) {
-            console.log('taskfor subtask::', list.name);
-            this.selected = list.name;
+            console.log('taskfor subtask::', list.taskId);
+            this.selected = list.taskId;
           }
         });
         console.log('selected task::', this.selected);
@@ -246,6 +248,7 @@ export class EditTaskComponent implements OnInit {
     }
   }
   public notifyFriends(notification): any {
+    console.log('notify friends for updates');
     /**emit update notifiation to friends if any*/
     if (this.usersFriend.length !== 0) {
       console.log('updates string::', notification, this.usersFriend);
