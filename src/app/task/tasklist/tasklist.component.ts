@@ -4,7 +4,7 @@ import { ToastConfig, Toaster } from 'ngx-toast-notifications';
 import { Router, Route } from '@angular/router';
 import { UserService } from '../../user/user.service';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
-
+import { MultiUserService } from '../../multiuser/multi-user.service';
 @Component({
   selector: 'app-tasklist',
   templateUrl: './tasklist.component.html',
@@ -42,6 +42,7 @@ export class TasklistComponent implements OnInit {
   public authToken = String;
   public selectedFriendName = String;
   public toggleBannerDisplay: Boolean = true;
+  public flagDisplayingFriendsItem: Boolean = false;
   /**-----------Modifications------- */
   public selectedUserId: String;
   public selectedTaskListId: String;
@@ -63,7 +64,8 @@ export class TasklistComponent implements OnInit {
     private _toast: Toaster,
     private _router: Router,
     private userService: UserService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private multiUserService: MultiUserService
   ) {
     const {
       authToken,
@@ -292,8 +294,13 @@ export class TasklistComponent implements OnInit {
   /**delete tasklist */
   public deleteTaskList(taskListId: String): any {
     //console.log('delete tasklist::', taskListId);
+    /**compute input params based on loggedIn user or friend's selection */
+    let userId = this.flagDisplayingFriendsItem
+      ? this.selectedUserId
+      : this.userId;
+    console.log('deleting task list for ::', userId);
     let taskListInfo = {
-      userId: this.userId,
+      userId: userId,
       taskListId: taskListId,
       operation: 'delete',
     };
@@ -311,6 +318,17 @@ export class TasklistComponent implements OnInit {
         this._toast.open({ text: error.error.message, type: 'danger' });
       }
     );
+    /**notification for delete items for friends */
+    console.log('notify friends for updates');
+    /**emit update notifiation to friends if any*/
+    let notification = `${this.username} deleted a TaskList`;
+    if (this.usersFriendList.length !== 0) {
+      console.log('updates string::', notification, this.usersFriendList);
+      this.multiUserService.notifyFriendsForUpdates(
+        notification,
+        this.usersFriendList
+      );
+    }
   }
   /**edit task list */
   public editTaskLists(value): any {
@@ -336,6 +354,8 @@ export class TasklistComponent implements OnInit {
     let [friendName, friendUserId] = selectedFriend.split(':');
     /**hide the friendlist div */
     this.toggleFriendList = true;
+    /**switch flag to friend's view */
+    this.flagDisplayingFriendsItem = true;
     /**fetch taskLists for friend and add to existing taskList array */
     this.selectedUserId = friendUserId;
     this.selectedFriendName = friendName;

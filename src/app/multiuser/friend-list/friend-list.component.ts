@@ -200,7 +200,7 @@ export class FriendListComponent implements OnInit {
             this._toaster.open({ text: toastString, type: 'dark' });
             //emit reload tasklist event
             console.log("reloading task for  ,since it's a friend");
-            this.reloadTaskList.emit(this.userId);
+            setTimeout(() => this.reloadTaskList.emit(this.userId), 1400);
           }
         });
       }
