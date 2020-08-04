@@ -230,8 +230,13 @@ export class TasklistComponent implements OnInit {
 
   /**listen for newly created task list and push it to existing array */
   public addNewTaskList(newTaskList: any): any {
-    //console.log('refresh new taskList::', newTaskList.name);
+    console.log('refresh new taskList::', newTaskList.name);
     //console.log('Adding to current list');
+    /**notification for delete items for friends */
+    console.log('notify friends for updates');
+    /**emit update notifiation to friends if any*/
+    let notification = `${this.username} Created a Task`;
+    this.notifyFriends(notification);
     return this.taskLists.push(newTaskList);
   }
   /**listen for newly created task  and emitt event to update it */
@@ -325,17 +330,17 @@ export class TasklistComponent implements OnInit {
         this.taskLists = this.taskLists.filter(
           (list) => list.taskListId != taskListId
         );
+        /**notification for delete items for friends */
+        console.log('notify friends for updates');
+        /**emit update notifiation to friends if any*/
+        let notification = `${this.username} deleted a TaskList`;
+        this.notifyFriends(notification);
       },
       (error) => {
         console.log('Error deleting tasklist::', error.error);
         this._toast.open({ text: error.error.message, type: 'danger' });
       }
     );
-    /**notification for delete items for friends */
-    console.log('notify friends for updates');
-    /**emit update notifiation to friends if any*/
-    let notification = `${this.username} deleted a TaskList`;
-    this.notifyFriends(notification);
   }
   /**edit task list */
   public editTaskLists(value): any {

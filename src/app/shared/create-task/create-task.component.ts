@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 import { TasklistService } from '../../task/tasklist.service';
 import { ToastConfig, Toaster } from 'ngx-toast-notifications';
-
+import { MultiUserService } from '../../multiuser/multi-user.service';
 @Component({
   selector: 'app-create-task',
   templateUrl: './create-task.component.html',
@@ -11,6 +11,10 @@ export class CreateTaskComponent implements OnInit {
   /**common input fields */
   @Input() userId: any;
   @Input() operationName: String;
+  @Input() loggedInUser: any;
+  @Input() username: any;
+  @Input() flagOperationForFriend: any;
+  @Input() usersFriend: any;
   /**task field */
   @Input() taskListId: any;
   @Input() taskName: any;
@@ -34,7 +38,11 @@ export class CreateTaskComponent implements OnInit {
   @Output()
   closeModal: EventEmitter<String> = new EventEmitter<String>();
 
-  constructor(private taskService: TasklistService, private _toast: Toaster) {}
+  constructor(
+    private taskService: TasklistService,
+    private _toast: Toaster,
+    private multiUserService: MultiUserService
+  ) {}
 
   ngOnInit(): void {}
   /**create a single task */
@@ -134,9 +142,11 @@ export class CreateTaskComponent implements OnInit {
             this.createNewtaskResponse = response.message;
             console.log('emmit new tasklist create', response.data);
             this.notifyNewTaskList.emit(response.data);
-            //setTimeout(() => this.notifyNewTaskList.emit(response.data), 130);
             /**emit modal close event */
             this.closeModal.emit();
+            /**emit create notifiation to friends if any*/
+            let notification = `${this.username} created a TaskList`;
+            this.notifyFriends(notification);
           }
           if (response.error === true && response.status === 400) {
             this._toast.open({ text: `${response.data}`, type: 'danger' });
@@ -174,5 +184,16 @@ export class CreateTaskComponent implements OnInit {
         this._toast.open({ text: error.error.message, type: 'danger' });
       }
     );
+  }
+  public notifyFriends(notification): any {
+    console.log('notify friends for updates');
+    /**emit update notifiation to friends if any*/
+    if (this.usersFriend.length !== 0) {
+      console.log('updates string::', notification, this.usersFriend);
+      this.multiUserService.notifyFriendsForUpdates(
+        notification,
+        this.usersFriend
+      );
+    }
   }
 }
