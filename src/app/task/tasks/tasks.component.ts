@@ -94,10 +94,11 @@ export class TasksComponent implements OnInit {
       subTaskId: subTaskId,
       taskId: taskId,
       operation: 'delete',
+      userId: this.userId,
     };
     this.taskService.updateSubTask(taskInfo).subscribe(
       (response) => {
-        console.log('Delete api reponse::', response.message);
+        console.log('Delete api reponse::', response);
         /**success toast  */
         this._toast.open({ text: response.message, type: 'success' });
         /**refresh for specific user */

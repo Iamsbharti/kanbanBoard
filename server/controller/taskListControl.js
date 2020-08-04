@@ -6,6 +6,9 @@ const SubTask = require("../models/SubTask");
 const User = require("../models/User");
 const EXCLUDE = "-__v -_id";
 const Historic_TaskList = require("../models/Historic_TaskList");
+const MemoryTable = require("../models/MemoryTable");
+const Historic_SubTask = require("../models/Historic_SubTask");
+const Historic_Task = require("../models/Historic_Task");
 /**Check for valid userId */
 const validUserId = async (userId) => {
   ////console.log("validate UserId:", userId);
@@ -52,12 +55,23 @@ exports.createTaskList = async (req, res) => {
     userId: userId,
     taskListId: uniqueTaskListId,
   });
-  /**hoistoric tasklist schema */
+  /**historic tasklist schema */
+  let createdTimeStamp = Date.now();
+  let updateId = `${userId}:${uniqueTaskListId}:${createdTimeStamp}`;
   let newHistoricSchema = new Historic_TaskList({
-    updateId: `${userId}:${uniqueTaskListId}:${Date.now()}`,
+    updateId: updateId,
     name: name,
     taskListId: uniqueTaskListId,
     userId: userId,
+    createdOn: createdTimeStamp,
+  });
+  /**memory table updates */
+  let memory = new MemoryTable({
+    userId: userId,
+    entity: "TaskList",
+    updatedOn: createdTimeStamp,
+    updateId: updateId,
+    operation: "create",
   });
   console.log("history-schema:;", newHistoricSchema);
   TaskList.create(newList, (error, createdList) => {
@@ -79,7 +93,12 @@ exports.createTaskList = async (req, res) => {
   let createdTaskListHistory = await Historic_TaskList.create(
     newHistoricSchema
   );
-  console.log("HISTORY UPDATED____", createdTaskListHistory.updateId);
+  let memorySnapShot = await MemoryTable.create(memory);
+  console.log(
+    "HISTORY UPDATED____",
+    createdTaskListHistory.updateId,
+    memorySnapShot.updateId
+  );
 };
 exports.getAllTaskList = async (req, res) => {
   //console.log("get all task list control");
@@ -136,13 +155,36 @@ exports.createTask = async (req, res) => {
       .json(formatResponse(true, 400, "Task Name Exists", name));
 
   /**Create new task */
+  let uniqueTaskId = shortid.generate();
+  let createdTimeStamp = Date.now();
+  let updateId = `${userId}:${uniqueTaskId}:${createdTimeStamp}`;
+  /**task schema */
   let newTask = new Task({
     name: name,
-    taskId: shortid.generate(),
+    taskId: uniqueTaskId,
     taskListId: taskListId,
     userId: userId,
     status: status,
+    createdOn: createdTimeStamp,
   });
+  /**historic task schema */
+  let newHistoricSchema = new Historic_Task({
+    updateId: updateId,
+    name: name,
+    taskId: uniqueTaskId,
+    userId: userId,
+    status: status,
+    createdOn: createdTimeStamp,
+  });
+  /**memory table schema */
+  let memory = new MemoryTable({
+    userId: userId,
+    entity: "Task",
+    updatedOn: createdTimeStamp,
+    updateId: updateId,
+    operation: "create",
+  });
+  console.log("history-schema:;", newHistoricSchema);
   Task.create(newTask, (error, createdTask) => {
     ////console.log("error", error, createdTask);
     if (error !== null) {
@@ -158,6 +200,14 @@ exports.createTask = async (req, res) => {
         .json(formatResponse(false, 200, "Task Created", response));
     }
   });
+  /**maintain history */
+  let createdTaskHistory = await Historic_Task.create(newHistoricSchema);
+  let memorySnapShot = await MemoryTable.create(memory);
+  console.log(
+    "HISTORY UPDATED____",
+    createdTaskHistory.updateId,
+    memorySnapShot.updateId
+  );
 };
 exports.getAllTasks = async (req, res) => {
   //console.log("get all tasks control");
@@ -195,7 +245,7 @@ exports.getAllTasks = async (req, res) => {
 };
 exports.createSubTask = async (req, res) => {
   //console.log("Create subtask control");
-  const { name, taskId, status } = req.body;
+  const { name, taskId, status, userId } = req.body;
 
   /**check for valid taskId */
   let isTaskIdValid = await validTaskId(taskId);
@@ -211,12 +261,35 @@ exports.createSubTask = async (req, res) => {
       .json(formatResponse(true, 400, "Sub Task Name Exists", name));
 
   /**Create new subtask */
+  let uniqueSubTaskId = shortid.generate();
+  let createdTimeStamp = Date.now();
+  let updateId = `${userId}:${uniqueSubTaskId}:${createdTimeStamp}`;
+  /**subtask schema */
   let newSubTask = new SubTask({
     name: name,
-    subTaskId: shortid.generate(),
+    subTaskId: uniqueSubTaskId,
     taskId: taskId,
     status: status,
   });
+  /**historic subtask schema */
+  let newHistoricSchema = new Historic_SubTask({
+    updateId: updateId,
+    name: name,
+    subTaskId: uniqueSubTaskId,
+    status: status,
+    userId: userId,
+    createdOn: createdTimeStamp,
+  });
+  /**memory table schema */
+  let memory = new MemoryTable({
+    userId: userId,
+    entity: "SubTask",
+    updatedOn: createdTimeStamp,
+    updateId: updateId,
+    operation: "create",
+  });
+  console.log("history-schema:;", newHistoricSchema);
+
   SubTask.create(newSubTask, (error, createdSubTask) => {
     ////console.log("error", error, createdSubTask);
     if (error !== null) {
@@ -232,6 +305,14 @@ exports.createSubTask = async (req, res) => {
         .json(formatResponse(false, 200, "Sub Task Created", response));
     }
   });
+  /**maintain history */
+  let createdTaskHistory = await Historic_SubTask.create(newHistoricSchema);
+  let memorySnapShot = await MemoryTable.create(memory);
+  console.log(
+    "HISTORY UPDATED____",
+    createdTaskHistory.updateId,
+    memorySnapShot.updateId
+  );
 };
 exports.getSubTasks = async (req, res) => {
   //console.log("get all subtasks control");
@@ -304,6 +385,37 @@ exports.updateTaskList = async (req, res) => {
             );
         }
       });
+      /**maintain history */
+      let uniqueTaskListId = taskListId;
+      let createdTimeStamp = Date.now();
+      let updateId = `${userId}:${uniqueTaskListId}:${createdTimeStamp}`;
+      /**historic task schema */
+      let newHistoricSchema = new Historic_TaskList({
+        updateId: updateId,
+        name: update.name,
+        taskListId: uniqueTaskListId,
+        userId: userId,
+        createdOn: createdTimeStamp,
+      });
+      /**memory table schema */
+      let memory = new MemoryTable({
+        userId: userId,
+        entity: "TaskList",
+        updatedOn: createdTimeStamp,
+        updateId: updateId,
+        operation: "edit",
+      });
+      console.log("history-schema:;", newHistoricSchema);
+      /**maintain history */
+      let createdTaskHistory = await Historic_TaskList.create(
+        newHistoricSchema
+      );
+      let memorySnapShot = await MemoryTable.create(memory);
+      console.log(
+        "HISTORY UPDATED____",
+        createdTaskHistory.updateId,
+        memorySnapShot.updateId
+      );
     }
   }
   if (operation === "delete") {
@@ -400,6 +512,36 @@ exports.updateTask = async (req, res) => {
             );
         }
       });
+      /**maintain history */
+      let uniqueTaskId = taskId;
+      let createdTimeStamp = Date.now();
+      let updateId = `${userId}:${uniqueTaskId}:${createdTimeStamp}`;
+      /**historic task schema */
+      let newHistoricSchema = new Historic_Task({
+        updateId: updateId,
+        name: update.name,
+        status: status,
+        taskId: uniqueTaskId,
+        userId: userId,
+        createdOn: createdTimeStamp,
+      });
+      /**memory table schema */
+      let memory = new MemoryTable({
+        userId: userId,
+        entity: "Task",
+        updatedOn: createdTimeStamp,
+        updateId: updateId,
+        operation: "edit",
+      });
+      console.log("history-schema:;", newHistoricSchema);
+      /**maintain history */
+      let createdTaskHistory = await Historic_Task.create(newHistoricSchema);
+      let memorySnapShot = await MemoryTable.create(memory);
+      console.log(
+        "HISTORY UPDATED____",
+        createdTaskHistory.updateId,
+        memorySnapShot.updateId
+      );
     }
   }
   if (operation === "delete") {
@@ -425,7 +567,7 @@ exports.updateTask = async (req, res) => {
 };
 exports.updateSubTask = async (req, res) => {
   //console.log("Update sub task control::");
-  const { subTaskId, taskId, update, operation } = req.body;
+  const { subTaskId, taskId, update, operation, userId } = req.body;
   /**----Sanity check--------------- */
   /**check for valid taskId */
   let isTaskIdValid = await validTaskId(taskId);
@@ -468,6 +610,36 @@ exports.updateSubTask = async (req, res) => {
             );
         }
       });
+      /**maintain history */
+      let uniqueSubTaskId = subTaskId;
+      let createdTimeStamp = Date.now();
+      let updateId = `${userId}:${uniqueSubTaskId}:${createdTimeStamp}`;
+      /**historic task schema */
+      let newHistoricSchema = new Historic_SubTask({
+        updateId: updateId,
+        name: update.name,
+        status: status,
+        subTaskId: subTaskId,
+        userId: userId,
+        createdOn: createdTimeStamp,
+      });
+      /**memory table schema */
+      let memory = new MemoryTable({
+        userId: userId,
+        entity: "SubTask",
+        updatedOn: createdTimeStamp,
+        updateId: updateId,
+        operation: "edit",
+      });
+      console.log("history-schema:;", newHistoricSchema);
+      /**maintain history */
+      let createdTaskHistory = await Historic_SubTask.create(newHistoricSchema);
+      let memorySnapShot = await MemoryTable.create(memory);
+      console.log(
+        "HISTORY UPDATED____",
+        createdTaskHistory.updateId,
+        memorySnapShot.updateId
+      );
     }
   }
   /**delete subtask */

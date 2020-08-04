@@ -18,9 +18,11 @@ let taskListSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  status: {
+    type: String,
+  },
   createdOn: {
     type: Date,
-    default: Date.now(),
   },
   updatedOn: {
     type: Date,

@@ -107,6 +107,7 @@ export class CreateTaskComponent implements OnInit {
         taskId: this.taskId,
         name: this.taskName,
         status: 'open',
+        userId: this.userId,
       };
       console.log('subtaskinfor::', taskInfo);
       this.taskService.createSubTask(taskInfo).subscribe(

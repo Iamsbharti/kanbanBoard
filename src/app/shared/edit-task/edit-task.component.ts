@@ -177,6 +177,7 @@ export class EditTaskComponent implements OnInit {
         taskId: this.taskId,
         subTaskId: this.subTaskId,
         operation: 'edit',
+        userId: this.userId,
         update: {
           name: this.name,
           status: this.status,

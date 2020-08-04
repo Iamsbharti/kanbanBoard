@@ -160,6 +160,7 @@ exports.createSubTaskValidation = (req, res, next) => {
     name: joi.string().min(3).required(),
     taskId: joi.string().required(),
     status: joi.valid("done", "open").required(),
+    userId: joi.string().required(),
   });
   let { error } = subTask.validate(req.body, options);
   ////console.log("Error::", error);
@@ -231,6 +232,7 @@ exports.updateSubTaskValidation = (req, res, next) => {
     taskId: joi.string().required(),
     subTaskId: joi.string().required(),
     update: joi.object().optional(),
+    userId: joi.string().required(),
   });
   let { error } = updateSubTask.validate(req.body, options);
   if (error) {
