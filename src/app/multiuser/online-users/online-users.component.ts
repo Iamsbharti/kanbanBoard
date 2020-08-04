@@ -30,7 +30,7 @@ export class OnlineUsersComponent implements OnInit {
   }
 
   public handeShakeAuthentication(): any {
-    //console.log('listen to hand shake', this.authToken.length);
+    console.log('listen to hand shake online compoenent');
     this.multiUserService.autheticateUser().subscribe((data) => {
       this.multiUserService.setUser(this.authToken);
       this.getOnlineUsersList();

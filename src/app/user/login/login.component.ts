@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ToastConfig, Toaster } from 'ngx-toast-notifications';
 import { UserService } from '../user.service';
 import { Cookie } from 'ng2-cookies';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',

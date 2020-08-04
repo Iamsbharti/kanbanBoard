@@ -19,6 +19,15 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(logIp);
+app.all("*", function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
+  next();
+});
 
 /**Set up api route */
 let baseurl = process.env.API_VERSION;
@@ -35,5 +44,5 @@ let server = app.listen(port, () =>
 );
 
 //Init socket
+console.log("SERVER_________:", server.listening);
 let socketServerInit = setSocketServer(server);
-console.log("Socket Init::", socketServerInit);

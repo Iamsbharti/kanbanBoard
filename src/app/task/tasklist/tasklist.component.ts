@@ -53,6 +53,7 @@ export class TasklistComponent implements OnInit {
   /**component will emit event ot update
    * task and subtask array in their respective compoenents
    */
+
   @Output()
   notifyNewTaskList: EventEmitter<Object> = new EventEmitter<Object>();
   @Output()
@@ -81,10 +82,16 @@ export class TasklistComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.handeShakeAuthentication();
     //load task list on component load
     this.getAllTaskList(this.userId);
   }
-
+  public handeShakeAuthentication(): any {
+    console.log('listen to hand shake from task-list');
+    this.taskListService.autheticateUser().subscribe((data) => {
+      this.taskListService.setUser(this.authToken);
+    });
+  }
   /**set inline users list */
   public setOnlineUsers(users): any {
     //console.log('online users::');

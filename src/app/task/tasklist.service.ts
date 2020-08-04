@@ -7,15 +7,47 @@ import {
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { UserService } from '../user/user.service';
+import * as io from 'socket.io-client';
 @Injectable({
   providedIn: 'root',
 })
 export class TasklistService {
   //initialize
   public baseurl = 'http://localhost:4201/api/v1';
-
-  constructor(private _http: HttpClient, private userService: UserService) {}
-
+  private socket;
+  private socketUrl = 'http://localhost:4201/multiusers';
+  constructor(private _http: HttpClient, private userService: UserService) {
+    /**init client socket */
+    this.socket = io(this.socketUrl, {
+      'auto connect': true,
+      multiplex: false,
+      'try multiple transports': true,
+    });
+  }
+  /**define listeners and emitters */
+  /**1: Listen to authentication handshake */
+  public autheticateUser = () => {
+    console.log('Auth user listener');
+    return Observable.create((observer) => {
+      this.socket.on('authenticate', (data) => {
+        observer.next(data);
+      });
+    });
+  };
+  /**2 send/emit authToken for authentication */
+  public setUser = (authToken) => {
+    console.log('Emmit user authentication');
+    this.socket.emit('set-user', authToken);
+  };
+  /**3 Get Online Userlist by listning to online-users broadcase */
+  public getOnlineUserList = () => {
+    //console.log('get online user service');
+    return Observable.create((observer) => {
+      this.socket.on('online-users', (data) => {
+        observer.next(data);
+      });
+    });
+  };
   //handle exceptions
   public handleError(error: HttpErrorResponse) {
     console.log('Http Error:', error.message);

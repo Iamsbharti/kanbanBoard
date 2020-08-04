@@ -19,7 +19,12 @@ export class MultiUserService {
   private socket;
   constructor(private _http: HttpClient, private userService: UserService) {
     /**init client socket */
-    this.socket = io(this.socketUrl);
+    this.socket = io(this.socketUrl, {
+      'auto connect': true,
+      'max reconnection attempts': 10,
+      multiplex: false,
+      'try multiple transports': true,
+    });
   }
   //handle exceptions
   public handleError(error: HttpErrorResponse) {
@@ -34,7 +39,7 @@ export class MultiUserService {
   /**define listeners and emitters */
   /**1: Listen to authentication handshake */
   public autheticateUser = () => {
-    //console.log('Auth user listener');
+    console.log('Auth user listener');
     return Observable.create((observer) => {
       this.socket.on('authenticate', (data) => {
         observer.next(data);
@@ -43,7 +48,7 @@ export class MultiUserService {
   };
   /**2 send/emit authToken for authentication */
   public setUser = (authToken) => {
-    //console.log('Emmit user authentication');
+    console.log('Emmit user authentication');
     this.socket.emit('set-user', authToken);
   };
   /**3 Get Online Userlist by listning to online-users broadcase */

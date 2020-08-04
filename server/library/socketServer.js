@@ -12,6 +12,7 @@ const eventEmitter = new events.EventEmitter();
 exports.setSocketServer = (server) => {
   console.log("Socket server INIT");
   let io = socketio.listen(server);
+
   /**cors fix */
   io.origins("*:*");
   let myio = io.of("/multiusers");
@@ -52,7 +53,7 @@ exports.setSocketServer = (server) => {
             console.log("Emit online-users-list");
             //socket.to(socket.room).broadcast.emit("online-users", onlineUsers);
             myio.emit("online-users", onlineUsers);
-            return onlineUsers;
+            //return onlineUsers;
           }
         });
       }

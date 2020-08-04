@@ -45,7 +45,7 @@ export class FriendListComponent implements OnInit {
   }
 
   public handeShakeAuthentication(): any {
-    //console.log('listen to hand shake', this.authToken.length);
+    console.log('listen to hand shake');
     this.multiUserService.autheticateUser().subscribe((data) => {
       this.multiUserService.setUser(this.authToken);
       this.getFriends();
