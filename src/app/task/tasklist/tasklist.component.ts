@@ -240,11 +240,11 @@ export class TasklistComponent implements OnInit {
     return this.taskLists.push(newTaskList);
   }
   /**listen for newly created task  and emitt event to update it */
-  public addNewTask(newTask: any): any {
+  public addNewTask(userId: any): any {
     //console.log('addnew task listeners::', newTask);
     //console.log(typeof newTask);
-    this.getAllTaskList(this.userId);
-    this.notifyNewTask.emit(newTask);
+    this.getAllTaskList(userId);
+    //this.notifyNewTask.emit(newTask);
   }
   /**listen for newly created task list and emit event to update it */
   public addNewSubTask(newSubTask: any): any {

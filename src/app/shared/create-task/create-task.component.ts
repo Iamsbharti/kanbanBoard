@@ -68,7 +68,21 @@ export class CreateTaskComponent implements OnInit {
             this.successResponse = true;
             this.createNewtaskResponse = response.message;
             console.log('emitt new task change', response.data);
-            this.notifyNewTask.emit(response.data);
+            //this.notifyNewTask.emit(response.data);
+            /**notify tasklist component for task updates */
+            let refreshUserId;
+            if (this.flagOperationForFriend) {
+              refreshUserId = this.userId;
+            } else {
+              refreshUserId = this.loggedInUser;
+            }
+            console.log('refreshing for::', refreshUserId);
+            //this.notifyEditTask.emit(refreshUserId);
+            this.notifyNewTask.emit(refreshUserId);
+            /**emit update notifiation to friends if any*/
+            let notification = `${this.username} created a Task`;
+            this.notifyFriends(notification);
+
             /**emit close modal event */
             this.closeModal.emit();
           }
@@ -163,28 +177,7 @@ export class CreateTaskComponent implements OnInit {
       );
     }
   }
-  /**get all taskLists */
-  public getAllTaskList(): any {
-    let userdata = {
-      userId: this.userId,
-    };
-    this.taskService.getTaskLists(userdata).subscribe(
-      (response) => {
-        console.log('get all task list', response.message);
-        //this.fetchedAlltaskLists = response.message;
-        /**store all tasklists */
-        this.taskService = response.data;
-        /**toast */
-        this._toast.open({ text: response.message, type: 'success' });
-        console.log('taskList', this.taskService);
-      },
-      (error) => {
-        console.warn('Error fetching task list', error, error);
-        //this.fetchedAlltaskLists = error.error.message;
-        this._toast.open({ text: error.error.message, type: 'danger' });
-      }
-    );
-  }
+
   public notifyFriends(notification): any {
     console.log('notify friends for updates');
     /**emit update notifiation to friends if any*/
