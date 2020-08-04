@@ -1,20 +1,19 @@
 <ul class="list-group">
   <li class="list-group-item" *ngFor="let task of subtasks">
-    {{ task.name
-    }}<img
-      class="remove"
-      src="/assets/removetaskicon.png"
-      (click)="emitSubTaskDeletion(task.taskId, task.subTaskId)"
-    />
-    <img
-      class="add"
-      src="/assets/edit.png"
-      (click)="
-        emitEditSubTask(task.taskId, task.name, task.subTaskId, task.status)
-      "
-    />
-    <span class="badge badge-pill badge-secondary ml-3 status">{{
-      task.status
-    }}</span>
+    <span class="name">{{ task.name }}</span>
+    <span class="taskHeader">
+      <img
+        class="add mr-2"
+        src="/assets/removetaskicon.png"
+        (click)="emitSubTaskDeletion(task.taskId, task.subTaskId)"
+      />
+      <img
+        class="add"
+        src="/assets/edit.png"
+        (click)="
+          emitEditSubTask(task.taskId, task.name, task.subTaskId, task.status)
+        "
+      />
+    </span>
   </li>
 </ul>

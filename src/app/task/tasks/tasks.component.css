@@ -1,5 +1,5 @@
 .add {
-  margin-left: 15px;
+  margin-left: 10px;
   width: 20px;
   height: 20px;
   cursor: pointer;
@@ -21,4 +21,10 @@
 }
 .subtask {
   float: right;
+}
+.taskHeader {
+  display: flex;
+  align-self: flex-start;
+  justify-content: flex-end;
+  margin-top: -21px;
 }
