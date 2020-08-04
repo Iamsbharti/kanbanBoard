@@ -98,10 +98,13 @@
         <app-tasks
           [taskListId]="list.taskListId"
           [userId]="list.userId"
+          [loggedInUser]="userId"
+          [flagOperationForFriend]="flagDisplayingFriendsItem"
           (notify)="openCreateSubTaskForm($event, createModal)"
           (delete)="deleteTask($event)"
           (edit)="editTask($event, editModal)"
           (editSTask)="editSubTask($event, editModal)"
+          (notifyForSTaskDelete)="notifyFriendsSTaskDelete($event)"
         >
         </app-tasks>
       </div>
@@ -156,6 +159,7 @@
           [selectTasks]="selectTasks"
           [loggedInUser]="userId"
           [username]="username"
+          [flagOperationForFriend]="flagDisplayingFriendsItem"
           [usersFriend]="usersFriendList"
           (notifyEditTaskList)="editTaskLists($event)"
           (notifyEditTask)="postEditTask($event)"

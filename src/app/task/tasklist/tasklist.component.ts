@@ -274,13 +274,26 @@ export class TasklistComponent implements OnInit {
         //console.log('Delete api reponse::', response.message);
         /**success toast  */
         this._toast.open({ text: response.message, type: 'success' });
-        this.getAllTaskList(this.userId);
+        /**notify tasklist component for task updates */
+        let refreshUserId;
+        if (this.flagDisplayingFriendsItem) {
+          refreshUserId = this.selectedUserId;
+        } else {
+          refreshUserId = this.userId;
+        }
+        console.log('refreshing for::', refreshUserId);
+        this.getAllTaskList(refreshUserId);
       },
       (error) => {
         console.log('Error Deleting Task::', error.error);
         this._toast.open({ text: error.error.message, type: 'danger' });
       }
     );
+    /**notification for delete items for friends */
+    console.log('notify friends for updates');
+    /**emit update notifiation to friends if any*/
+    let notification = `${this.username} deleted a Task`;
+    this.notifyFriends(notification);
   }
   /**edit task listeners from task-component */
   public editTask(values, modal): any {
@@ -322,13 +335,7 @@ export class TasklistComponent implements OnInit {
     console.log('notify friends for updates');
     /**emit update notifiation to friends if any*/
     let notification = `${this.username} deleted a TaskList`;
-    if (this.usersFriendList.length !== 0) {
-      console.log('updates string::', notification, this.usersFriendList);
-      this.multiUserService.notifyFriendsForUpdates(
-        notification,
-        this.usersFriendList
-      );
-    }
+    this.notifyFriends(notification);
   }
   /**edit task list */
   public editTaskLists(value): any {
@@ -344,10 +351,10 @@ export class TasklistComponent implements OnInit {
     });
   }
   public postEditTask(value): any {
-    this.getAllTaskList(this.userId);
+    this.getAllTaskList(value);
   }
   public postEditSubTask(value): any {
-    this.getAllTaskList(this.userId);
+    this.getAllTaskList(value);
   }
   public getFriendsItems(selectedFriend): any {
     console.log('listen to friend selection::', selectedFriend);
@@ -390,5 +397,22 @@ export class TasklistComponent implements OnInit {
     this.getAllTaskList(userId);
     /**hide friend's banner */
     this.toggleBannerDisplay = true;
+  }
+  /**utitlity method for realtime update notification  */
+  public notifyFriends(notification): any {
+    console.log('notify friends for updates');
+    /**emit update notifiation to friends if any*/
+    if (this.usersFriendList.length !== 0) {
+      console.log('updates string::', notification, this.usersFriendList);
+      this.multiUserService.notifyFriendsForUpdates(
+        notification,
+        this.usersFriendList
+      );
+    }
+  }
+  /**notification for sub task deeltion */
+  public notifyFriendsSTaskDelete(value): any {
+    let notification = `${this.username} deleted a SubTask`;
+    this.notifyFriends(notification);
   }
 }

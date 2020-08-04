@@ -28,7 +28,7 @@ export class EditTaskComponent implements OnInit {
   @Input() subTaskId: any;
   @Input() selectedFriendName: any;
   @Input() selectTasks: any[];
-
+  @Input() flagOperationForFriend: any[];
   public editTaskResponse: String;
   public errorResponse: Boolean = true;
   public successResponse: Boolean = true;
@@ -145,7 +145,14 @@ export class EditTaskComponent implements OnInit {
             this.editTaskResponse = response.message;
             console.log('emitt new task change', response.data);
             /**notify tasklist component for task updates */
-            this.notifyEditTask.emit(response.data);
+            let refreshUserId;
+            if (this.flagOperationForFriend) {
+              refreshUserId = this.userId;
+            } else {
+              refreshUserId = this.loggedInUser;
+            }
+            console.log('refreshing for::', refreshUserId);
+            this.notifyEditTask.emit(refreshUserId);
             /**emit update notifiation to friends if any*/
             let notification = `${this.username} updated a Task`;
             this.notifyFriends(notification);
@@ -186,7 +193,13 @@ export class EditTaskComponent implements OnInit {
             this.errorResponse = false;
             this.successResponse = true;
             this.editTaskResponse = response.message;
-            this.notifyEditSubTask.emit(response.data);
+            let refreshUserId;
+            if (this.flagOperationForFriend) {
+              refreshUserId = this.userId;
+            } else {
+              refreshUserId = this.loggedInUser;
+            }
+            this.notifyEditSubTask.emit(refreshUserId);
             /**emit update notifiation to friends if any*/
             let notification = `${this.username} updated a SubTask`;
             this.notifyFriends(notification);

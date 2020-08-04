@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { TasklistService } from '../../task/tasklist.service';
 import { ToastConfig, Toaster } from 'ngx-toast-notifications';
-
+import { MultiUserService } from '../../multiuser/multi-user.service';
 @Component({
   selector: 'app-tasks',
   templateUrl: './tasks.component.html',
@@ -11,7 +11,8 @@ export class TasksComponent implements OnInit {
   @Input() taskListId: any;
   @Input() userId: any;
   @Input() name: any;
-
+  @Input() loggedInUser: any;
+  @Input() flagOperationForFriend: any;
   //component will emitt
   @Output()
   notify: EventEmitter<String> = new EventEmitter<String>();
@@ -21,14 +22,20 @@ export class TasksComponent implements OnInit {
   edit: EventEmitter<String> = new EventEmitter<String>();
   @Output()
   editSTask: EventEmitter<String> = new EventEmitter<String>();
+  @Output()
+  notifyForSTaskDelete: EventEmitter<String> = new EventEmitter<String>();
 
   public tasks: [Object];
   public toggleCreateTaskForm: Boolean = false;
-  constructor(private taskService: TasklistService, private _toast: Toaster) {}
+  constructor(
+    private taskService: TasklistService,
+    private _toast: Toaster,
+    private multiUserService: MultiUserService
+  ) {}
   ngOnInit(): void {
-    this.getAllTask();
+    this.getAllTask(this.taskListId, this.userId);
   }
-  public getAllTask(): any {
+  public getAllTask(taskListId, userId): any {
     let taskInfo = {
       taskListId: this.taskListId,
       userId: this.userId,
@@ -93,12 +100,21 @@ export class TasksComponent implements OnInit {
         console.log('Delete api reponse::', response.message);
         /**success toast  */
         this._toast.open({ text: response.message, type: 'success' });
-        this.getAllTask();
+        /**refresh for specific user */
+        let refreshUserId;
+        if (this.flagOperationForFriend) {
+          refreshUserId = this.userId;
+        } else {
+          refreshUserId = this.loggedInUser;
+        }
+        console.log('refreshing for::', refreshUserId);
+        this.getAllTask(refreshUserId, taskId);
       },
       (error) => {
         console.log('Error Deleting Task::', error.error);
         this._toast.open({ text: error.error.message, type: 'danger' });
       }
     );
+    this.notifyForSTaskDelete.emit();
   }
 }

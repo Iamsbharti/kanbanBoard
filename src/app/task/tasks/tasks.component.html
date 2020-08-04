@@ -20,6 +20,7 @@
     <span class="badge badge-pill badge-primary ml-3">{{ task.status }}</span>
     <app-subtasks
       [taskId]="task.taskId"
+      [userId]="userId"
       (delete)="deleteSubTask($event)"
       (edit)="editSubTask($event, task.taskListId)"
     ></app-subtasks>

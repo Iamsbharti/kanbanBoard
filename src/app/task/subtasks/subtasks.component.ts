@@ -9,6 +9,7 @@ import {} from '../../multiuser/multiuser.module';
 export class SubtasksComponent implements OnInit {
   //init field
   @Input() taskId: any;
+  @Input() userId: any;
   public subtasks: [Object];
   constructor(private taskService: TasklistService) {}
   @Output()
