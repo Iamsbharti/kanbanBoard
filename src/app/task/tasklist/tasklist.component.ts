@@ -4,8 +4,6 @@ import { ToastConfig, Toaster } from 'ngx-toast-notifications';
 import { Router, Route } from '@angular/router';
 import { UserService } from '../../user/user.service';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
-import { first } from 'rxjs/operators';
-import { timeStamp } from 'console';
 
 @Component({
   selector: 'app-tasklist',
@@ -18,6 +16,7 @@ export class TasklistComponent implements OnInit {
   public subtasks: any = [];
   public fetchedAlltaskLists: String;
   public userId: String;
+  public usersFriendList: any = [];
   /**new task info */
   public subTaskName: String;
   public taskListId: String;
@@ -40,6 +39,7 @@ export class TasklistComponent implements OnInit {
   public username: String;
   public onlineUsersList: any[];
   public authToken = String;
+  public selectedFriendName = String;
   /**-----------Modifications------- */
   public selectedUserId: String;
   public selectedTaskListId: String;
@@ -67,11 +67,13 @@ export class TasklistComponent implements OnInit {
       authToken,
       firstName,
       lastName,
+      friends,
     } = userService.getAutheticatedUserInfo();
     this.userId = userService.getAutheticatedUserInfo().userId;
     this.username = firstName + ' ' + lastName;
     this.authToken = authToken;
     this.selectedUserId = this.userId;
+    this.usersFriendList = friends;
   }
 
   ngOnInit(): void {
@@ -333,6 +335,7 @@ export class TasklistComponent implements OnInit {
     let [friendName, friendUserId] = selectedFriend.split(':');
     /**fetch taskLists for friend and add to existing taskList array */
     this.selectedUserId = friendUserId;
+    this.selectedFriendName = friendName;
     console.log('get all task tasklist for friends::');
     this.getAllTaskList(friendUserId);
     console.log('tasklist::', this.taskLists);
@@ -341,5 +344,10 @@ export class TasklistComponent implements OnInit {
       text: `opening tasks for ${friendName}`,
       type: 'info',
     });
+  }
+  /**reload friendly updates */
+  public reloadFriendlyUpdates(value): any {
+    console.log('reload listener::', value);
+    this.getAllTaskList(value);
   }
 }

@@ -79,6 +79,16 @@ exports.setSocketServer = (server) => {
         1200
       );
     });
+    /**listen to friend-updated-tasks and emit for concerner friends*/
+    socket.on("friend-updated-tasks", (updates, friendsList) => {
+      console.log(
+        "______________friendlyupdates_________________",
+        updates,
+        friendsList
+      );
+      myio.emit("updates-from-friend", updates, friendsList);
+    });
+
     /**logout/disconnect user listener*/
     socket.on("disconnected", (userId) => {
       console.log("User Disconnected", userId);

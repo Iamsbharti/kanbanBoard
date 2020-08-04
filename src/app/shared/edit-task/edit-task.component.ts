@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 import { TasklistService } from '../../task/tasklist.service';
 import { ToastConfig, Toaster } from 'ngx-toast-notifications';
-
+import { MultiUserService } from '../../multiuser/multi-user.service';
 @Component({
   selector: 'app-edit-task',
   templateUrl: './edit-task.component.html',
@@ -14,6 +14,8 @@ export class EditTaskComponent implements OnInit {
   @Input() name: String;
   @Input() status: String;
   @Input() loggedInUser: String;
+  @Input() usersFriend: any;
+  @Input() username: any;
   /**task field */
   @Input() taskListId: any;
 
@@ -24,6 +26,7 @@ export class EditTaskComponent implements OnInit {
   @Input() subTaskName: any;
   @Input() taskId: any;
   @Input() subTaskId: any;
+  @Input() selectedFriendName: any;
 
   public editTaskResponse: String;
   public errorResponse: Boolean = true;
@@ -35,6 +38,7 @@ export class EditTaskComponent implements OnInit {
   public selected: String;
   public selectedTask: String;
   public statusOptions: String[];
+
   //component will emit tasklist reload
 
   @Output()
@@ -46,7 +50,11 @@ export class EditTaskComponent implements OnInit {
   @Output()
   closeModal: EventEmitter<String> = new EventEmitter<String>();
 
-  constructor(private taskService: TasklistService, private _toast: Toaster) {}
+  constructor(
+    private taskService: TasklistService,
+    private _toast: Toaster,
+    private multiUserService: MultiUserService
+  ) {}
 
   ngOnInit(): void {
     this.statusOptions = ['open', 'done'];
@@ -212,6 +220,22 @@ export class EditTaskComponent implements OnInit {
             this.notifyEditTaskList.emit(
               `${this.name + ':' + this.taskListId}`
             );
+            /**emit update notifiation to friends if any*/
+            console.log("friend'slist::", this.usersFriend.length);
+            //aurabh bharti updated sautyutrvwyer TaskList
+            if (this.usersFriend.length !== 0) {
+              console.log(
+                'notify friends for any changes --user has friends:',
+                this.usersFriend.length
+              );
+              let updates = `${this.username} updated a TaskList`;
+              console.log('updates string::', updates, this.usersFriend);
+              this.multiUserService.notifyFriendsForUpdates(
+                updates,
+                this.usersFriend
+              );
+            }
+
             /**emit close modal event */
             this.closeModal.emit();
           }

@@ -15,6 +15,8 @@ export class FriendListComponent implements OnInit {
   friends: EventEmitter<any> = new EventEmitter<any>();
   @Output()
   selectedFriend: EventEmitter<any> = new EventEmitter<any>();
+  @Output()
+  reloadTaskList: EventEmitter<any> = new EventEmitter<any>();
 
   private authToken: String;
   public resultList: any = [];
@@ -38,6 +40,8 @@ export class FriendListComponent implements OnInit {
     this.getFriendRequestList();
     /**listen for any approval/rejection for this user */
     this.fRequestUpdateListener();
+    /**listen for any updates made by friends */
+    this.friendlyUpdatesListener();
   }
 
   public handeShakeAuthentication(): any {
@@ -173,5 +177,35 @@ export class FriendListComponent implements OnInit {
   public openFriendsItem(friend): any {
     console.log('friend::', friend);
     this.selectedFriend.emit(friend);
+  }
+  /**listener for friendly task updates */
+  public friendlyUpdatesListener(): any {
+    let toastString;
+    let friendList = [];
+    console.log('Friendly task updates');
+    this.multiUserService.friendlyTaskUpdates().subscribe((updates) => {
+      console.log('updates listener::', updates);
+      if (typeof updates === 'string') {
+        toastString = updates;
+        console.log('toast string::', toastString);
+      } else {
+        friendList = updates;
+        console.log('friendlist::', updates);
+      }
+      console.log('is friend::', friendList, this.userId);
+      if (friendList.length !== 0) {
+        friendList.map((fr) => {
+          if (fr !== null && fr === this.userId) {
+            console.log('Found friend');
+            this._toaster.open({ text: toastString, type: 'dark' });
+            //emit reload tasklist event
+            console.log(
+              "reloading task for current upser ,since it's a friend"
+            );
+            this.reloadTaskList.emit(this.userId);
+          }
+        });
+      }
+    });
   }
 }

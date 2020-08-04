@@ -31,10 +31,12 @@ exports.loginControl = async (req, res) => {
       let friendList = _userData.friends;
       friendList.map((fr, i) => {
         if (fr === _userData.userId) {
+          console.log("found::", fr, i);
           /**remove from friend list */
-          _userData.friends.splice(i);
+          delete _userData.friends[i];
         }
       });
+      console.log(_userData.friends);
       return Promise.resolve(_userData);
     } else {
       return Promise.reject(formatResponse(true, 401, "Login Failed", null));

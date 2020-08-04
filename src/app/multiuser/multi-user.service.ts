@@ -113,4 +113,24 @@ export class MultiUserService {
       });
     });
   }
+  /**emit update notification to friends when any edit if
+   * performed 'updates' has What was updated by whom
+   */
+  public notifyFriendsForUpdates(updates, friendlist): any {
+    console.log('emit notify friendly updates');
+    this.socket.emit('friend-updated-tasks', updates, friendlist);
+  }
+  /**listen for updates from friends and show notificationa
+   * and reload tasklist if userId is in Friend's list
+   */
+  public friendlyTaskUpdates(): any {
+    console.log('friendly task updates');
+    return Observable.create((observable) => {
+      this.socket.on('updates-from-friend', (updates, friendList) => {
+        observable.next(updates);
+        observable.next(friendList);
+        observable.complete();
+      });
+    });
+  }
 }

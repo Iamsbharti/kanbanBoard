@@ -55,6 +55,7 @@
     [username]="username"
     (friends)="setFriendList($event)"
     (selectedFriend)="getFriendsItems($event)"
+    (reloadTaskList)="reloadFriendlyUpdates($event)"
   ></app-friend-list>
   <div class="row">
     <div class="col-md-5 mt-4" *ngFor="let list of taskLists">
@@ -140,6 +141,8 @@
           [status]="selectedTaskStatus"
           [selectTasks]="selectTasks"
           [loggedInUser]="userId"
+          [username]="username"
+          [usersFriend]="usersFriendList"
           (notifyEditTaskList)="editTaskLists($event)"
           (notifyEditTask)="postEditTask($event)"
           (notifyEditSubTask)="postEditSubTask($event)"
