@@ -482,8 +482,10 @@ export class TasklistComponent implements OnInit {
           console.log('Revert-Success::', response.message);
           console.log('Reloading the current tasklist');
           /**timeout to fetch the updated db data */
-          setTimeout(() => this.getAllTaskList(this.selectedUserId), 1000);
-          this._toast.open({ text: response.message, type: 'success' });
+          setTimeout(() => {
+            this.getAllTaskList(this.selectedUserId);
+            this._toast.open({ text: response.message, type: 'success' });
+          }, 1000);
         } else {
           this._toast.open({ text: response.message, type: 'danger' });
         }
