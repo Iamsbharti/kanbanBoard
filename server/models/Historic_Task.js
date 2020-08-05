@@ -20,6 +20,11 @@ let taskListSchema = mongoose.Schema({
     required: true,
     unique: false,
   },
+  taskListId: {
+    type: String,
+    required: true,
+    unique: false,
+  },
   status: {
     type: String,
     unique: false,

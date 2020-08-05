@@ -173,6 +173,7 @@ exports.createTask = async (req, res) => {
     updateId: updateId,
     name: name,
     taskId: uniqueTaskId,
+    taskListId: taskListId,
     userId: userId,
     status: status,
     operation: "create",
@@ -400,7 +401,7 @@ exports.updateTaskList = async (req, res) => {
         name: update.name,
         taskListId: uniqueTaskListId,
         userId: userId,
-        operation: "edit",
+        operation: operation,
         createdOn: createdTimeStamp,
       });
       /**memory table schema */
@@ -409,7 +410,7 @@ exports.updateTaskList = async (req, res) => {
         entity: "TaskList",
         updatedOn: createdTimeStamp,
         updateId: updateId,
-        operation: "edit",
+        operation: operation,
       });
       console.log("history-schema:;", newHistoricSchema);
       /**maintain history */
@@ -427,6 +428,40 @@ exports.updateTaskList = async (req, res) => {
   if (operation === "delete") {
     //console.log("delete task and related task and subtasks");
     let query = { taskListId: taskListId, userId: userId };
+    /**maintain history before delete*/
+    /**get info about tasklist being deleted */
+    let toBeDeletedTaskList = await TaskList.findOne({
+      taskListId: taskListId,
+    });
+    let uniqueTaskListId = taskListId;
+    let createdTimeStamp = Date.now();
+    let updateId = `${userId}:${uniqueTaskListId}:${createdTimeStamp}`;
+    /**historic task schema */
+    let newHistoricSchema = new Historic_TaskList({
+      updateId: updateId,
+      name: toBeDeletedTaskList.name,
+      taskListId: uniqueTaskListId,
+      userId: userId,
+      operation: operation,
+      createdOn: createdTimeStamp,
+    });
+    /**memory table schema */
+    let memory = new MemoryTable({
+      userId: userId,
+      entity: "TaskList",
+      updatedOn: createdTimeStamp,
+      updateId: updateId,
+      operation: operation,
+    });
+    console.log("history-schema:;", newHistoricSchema);
+    /**maintain history */
+    let createdTaskHistory = await Historic_TaskList.create(newHistoricSchema);
+    let memorySnapShot = await MemoryTable.create(memory);
+    console.log(
+      "HISTORY UPDATED____",
+      createdTaskHistory.updateId,
+      memorySnapShot.updateId
+    );
     /**find taskId and to delete it's subtasks */
     ////console.log("Fetching task ids for userid and taskList Id");
     let taskDetails = await Task.find(query).select("taskId").lean().exec();
@@ -472,6 +507,7 @@ exports.updateTaskList = async (req, res) => {
       }
     });
   }
+  /**memory snapshots updates */
 };
 exports.updateTask = async (req, res) => {
   //console.log("Update task control::");
@@ -553,6 +589,42 @@ exports.updateTask = async (req, res) => {
   }
   if (operation === "delete") {
     //console.log("Delete task");
+    /**maintain history */
+    /**get info about task being deleted */
+    let toBeDeletedTask = await Task.findOne({
+      taskId: taskId,
+    });
+    let uniqueTaskId = taskId;
+    let createdTimeStamp = Date.now();
+    let updateId = `${userId}:${uniqueTaskId}:${createdTimeStamp}`;
+    /**historic task schema */
+    let newHistoricSchema = new Historic_Task({
+      updateId: updateId,
+      name: toBeDeletedTask.name,
+      status: toBeDeletedTask.status,
+      taskId: uniqueTaskId,
+      taskListId: toBeDeletedTask.taskListId,
+      userId: userId,
+      operation: operation,
+      createdOn: createdTimeStamp,
+    });
+    /**memory table schema */
+    let memory = new MemoryTable({
+      userId: userId,
+      entity: "Task",
+      updatedOn: createdTimeStamp,
+      updateId: updateId,
+      operation: operation,
+    });
+    console.log("history-schema:;", newHistoricSchema);
+    /**maintain history and memory map*/
+    let createdTaskHistory = await Historic_Task.create(newHistoricSchema);
+    let memorySnapShot = await MemoryTable.create(memory);
+    console.log(
+      "HISTORY UPDATED____",
+      createdTaskHistory.updateId,
+      memorySnapShot.updateId
+    );
     /**delete/cleanup subsequent subtasks */
     let deletedSubTasks = await SubTask.deleteMany({ taskId: taskId });
     deletedSubTasks &&
@@ -628,7 +700,7 @@ exports.updateSubTask = async (req, res) => {
         status: status,
         subTaskId: subTaskId,
         userId: userId,
-        operation: "edit",
+        operation: operation,
         createdOn: createdTimeStamp,
       });
       /**memory table schema */
@@ -637,7 +709,7 @@ exports.updateSubTask = async (req, res) => {
         entity: "SubTask",
         updatedOn: createdTimeStamp,
         updateId: updateId,
-        operation: "edit",
+        operation: operation,
       });
       console.log("history-schema:;", newHistoricSchema);
       /**maintain history */
@@ -653,6 +725,42 @@ exports.updateSubTask = async (req, res) => {
   /**delete subtask */
   if (operation === "delete") {
     //console.log("Delete subtask");
+    /**maintain history */
+    /**get info about task being deleted */
+    let toBeDeletedSubTask = await SubTask.findOne({
+      subTaskId: subTaskId,
+    });
+    let uniqueSubTaskId = subTaskId;
+    let createdTimeStamp = Date.now();
+    let updateId = `${userId}:${uniqueSubTaskId}:${createdTimeStamp}`;
+    /**historic task schema */
+    let newHistoricSchema = new Historic_SubTask({
+      updateId: updateId,
+      name: toBeDeletedSubTask.name,
+      status: toBeDeletedSubTask.status,
+      subTaskId: toBeDeletedSubTask.subTaskId,
+      taskId: toBeDeletedSubTask.taskId,
+      userId: userId,
+      operation: operation,
+      createdOn: createdTimeStamp,
+    });
+    /**memory table schema */
+    let memory = new MemoryTable({
+      userId: userId,
+      entity: "SubTask",
+      updatedOn: createdTimeStamp,
+      updateId: updateId,
+      operation: operation,
+    });
+    console.log("history-schema:;", newHistoricSchema);
+    /**maintain history */
+    let createdTaskHistory = await Historic_SubTask.create(newHistoricSchema);
+    let memorySnapShot = await MemoryTable.create(memory);
+    console.log(
+      "HISTORY UPDATED____",
+      createdTaskHistory.updateId,
+      memorySnapShot.updateId
+    );
     SubTask.deleteOne(query, (error, deletedSubTask) => {
       if (error !== null) {
         res

@@ -29,6 +29,11 @@ let subTaskSchema = mongoose.Schema({
     required: true,
     unique: false,
   },
+  status: {
+    type: String,
+    required: true,
+    unique: false,
+  },
   createdOn: {
     type: Date,
   },

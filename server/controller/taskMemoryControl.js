@@ -132,7 +132,7 @@ exports.revertChanges = async (req, res) => {
       revertedSomething = true;
     }
     if (operation === "delete") {
-      let { name, status, userId, taskId } = historicTask[0];
+      let { name, status, userId, taskId, taskListId } = historicTask[0];
       console.log("delete  ops -->creating::", name, status, userId, taskId);
       /**create the deleted tasklist */
       let newTaskSchema = new Task({
@@ -205,8 +205,8 @@ exports.revertChanges = async (req, res) => {
         status: status,
         taskId: taskId,
       });
-      let createdTask = await SubTask.create(newTaskSchema);
-      console.log("created the deleted tasklist::", createdTask.taskId);
+      let createdSubTask = await SubTask.create(newTaskSchema);
+      console.log("created the deleted subtask::", createdSubTask.subTaskId);
       revertedSomething = true;
     }
     /**clean memorysnapshot and corresposing Hitoric entry post revert*/
