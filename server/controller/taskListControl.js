@@ -104,6 +104,7 @@ exports.createTaskList = async (req, res) => {
 exports.getAllTaskList = async (req, res) => {
   //console.log("get all task list control");
   const { userId } = req.body;
+  const { skip } = req.query;
 
   /**Verify userId */
   let isUserIdValid = await validUserId(userId);
@@ -114,13 +115,17 @@ exports.getAllTaskList = async (req, res) => {
   /**fetch all task list for the userid */
   TaskList.find({ userId: userId })
     .select(EXCLUDE)
+    .skip(parseInt(skip, 10) || 0)
     .lean()
+    .limit(5)
     .exec((error, allList) => {
       // //console.log("error", error, allList);
       if (error !== null) {
         res
           .status(500)
-          .json(formatResponse(true, 500, "Error Fetching TaskLists", error));
+          .json(
+            formatResponse(true, 500, "Error Fetching TaskLists", error.message)
+          );
       } else {
         res
           .status(200)
