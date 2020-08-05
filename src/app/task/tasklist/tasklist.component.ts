@@ -5,6 +5,7 @@ import { Router, Route } from '@angular/router';
 import { UserService } from '../../user/user.service';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { MultiUserService } from '../../multiuser/multi-user.service';
+import { HostListener } from '@angular/core';
 @Component({
   selector: 'app-tasklist',
   templateUrl: './tasklist.component.html',
@@ -80,7 +81,14 @@ export class TasklistComponent implements OnInit {
     this.selectedUserId = this.userId;
     this.usersFriendList = friends;
   }
-
+  /**document listener for undo process */
+  @HostListener('document:keydown', ['$event'])
+  onKeyDown(ev: KeyboardEvent) {
+    if (ev.metaKey || (ev.ctrlKey && ev.key === 'z')) {
+      console.log('undo start');
+      this.startUndoProcess();
+    }
+  }
   ngOnInit(): void {
     console.log('NGONIT RELOAD_______________TASKLIST');
     this.handeShakeAuthentication();
