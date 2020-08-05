@@ -259,10 +259,10 @@ exports.getFriendRequestsValidation = (req, res, next) => {
   }
   next();
 };
-exports.fetchHistoricDataValidation = (req, res, next) => {
+exports.revertValidation = (req, res, next) => {
   console.log("Fetch historic data validation");
   const frSchema = joi.object({
-    updateId: joi.string().required(),
+    userId: joi.string().required(),
   });
   let { error } = frSchema.validate(req.body);
   if (error) {

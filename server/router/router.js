@@ -20,6 +20,7 @@ const {
   updateTaskValidation,
   updateSubTaskValidation,
   getFriendRequestsValidation,
+  revertValidation,
 } = require("../middlewares/paramValidation");
 const { isAuthorized } = require("../middlewares/authorization");
 const {
@@ -35,7 +36,7 @@ const {
 } = require("../controller/taskListControl");
 
 const { getFriendList } = require("../controller/friendReqSocketControl");
-
+const { revertChanges } = require("../controller/taskMemoryControl");
 /**Sign up route */
 router.post("/signup", signupParamValidation, signUpControl);
 /**login route */
@@ -95,4 +96,6 @@ router.post(
   getFriendRequestsValidation,
   getFriendList
 );
+/**revert changes */
+router.post("/revertChanges", isAuthorized, revertValidation, revertChanges);
 module.exports = router;

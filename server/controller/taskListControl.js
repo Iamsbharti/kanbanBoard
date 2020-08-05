@@ -270,6 +270,7 @@ exports.createSubTask = async (req, res) => {
     subTaskId: uniqueSubTaskId,
     taskId: taskId,
     status: status,
+    userId: userId,
   });
   /**historic subtask schema */
   let newHistoricSchema = new Historic_SubTask({
@@ -278,6 +279,7 @@ exports.createSubTask = async (req, res) => {
     subTaskId: uniqueSubTaskId,
     status: status,
     userId: userId,
+    taskId: taskId,
     createdOn: createdTimeStamp,
   });
   /**memory table schema */
