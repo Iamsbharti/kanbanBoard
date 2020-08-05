@@ -82,6 +82,7 @@ export class TasklistComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log('NGONIT RELOAD_______________TASKLIST');
     this.handeShakeAuthentication();
     //load task list on component load
     this.getAllTaskList(this.userId);
@@ -486,6 +487,9 @@ export class TasklistComponent implements OnInit {
             this.getAllTaskList(this.selectedUserId);
             this._toast.open({ text: response.message, type: 'success' });
           }, 1000);
+          /**notify friends about changes */
+          let notification = `${this.username} Reverted a Change`;
+          this.notifyFriends(notification);
         } else {
           this._toast.open({ text: response.message, type: 'danger' });
         }

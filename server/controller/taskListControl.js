@@ -562,8 +562,9 @@ exports.updateTask = async (req, res) => {
       let newHistoricSchema = new Historic_Task({
         updateId: updateId,
         name: update.name,
-        status: status,
+        status: update.status,
         taskId: uniqueTaskId,
+        taskListId: taskListId,
         userId: userId,
         operation: "edit",
         createdOn: createdTimeStamp,

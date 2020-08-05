@@ -1,4 +1,11 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  OnDestroy,
+} from '@angular/core';
 import { MultiUserService } from '../multi-user.service';
 import { Cookie } from 'ng2-cookies';
 import { ToastConfig, Toaster } from 'ngx-toast-notifications';
@@ -8,7 +15,7 @@ import { ToastConfig, Toaster } from 'ngx-toast-notifications';
   templateUrl: './friend-list.component.html',
   styleUrls: ['./friend-list.component.css'],
 })
-export class FriendListComponent implements OnInit {
+export class FriendListComponent implements OnInit, OnDestroy {
   @Input() userId: any;
   @Input() username: any;
   @Output()
@@ -34,6 +41,7 @@ export class FriendListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log('NGINIT_______FRIENDLIST');
     /**get friend list on user's login */
     this.getFriends();
     /**listen for any friend request made */
@@ -43,7 +51,14 @@ export class FriendListComponent implements OnInit {
     /**listen for any updates made by friends */
     this.friendlyUpdatesListener();
   }
-
+  ngOnDestroy(): void {
+    /**listen for any friend request made */
+    this.getFriendRequestList();
+    /**listen for any approval/rejection for this user */
+    this.fRequestUpdateListener();
+    /**listen for any updates made by friends */
+    this.friendlyUpdatesListener();
+  }
   public handeShakeAuthentication(): any {
     console.log('listen to hand shake');
     this.multiUserService.autheticateUser().subscribe((data) => {
