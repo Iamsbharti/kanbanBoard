@@ -113,6 +113,7 @@ exports.getAllTaskList = async (req, res) => {
     return res.status(isUserIdValid.status).json(isUserIdValid);
 
   /**fetch all task list for the userid */
+  /**skip and limit are used for pagination purpose */
   TaskList.find({ userId: userId })
     .select(EXCLUDE)
     .skip(parseInt(skip, 10) || 0)
