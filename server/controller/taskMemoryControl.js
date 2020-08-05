@@ -14,7 +14,7 @@ exports.revertChanges = async (req, res) => {
    *  reverted , and take action accordingly
    *
    */
-
+  let revertedSomething = false;
   let toRevert;
   /**fetch memory snapshot and filter out the latest changes done by that id */
   let memorySnapshots = await MemoryTable.find({ userId: userId });
@@ -26,8 +26,8 @@ exports.revertChanges = async (req, res) => {
     });
   } else {
     return res
-      .status(200)
-      .json(formatResponse(false, 200, "No Historic Data Found", null));
+      .status(404)
+      .json(formatResponse(true, 404, "No Historic Data Found", null));
   }
 
   /**destructure data from memory map to find out appropiate entity and take actions */
@@ -61,27 +61,33 @@ exports.revertChanges = async (req, res) => {
 
     let historicTaskList = await Historic_TaskList.find({
       updateId: updateId,
-    });
+    })
+      .lean()
+      .exec();
 
-    let { name, taskListId, userId } = historicTaskList;
     if (operation === "create") {
-      console.log("creates ops -->deleteting");
+      let { taskListId, userId } = historicTaskList[0];
+      console.log("creates ops -->deleteting:", taskListId, userId);
       /**delete the entity if ops is create */
       let deletedTaskList = await TaskList.deleteOne({
         taskListId: taskListId,
         userId: userId,
       });
+      revertedSomething = true;
       console.log("Deleted the created historic tasklist", deletedTaskList.n);
     }
     if (operation === "edit") {
-      console.log("edit ops -->updating");
+      let { name, userId, taskListId } = historicTaskList[0];
+      console.log("edit ops -->updating::", name, userId, taskListId);
       /**revert the old/history name */
       let query = { taskListId: taskListId, userId: userId };
       let update = { name: name };
       let updatedTaskList = await TaskList.updateOne(query, update);
-      console.log("Update historic tasklist::", updatedTaskList.n);
+      console.log("Update historic task::", updatedTaskList.n);
+      revertedSomething = true;
     }
     if (operation === "delete") {
+      let { name, taskListId, userId } = historicTaskList[0];
       console.log("delete  ops -->creating");
       /**create the deleted tasklist */
       let newTaskListSchema = new TaskList({
@@ -90,8 +96,8 @@ exports.revertChanges = async (req, res) => {
         name: name,
       });
       let createdTaskList = await TaskList.create(newTaskListSchema);
-
       console.log("created the deleted tasklist::", createdTaskList.taskListId);
+      revertedSomething = true;
     }
     /**clean memorysnapshot and corresposing Hitoric entry post revert*/
     deleteRevertedMemory(toRevert, historicTaskList, Historic_TaskList);
@@ -100,30 +106,34 @@ exports.revertChanges = async (req, res) => {
     console.log("Reverting Task:::", updateId);
     let historicTask = await Historic_Task.find({
       updateId: updateId,
-    });
+    })
+      .lean()
+      .exec();
 
     if (operation === "create") {
-      let { updateId, name, status, userId, taskId } = historicTask;
-      console.log("creates ops -->deleteting");
+      let { userId, taskId } = historicTask[0];
+      console.log("creates ops -->deleteting::", userId, taskId);
       /**delete the entity if ops is create */
       let deletedTask = await Task.deleteOne({
         taskId: taskId,
         userId: userId,
       });
       console.log("Deleted the created historic task", deletedTask.n);
+      revertedSomething = true;
     }
     if (operation === "edit") {
-      let { updateId, name, status, userId, taskId } = historicTask;
-      console.log("edit ops -->updating");
+      let { name, status, userId, taskId } = historicTask[0];
+      console.log("edit ops -->updating::", name, status, userId, taskId);
       /**revert the old/history name */
       let query = { taskId: taskId, userId: userId };
       let update = { name: name, status: status };
       let updatedTask = await Task.updateOne(query, update);
       console.log("Update historic task::", updatedTask.n);
+      revertedSomething = true;
     }
     if (operation === "delete") {
-      let { updateId, name, status, userId, taskId } = historicTask;
-      console.log("delete  ops -->creating");
+      let { name, status, userId, taskId } = historicTask[0];
+      console.log("delete  ops -->creating::", name, status, userId, taskId);
       /**create the deleted tasklist */
       let newTaskSchema = new Task({
         taskListId: taskListId,
@@ -134,6 +144,7 @@ exports.revertChanges = async (req, res) => {
       });
       let createdTask = await Task.create(newTaskSchema);
       console.log("created the deleted tasklist::", createdTask.taskId);
+      revertedSomething = true;
     }
     /**clean memorysnapshot and corresposing Hitoric entry post revert*/
     deleteRevertedMemory(toRevert, historicTask, Historic_Task);
@@ -142,27 +153,50 @@ exports.revertChanges = async (req, res) => {
     console.log("Reverting SubTask:::");
     let historicSubTask = await Historic_SubTask.find({
       updateId: updateId,
-    });
-    let { updateId, name, status, userId, subTaskId, taskId } = historicSubTask;
+    })
+      .lean()
+      .exec();
+
     if (operation === "create") {
+      let { userId, subTaskId, taskId } = historicSubTask[0];
+      console.log("to--delete-subtask:", userId, subTaskId, taskId);
       console.log("creates ops -->deleteting");
       /**delete the entity if ops is create */
       let deletedSubTask = await SubTask.deleteOne({
         subTaskId: subTaskId,
         userId: userId,
+        taskId: taskId,
       });
       console.log("Deleted the created historic subtask", deletedSubTask.n);
+      revertedSomething = true;
     }
     if (operation === "edit") {
-      console.log("edit ops -->updating");
+      let { name, status, userId, subTaskId, taskId } = historicSubTask[0];
+      console.log(
+        "edit ops -->updating::",
+        name,
+        status,
+        userId,
+        subTaskId,
+        taskId
+      );
       /**revert the old/history name */
       let query = { subTaskId: subTaskId, userId: userId };
       let update = { name: name, status: status, taskId: taskId };
       let updatedTask = await SubTask.updateOne(query, update);
       console.log("Update historic subtask::", updatedTask.n);
+      revertedSomething = true;
     }
     if (operation === "delete") {
-      console.log("delete  ops -->creating");
+      let { name, status, userId, subTaskId, taskId } = historicSubTask[0];
+      console.log(
+        "delete  ops -->creating::",
+        name,
+        status,
+        userId,
+        subTaskId,
+        taskId
+      );
       /**create the deleted tasklist */
       let newTaskSchema = new SubTask({
         subTaskId: subTaskId,
@@ -173,15 +207,16 @@ exports.revertChanges = async (req, res) => {
       });
       let createdTask = await SubTask.create(newTaskSchema);
       console.log("created the deleted tasklist::", createdTask.taskId);
+      revertedSomething = true;
     }
     /**clean memorysnapshot and corresposing Hitoric entry post revert*/
     deleteRevertedMemory(toRevert, historicSubTask, Historic_SubTask);
   }
   if (toRevert.length === 0) {
     res
-      .status(200)
-      .json(formatResponse(false, 200, "No Historic Data Found", toRevert));
-  } else {
+      .status(404)
+      .json(formatResponse(true, 404, "No Historic Data Found", toRevert));
+  } else if (revertedSomething) {
     res
       .status(200)
       .json(formatResponse(false, 200, "Revert Success", toRevert));

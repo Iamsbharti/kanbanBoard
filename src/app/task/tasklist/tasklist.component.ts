@@ -470,7 +470,28 @@ export class TasklistComponent implements OnInit {
      * which will be either current user or if he is viewing task for
      * a friend
      * -->call fetchhistoric data api
-     *
+     * -->on success response reload the tasklist for the selected user
      */
+    let userInfo = {
+      userId: this.selectedUserId,
+    };
+    this.taskListService.revertLatestChange(userInfo).subscribe(
+      (response) => {
+        console.log('revert changes api response:', response);
+        if (response.status === 200) {
+          console.log('Revert-Success::', response.message);
+          console.log('Reloading the current tasklist');
+          /**timeout to fetch the updated db data */
+          setTimeout(() => this.getAllTaskList(this.selectedUserId), 1000);
+          this._toast.open({ text: response.message, type: 'success' });
+        } else {
+          this._toast.open({ text: response.message, type: 'danger' });
+        }
+      },
+      (error) => {
+        console.log('Revert Change API Error::', error.error);
+        this._toast.open({ text: error.error.message, type: 'danger' });
+      }
+    );
   }
 }

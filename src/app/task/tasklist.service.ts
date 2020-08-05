@@ -143,4 +143,13 @@ export class TasklistService {
       this.httpHeaderOptions
     );
   }
+  /**revert changes */
+  public revertLatestChange(userId): any {
+    console.log('reverting changes::for', userId);
+    return this._http.post(
+      `${this.baseurl}/revertChanges`,
+      userId,
+      this.httpHeaderOptions
+    );
+  }
 }

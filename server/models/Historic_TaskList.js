@@ -8,18 +8,24 @@ let taskListSchema = mongoose.Schema({
   name: {
     type: String,
     required: true,
+    unique: false,
   },
   taskListId: {
     type: String,
     required: true,
-    unique: true,
+    unique: false,
   },
   userId: {
     type: String,
     required: true,
+    unique: false,
   },
   status: {
     type: String,
+  },
+  operation: {
+    type: String,
+    required: true,
   },
   createdOn: {
     type: Date,

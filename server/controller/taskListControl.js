@@ -63,6 +63,7 @@ exports.createTaskList = async (req, res) => {
     name: name,
     taskListId: uniqueTaskListId,
     userId: userId,
+    operation: "create",
     createdOn: createdTimeStamp,
   });
   /**memory table updates */
@@ -174,6 +175,7 @@ exports.createTask = async (req, res) => {
     taskId: uniqueTaskId,
     userId: userId,
     status: status,
+    operation: "create",
     createdOn: createdTimeStamp,
   });
   /**memory table schema */
@@ -280,6 +282,7 @@ exports.createSubTask = async (req, res) => {
     status: status,
     userId: userId,
     taskId: taskId,
+    operation: "create",
     createdOn: createdTimeStamp,
   });
   /**memory table schema */
@@ -397,6 +400,7 @@ exports.updateTaskList = async (req, res) => {
         name: update.name,
         taskListId: uniqueTaskListId,
         userId: userId,
+        operation: "edit",
         createdOn: createdTimeStamp,
       });
       /**memory table schema */
@@ -525,6 +529,7 @@ exports.updateTask = async (req, res) => {
         status: status,
         taskId: uniqueTaskId,
         userId: userId,
+        operation: "edit",
         createdOn: createdTimeStamp,
       });
       /**memory table schema */
@@ -623,6 +628,7 @@ exports.updateSubTask = async (req, res) => {
         status: status,
         subTaskId: subTaskId,
         userId: userId,
+        operation: "edit",
         createdOn: createdTimeStamp,
       });
       /**memory table schema */

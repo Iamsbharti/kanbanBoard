@@ -8,6 +8,7 @@ let subTaskSchema = mongoose.Schema({
   subTaskId: {
     type: String,
     required: true,
+    unique: true,
   },
   taskId: {
     type: String,

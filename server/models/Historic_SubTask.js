@@ -8,19 +8,26 @@ let subTaskSchema = mongoose.Schema({
   name: {
     type: String,
     required: true,
+    unique: false,
   },
   subTaskId: {
     type: String,
     required: true,
-    unique: true,
+    unique: false,
   },
   taskId: {
+    type: String,
+    required: true,
+    unique: false,
+  },
+  operation: {
     type: String,
     required: true,
   },
   userId: {
     type: String,
     required: true,
+    unique: false,
   },
   createdOn: {
     type: Date,
