@@ -116,9 +116,8 @@ exports.getAllTaskList = async (req, res) => {
   /**skip and limit are used for pagination purpose */
   TaskList.find({ userId: userId })
     .select(EXCLUDE)
-    .skip(parseInt(skip, 10) || 0)
     .lean()
-    .limit(5)
+    .limit(parseInt(skip, 10) || 0)
     .exec((error, allList) => {
       // //console.log("error", error, allList);
       if (error !== null) {

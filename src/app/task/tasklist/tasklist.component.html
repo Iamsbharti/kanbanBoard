@@ -76,117 +76,128 @@
     (selectedFriend)="getFriendsItems($event)"
     (reloadTaskList)="reloadFriendlyUpdates($event)"
   ></app-friend-list>
-
-  <div class="row">
-    <div class="col-md-5 mt-4" *ngFor="let list of taskLists">
-      <div class="card" style="width: 22rem;">
-        <div class="card-header">
-          {{ list.name }}
-          <span class="taskListHeader">
-            <img
-              class="add"
-              src="/assets/addtaskicon.png"
-              (click)="open(createModal, 'New Task', list.taskListId)"
-            />
-            <img
-              class="add"
-              src="/assets/removetaskicon.png"
-              (click)="deleteTaskList(list.taskListId)"
-            />
-            <img
-              class="add"
-              src="/assets/edit.png"
-              (click)="
-                openEdit(editModal, 'Edit TaskList', list.taskListId, list.name)
-              "
-            />
-          </span>
+  <div class="tasklist">
+    <div class="row">
+      <div class="col-md-5 mt-4" *ngFor="let list of taskLists" #scrollBar>
+        <div class="card" style="width: 22rem;">
+          <div class="card-header">
+            {{ list.name }}
+            <span class="taskListHeader">
+              <img
+                class="add"
+                src="/assets/addtaskicon.png"
+                (click)="open(createModal, 'New Task', list.taskListId)"
+              />
+              <img
+                class="add"
+                src="/assets/removetaskicon.png"
+                (click)="deleteTaskList(list.taskListId)"
+              />
+              <img
+                class="add"
+                src="/assets/edit.png"
+                (click)="
+                  openEdit(
+                    editModal,
+                    'Edit TaskList',
+                    list.taskListId,
+                    list.name
+                  )
+                "
+              />
+            </span>
+          </div>
+          <app-tasks
+            [taskListId]="list.taskListId"
+            [userId]="list.userId"
+            [loggedInUser]="userId"
+            [flagOperationForFriend]="flagDisplayingFriendsItem"
+            (notify)="openCreateSubTaskForm($event, createModal)"
+            (delete)="deleteTask($event)"
+            (edit)="editTask($event, editModal)"
+            (editSTask)="editSubTask($event, editModal)"
+            (notifyForSTaskDelete)="notifyFriendsSTaskDelete($event)"
+          >
+          </app-tasks>
         </div>
-        <app-tasks
-          [taskListId]="list.taskListId"
-          [userId]="list.userId"
-          [loggedInUser]="userId"
-          [flagOperationForFriend]="flagDisplayingFriendsItem"
-          (notify)="openCreateSubTaskForm($event, createModal)"
-          (delete)="deleteTask($event)"
-          (edit)="editTask($event, editModal)"
-          (editSTask)="editSubTask($event, editModal)"
-          (notifyForSTaskDelete)="notifyFriendsSTaskDelete($event)"
-        >
-        </app-tasks>
       </div>
-    </div>
 
-    <!-- Create Modal -->
-    <ng-template #createModal let-modal>
-      <div class="modal-header">
-        <h4 class="modal-title" id="modal-create">
-          You are creating...
-        </h4>
-      </div>
-      <div class="modal-body">
-        <app-create-task
-          [operationName]="operationName"
-          [taskListId]="selectedTaskListId"
-          [userId]="selectedUserId"
-          [taskId]="selectedTaskId"
-          [loggedInUser]="userId"
-          [username]="username"
-          [flagOperationForFriend]="flagDisplayingFriendsItem"
-          [usersFriend]="usersFriendList"
-          (notifyNewTaskList)="addNewTaskList($event)"
-          (notifyNewTask)="addNewTask($event)"
-          (notifyNewSubTask)="addNewSubTask($event)"
-          (closeModal)="modal.close()"
-        ></app-create-task>
-      </div>
-      <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-outline-dark"
-          (click)="modal.close('Save click')"
-        >
-          Done?
-        </button>
-      </div>
-    </ng-template>
-    <!-- Edit Modal -->
-    <ng-template #editModal let-modal>
-      <div class="modal-header">
-        <h4 class="modal-title" id="modal-edit">
-          You are editing...
-        </h4>
-      </div>
-      <div class="modal-body">
-        <app-edit-task
-          [operationName]="operationName"
-          [taskListId]="selectedTaskListId"
-          [userId]="selectedUserId"
-          [taskId]="selectedTaskId"
-          [subTaskId]="selectedSubTaskId"
-          [name]="selectedTaskName"
-          [status]="selectedTaskStatus"
-          [selectTasksList]="selectTasksList"
-          [selectTasks]="selectTasks"
-          [loggedInUser]="userId"
-          [username]="username"
-          [flagOperationForFriend]="flagDisplayingFriendsItem"
-          [usersFriend]="usersFriendList"
-          (notifyEditTaskList)="editTaskLists($event)"
-          (notifyEditTask)="postEditTask($event)"
-          (notifyEditSubTask)="postEditSubTask($event)"
-          (closeModal)="modal.close()"
-        ></app-edit-task>
-      </div>
-      <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-outline-dark"
-          (click)="modal.close('Save click')"
-        >
-          Done?
-        </button>
-      </div>
-    </ng-template>
+      <!-- Create Modal -->
+      <ng-template #createModal let-modal>
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal-create">
+            You are creating...
+          </h4>
+        </div>
+        <div class="modal-body">
+          <app-create-task
+            [operationName]="operationName"
+            [taskListId]="selectedTaskListId"
+            [userId]="selectedUserId"
+            [taskId]="selectedTaskId"
+            [loggedInUser]="userId"
+            [username]="username"
+            [flagOperationForFriend]="flagDisplayingFriendsItem"
+            [usersFriend]="usersFriendList"
+            (notifyNewTaskList)="addNewTaskList($event)"
+            (notifyNewTask)="addNewTask($event)"
+            (notifyNewSubTask)="addNewSubTask($event)"
+            (closeModal)="modal.close()"
+          ></app-create-task>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-outline-dark"
+            (click)="modal.close('Save click')"
+          >
+            Done?
+          </button>
+        </div>
+      </ng-template>
+      <!-- Edit Modal -->
+      <ng-template #editModal let-modal>
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal-edit">
+            You are editing...
+          </h4>
+        </div>
+        <div class="modal-body">
+          <app-edit-task
+            [operationName]="operationName"
+            [taskListId]="selectedTaskListId"
+            [userId]="selectedUserId"
+            [taskId]="selectedTaskId"
+            [subTaskId]="selectedSubTaskId"
+            [name]="selectedTaskName"
+            [status]="selectedTaskStatus"
+            [selectTasksList]="selectTasksList"
+            [selectTasks]="selectTasks"
+            [loggedInUser]="userId"
+            [username]="username"
+            [flagOperationForFriend]="flagDisplayingFriendsItem"
+            [usersFriend]="usersFriendList"
+            (notifyEditTaskList)="editTaskLists($event)"
+            (notifyEditTask)="postEditTask($event)"
+            (notifyEditSubTask)="postEditSubTask($event)"
+            (closeModal)="modal.close()"
+          ></app-edit-task>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-outline-dark"
+            (click)="modal.close('Save click')"
+          >
+            Done?
+          </button>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+  <div class="loadtasks" [hidden]="toggleLoadMoreTasks">
+    <span class="badge badge-pill badge-danger" (click)="loadMoreTaskList()"
+      >load more task lists...</span
+    >
   </div>
 </div>

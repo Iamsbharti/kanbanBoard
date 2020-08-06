@@ -1,4 +1,12 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  EventEmitter,
+  Output,
+  ViewContainerRef,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { TasklistService } from '../tasklist.service';
 import { ToastConfig, Toaster } from 'ngx-toast-notifications';
 import { Router, Route } from '@angular/router';
@@ -12,12 +20,17 @@ import { HostListener } from '@angular/core';
   styleUrls: ['./tasklist.component.css'],
 })
 export class TasklistComponent implements OnInit {
+  //scroll postion
+  @ViewChild('scrollBar', { read: ElementRef })
+  public scrollMe: ElementRef;
   //init fields
   public taskLists: any = [];
   public subtasks: any = [];
   public fetchedAlltaskLists: String;
   public userId: String;
   public usersFriendList: any = [];
+  public page: any;
+  public toggleLoadMoreTasks: Boolean = false;
   /**new task info */
   public subTaskName: String;
   public taskListId: String;
@@ -80,6 +93,7 @@ export class TasklistComponent implements OnInit {
     this.authToken = authToken;
     this.selectedUserId = this.userId;
     this.usersFriendList = friends;
+    this.page = 0;
   }
   /**document listener for undo process */
   @HostListener('document:keydown', ['$event'])
@@ -233,7 +247,8 @@ export class TasklistComponent implements OnInit {
     let userdata = {
       userId: userId,
     };
-    this.taskListService.getTaskLists(userdata).subscribe(
+    this.page = 5;
+    this.taskListService.getTaskLists(userdata, this.page).subscribe(
       (response) => {
         console.log('get all task list', response.message);
         this.fetchedAlltaskLists = response.message;
@@ -505,6 +520,34 @@ export class TasklistComponent implements OnInit {
       (error) => {
         console.log('Revert Change API Error::', error.error);
         this._toast.open({ text: error.error.message, type: 'danger' });
+      }
+    );
+  }
+  /**load more tasks */
+  public loadMoreTaskList(): any {
+    console.log('load more tasks');
+    if (this.page === 0 || this.page < 0) {
+      this.page = 3;
+    } else {
+      this.page = --this.page;
+    }
+
+    let currentTaskList = this.taskLists;
+    console.log('current task::', currentTaskList);
+    console.log('task lists length::', this.taskLists.length);
+
+    let user = {
+      userId: this.selectedUserId,
+    };
+    this.taskListService.getTaskLists(user, this.page).subscribe(
+      (response) => {
+        console.log('resposne laod more tasks::', response.data);
+        let result = response.data;
+        this.taskLists = response.data;
+        console.log('final tasks::', this.taskLists);
+      },
+      (error) => {
+        console.log('error load::', error.error);
       }
     );
   }

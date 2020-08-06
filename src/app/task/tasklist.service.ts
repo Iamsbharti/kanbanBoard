@@ -70,9 +70,9 @@ export class TasklistService {
     return createTaskListRes;
   }
   //get taskLists for a userId
-  public getTaskLists(userId): any {
+  public getTaskLists(userId, skip): any {
     let allTaskLists = this._http.post(
-      `${this.baseurl}/getAllTaskList`,
+      `${this.baseurl}/getAllTaskList/?skip=${skip}`,
       userId,
       this.httpHeaderOptions
     );
