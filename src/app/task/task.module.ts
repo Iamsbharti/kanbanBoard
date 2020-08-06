@@ -10,6 +10,7 @@ import { TasksComponent } from './tasks/tasks.component';
 import { SubtasksComponent } from './subtasks/subtasks.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MultiuserModule } from '../multiuser/multiuser.module';
+import { RouterGuardService } from './router-guard.service';
 @NgModule({
   declarations: [TasklistComponent, TasksComponent, SubtasksComponent],
   imports: [
@@ -20,10 +21,15 @@ import { MultiuserModule } from '../multiuser/multiuser.module';
     NgbModule,
     MultiuserModule,
     RouterModule.forRoot([
-      { path: 'taskList', component: TasklistComponent, pathMatch: 'full' },
+      {
+        path: 'taskList',
+        component: TasklistComponent,
+        pathMatch: 'full',
+        canActivate: [RouterGuardService],
+      },
     ]),
   ],
-  providers: [TasklistService],
+  providers: [TasklistService, RouterGuardService],
   exports: [TasksComponent, SubtasksComponent, TasklistComponent],
 })
 export class TaskModule {}
