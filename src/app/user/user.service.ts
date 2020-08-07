@@ -8,7 +8,7 @@ import { catchError, retry } from 'rxjs/operators';
 })
 export class UserService {
   //initiliaze
-  public baseurl = 'http://localhost:4201/api/v1';
+  public baseurl = 'http://api.kanbanboard.co.in/api/v1';
   constructor(private _http: HttpClient) {}
 
   //handle exceptions

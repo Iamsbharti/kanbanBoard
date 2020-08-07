@@ -13,8 +13,8 @@ import { Cookie } from 'ng2-cookies';
   providedIn: 'root',
 })
 export class MultiUserService {
-  private socketUrl = 'http://localhost:4201/multiusers';
-  private apiBaseUrl = 'http://localhost:4201/api/v1';
+  private socketUrl = 'http://api.kanbanboard.co.in/multiusers';
+  private apiBaseUrl = 'http://api.kanbanboard.co.in/api/v1';
   private authToken: any;
   private socket;
   constructor(private _http: HttpClient, private userService: UserService) {

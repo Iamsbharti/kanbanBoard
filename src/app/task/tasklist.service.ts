@@ -13,9 +13,9 @@ import * as io from 'socket.io-client';
 })
 export class TasklistService {
   //initialize
-  public baseurl = 'http://localhost:4201/api/v1';
+  public baseurl = 'http://api.kanbanboard.co.in/api/v1';
   private socket;
-  private socketUrl = 'http://localhost:4201/multiusers';
+  private socketUrl = 'http://api.kanbanboard.co.in/multiusers';
   constructor(private _http: HttpClient, private userService: UserService) {
     /**init client socket */
     this.socket = io(this.socketUrl, {

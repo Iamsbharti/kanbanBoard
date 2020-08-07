@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
       /**Handle sucess */
       (response) => {
         console.debug('Login service res', response);
-        this.loginResponse = response.message;
+        this.loginResponse = `${response.message} --Redirecting To Your Tasks`;
 
         /**get user info from response and store as cookie for auth*/
         const { firstName, lastName, email, userId, authToken } = response.data;
