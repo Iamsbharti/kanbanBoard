@@ -32,3 +32,9 @@ label {
 a {
   color: #c7c6bf;
 }
+
+@media only screen and (max-width: 725px) {
+  .loginbox {
+    flex-direction: column;
+  }
+}
