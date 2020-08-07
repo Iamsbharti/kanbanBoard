@@ -10,12 +10,13 @@ import { ToastConfig, Toaster } from 'ngx-toast-notifications';
 export class OnlineUsersComponent implements OnInit {
   @Input() userId: any;
   @Input() username: any;
+  @Input() usersFriend: any = [];
   @Output()
   onlineUsers: EventEmitter<Array<Object>> = new EventEmitter<Array<Object>>();
 
   private authToken: String;
   public onlineUsersList: any[];
-
+  public isFriend: Boolean = true;
   constructor(
     private multiUserService: MultiUserService,
     private _toaster: Toaster

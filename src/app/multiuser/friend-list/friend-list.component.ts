@@ -38,12 +38,6 @@ export class FriendListComponent implements OnInit, OnDestroy {
     private _toaster: Toaster
   ) {
     this.authToken = Cookie.get('authToken');
-    /**listen for any friend request made */
-    this.getFriendRequestList();
-    /**listen for any approval/rejection for this user */
-    this.fRequestUpdateListener();
-    /**listen for any updates made by friends */
-    this.friendlyUpdatesListener();
   }
 
   ngOnInit(): void {

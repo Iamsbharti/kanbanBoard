@@ -3,6 +3,7 @@
     <li class="list-group-item" *ngFor="let user of onlineUsersList">
       {{ user.name }}
       <button
+        *ngIf="!usersFriend.includes(user.userId)"
         type="button"
         class="btn btn-light"
         (click)="addFriend(user.userId, user.name)"
