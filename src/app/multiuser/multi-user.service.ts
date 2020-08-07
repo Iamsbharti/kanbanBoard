@@ -28,7 +28,7 @@ export class MultiUserService {
   }
   //handle exceptions
   public handleError(error: HttpErrorResponse) {
-    console.log('Http Error:', error.message);
+    console.debug('Http Error:', error.message);
     return Observable.throw(error.message);
   }
   public httpHeaderOptions = {
@@ -39,7 +39,7 @@ export class MultiUserService {
   /**define listeners and emitters */
   /**1: Listen to authentication handshake */
   public autheticateUser = () => {
-    console.log('Auth user listener');
+    console.debug('Auth user listener');
     return Observable.create((observer) => {
       this.socket.on('authenticate', (data) => {
         observer.next(data);
@@ -48,12 +48,12 @@ export class MultiUserService {
   };
   /**2 send/emit authToken for authentication */
   public setUser = (authToken) => {
-    console.log('Emmit user authentication');
+    console.debug('Emmit user authentication');
     this.socket.emit('set-user', authToken);
   };
   /**3 Get Online Userlist by listning to online-users broadcase */
   public getOnlineUserList = () => {
-    //console.log('get online user service');
+    //console.debug('get online user service');
     return Observable.create((observer) => {
       this.socket.on('online-users', (data) => {
         observer.next(data);
@@ -62,10 +62,10 @@ export class MultiUserService {
   };
   /**emitt disconnect event with userId */
   public disconnectUser = (userId) => {
-    //console.log('Disconnecting user', userId);
+    //console.debug('Disconnecting user', userId);
     this.socket.emit('disconnected', userId);
     /**delete cookie and  localstorage*/
-    //console.log('clearing localstorage and cookie');
+    //console.debug('clearing localstorage and cookie');
     localStorage.clear();
     Cookie.delete('name');
     Cookie.delete('authToken');
@@ -74,7 +74,7 @@ export class MultiUserService {
   };
   /**emit friend request */
   public sendFriendRequest = (friendRequest) => {
-    //console.log('Send friend Request:');
+    //console.debug('Send friend Request:');
     this.socket.emit('sentFriendRequest', friendRequest);
   };
   /**listen for friend request */
@@ -103,7 +103,7 @@ export class MultiUserService {
   }
   /**emit request approve/rejection FR */
   public updateFriendRequest = (friendRequest) => {
-    //console.log('Emit actions on fr request');
+    //console.debug('Emit actions on fr request');
     this.socket.emit('update-friend-request', friendRequest);
   };
   /**listen for friend request approval/rejection for appropiate sender */
@@ -122,14 +122,14 @@ export class MultiUserService {
    * performed 'updates' has What was updated by whom
    */
   public notifyFriendsForUpdates(updates, friendlist): any {
-    console.log('emit notify friendly updates');
+    console.debug('emit notify friendly updates');
     this.socket.emit('friend-updated-tasks', updates, friendlist);
   }
   /**listen for updates from friends and show notificationa
    * and reload tasklist if userId is in Friend's list
    */
   public friendlyTaskUpdates(): any {
-    console.log('friendly task updates');
+    console.debug('friendly task updates');
     return Observable.create((observable) => {
       this.socket.on('updates-from-friend', (updates, friendList) => {
         observable.next(updates);

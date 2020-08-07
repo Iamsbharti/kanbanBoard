@@ -47,27 +47,27 @@ export class CreateTaskComponent implements OnInit {
   ngOnInit(): void {}
   /**create a single task */
   public createTask(): any {
-    console.log('operation::', this.operationName);
+    console.debug('operation::', this.operationName);
     if (this.operationName.endsWith('New Task')) {
-      console.log('create new task');
+      console.debug('create new task');
       let taskInfo = {
         taskListId: this.taskListId,
         userId: this.userId,
         name: this.taskName,
         status: 'open',
       };
-      console.log('taskinfo::', taskInfo);
+      console.debug('taskinfo::', taskInfo);
       this.taskService.createTask(taskInfo).subscribe(
         (response) => {
-          console.log('Create task response::', response.message);
-          console.log('error::', response);
+          console.debug('Create task response::', response.message);
+          console.debug('error::', response);
           /**New task Create success */
           if (response.status === 200) {
             this._toast.open({ text: response.message, type: 'success' });
             this.errorResponse = false;
             this.successResponse = true;
             this.createNewtaskResponse = response.message;
-            console.log('emitt new task change', response.data);
+            console.debug('emitt new task change', response.data);
             //this.notifyNewTask.emit(response.data);
             /**notify tasklist component for task updates */
             let refreshUserId;
@@ -76,7 +76,7 @@ export class CreateTaskComponent implements OnInit {
             } else {
               refreshUserId = this.loggedInUser;
             }
-            console.log('refreshing for::', refreshUserId);
+            console.debug('refreshing for::', refreshUserId);
             //this.notifyEditTask.emit(refreshUserId);
             this.notifyNewTask.emit(refreshUserId);
             /**emit update notifiation to friends if any*/
@@ -95,24 +95,24 @@ export class CreateTaskComponent implements OnInit {
           /**compute any error while */
           this.errorResponse = false;
           this.createNewtaskResponse = error.error.message;
-          console.log('resposen::', this.createNewtaskResponse);
+          console.debug('resposen::', this.createNewtaskResponse);
 
           this._toast.open({ text: error.error.message, type: 'danger' });
         }
       );
     }
     if (this.operationName.includes('New SubTask')) {
-      console.log('create new subtask');
+      console.debug('create new subtask');
       let taskInfo = {
         taskId: this.taskId,
         name: this.taskName,
         status: 'open',
         userId: this.userId,
       };
-      console.log('subtaskinfor::', taskInfo);
+      console.debug('subtaskinfor::', taskInfo);
       this.taskService.createSubTask(taskInfo).subscribe(
         (response) => {
-          console.log('Create task response::', response.message);
+          console.debug('Create task response::', response.message);
 
           /**New subtask Create success */
           if (response.status === 200) {
@@ -127,7 +127,7 @@ export class CreateTaskComponent implements OnInit {
             } else {
               refreshUserId = this.loggedInUser;
             }
-            console.log('refreshing for::', refreshUserId);
+            console.debug('refreshing for::', refreshUserId);
             this.notifyNewSubTask.emit(refreshUserId);
             /**emit update notifiation to friends if any*/
             let notification = `${this.username} created a SubTask`;
@@ -145,20 +145,20 @@ export class CreateTaskComponent implements OnInit {
           /**compute any error while */
           this.errorResponse = false;
           this.createNewtaskResponse = error.error.message;
-          console.log('resposen-subtask::', this.createNewtaskResponse);
+          console.debug('resposen-subtask::', this.createNewtaskResponse);
           this._toast.open({ text: error.error.message, type: 'danger' });
         }
       );
     }
     if (this.operationName.includes('New TaskList')) {
-      console.log('create new tasklist');
+      console.debug('create new tasklist');
       let taskListInfo = {
         userId: this.userId,
         name: this.taskName,
       };
       this.taskService.createTaskList(taskListInfo).subscribe(
         (response) => {
-          console.log('Create tasklist  response::', response.message);
+          console.debug('Create tasklist  response::', response.message);
 
           /**New subtask Create success */
           if (response.status === 200) {
@@ -166,7 +166,7 @@ export class CreateTaskComponent implements OnInit {
             this.errorResponse = false;
             this.successResponse = true;
             this.createNewtaskResponse = response.message;
-            console.log('emmit new tasklist create', response.data);
+            console.debug('emmit new tasklist create', response.data);
             this.notifyNewTaskList.emit(response.data);
             /**emit modal close event */
             this.closeModal.emit();
@@ -183,7 +183,7 @@ export class CreateTaskComponent implements OnInit {
           /**compute any error while */
           this.errorResponse = false;
           this.createNewtaskResponse = error.error.message;
-          console.log('resposen-taklist::', this.createNewtaskResponse);
+          console.debug('resposen-taklist::', this.createNewtaskResponse);
           this._toast.open({ text: error.error.message, type: 'danger' });
         }
       );
@@ -191,10 +191,10 @@ export class CreateTaskComponent implements OnInit {
   }
 
   public notifyFriends(notification): any {
-    console.log('notify friends for updates');
+    console.debug('notify friends for updates');
     /**emit update notifiation to friends if any*/
     if (this.usersFriend.length !== 0) {
-      console.log('updates string::', notification, this.usersFriend);
+      console.debug('updates string::', notification, this.usersFriend);
       this.multiUserService.notifyFriendsForUpdates(
         notification,
         this.usersFriend

@@ -27,7 +27,7 @@ export class TasklistService {
   /**define listeners and emitters */
   /**1: Listen to authentication handshake */
   public autheticateUser = () => {
-    console.log('Auth user listener');
+    console.debug('Auth user listener');
     return Observable.create((observer) => {
       this.socket.on('authenticate', (data) => {
         observer.next(data);
@@ -36,12 +36,12 @@ export class TasklistService {
   };
   /**2 send/emit authToken for authentication */
   public setUser = (authToken) => {
-    console.log('Emmit user authentication');
+    console.debug('Emmit user authentication');
     this.socket.emit('set-user', authToken);
   };
   /**3 Get Online Userlist by listning to online-users broadcase */
   public getOnlineUserList = () => {
-    //console.log('get online user service');
+    //console.debug('get online user service');
     return Observable.create((observer) => {
       this.socket.on('online-users', (data) => {
         observer.next(data);
@@ -50,7 +50,7 @@ export class TasklistService {
   };
   //handle exceptions
   public handleError(error: HttpErrorResponse) {
-    console.log('Http Error:', error.message);
+    console.debug('Http Error:', error.message);
     return Observable.throw(error.message);
   }
   public httpHeaderOptions = {
@@ -61,7 +61,7 @@ export class TasklistService {
 
   //create taskList
   public createTaskList(taskListData): any {
-    console.log('https header:', this.httpHeaderOptions);
+    console.debug('https header:', this.httpHeaderOptions);
     let createTaskListRes = this._http.post(
       `${this.baseurl}/createTaskList`,
       taskListData,
@@ -80,7 +80,7 @@ export class TasklistService {
   }
   //created task
   public createTask(taskDetails): any {
-    //console.log('create task service:', taskDetails);
+    //console.debug('create task service:', taskDetails);
     let createTaskRes = this._http.post(
       `${this.baseurl}/createTask`,
       taskDetails,
@@ -117,7 +117,7 @@ export class TasklistService {
   }
   /**update task */
   public updateTask(taskInfo): any {
-    //console.log('update task sevice::', taskInfo);
+    //console.debug('update task sevice::', taskInfo);
     let udpatedTask = this._http.post(
       `${this.baseurl}/updateTask`,
       taskInfo,
@@ -127,7 +127,7 @@ export class TasklistService {
   }
   /**update/delete tasklist */
   public updateTaskList(taskListInfo): any {
-    console.log('update tasklist service:');
+    console.debug('update tasklist service:');
     return this._http.post(
       `${this.baseurl}/updatetaskList`,
       taskListInfo,
@@ -136,7 +136,7 @@ export class TasklistService {
   }
   /**update/delete subtask */
   public updateSubTask(subTaskInfo): any {
-    console.log('update subtask  servcie');
+    console.debug('update subtask  servcie');
     return this._http.post(
       `${this.baseurl}/updateSubTask`,
       subTaskInfo,
@@ -145,7 +145,7 @@ export class TasklistService {
   }
   /**revert changes */
   public revertLatestChange(userId): any {
-    console.log('reverting changes::for', userId);
+    console.debug('reverting changes::for', userId);
     return this._http.post(
       `${this.baseurl}/revertChanges`,
       userId,

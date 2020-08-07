@@ -45,9 +45,9 @@ export class SignupComponent implements OnInit {
     });
   }
   public selectCountryCode(value): any {
-    //console.log('select code:', `+${n.search(value)[0].phone}`);
+    //console.debug('select code:', `+${n.search(value)[0].phone}`);
     this.countrycode = `+${n.search(value)[0].phone}`;
-    //console.log('cc::', this.countrycode);
+    //console.debug('cc::', this.countrycode);
     this.mobile = this.countrycode;
   }
   /**compare password */
@@ -65,7 +65,7 @@ export class SignupComponent implements OnInit {
   }
   /**Signup function */
   public signUpUser(): any {
-    console.log('Signup user');
+    console.debug('Signup user');
     let newuser = {
       firstName: this.firstName,
       lastName: this.lastName,
@@ -75,7 +75,7 @@ export class SignupComponent implements OnInit {
     };
     this.userService.signUpService(newuser).subscribe(
       (response) => {
-        console.log('Sign up response', response);
+        console.debug('Sign up response', response);
         if (
           response.status === 400 &&
           response.data[0] === 'Invalid Password'
@@ -92,7 +92,7 @@ export class SignupComponent implements OnInit {
       },
       (error) => {
         console.warn('SignUpError', error.error);
-        console.log('error_msg', error.error.message);
+        console.debug('error_msg', error.error.message);
         this.signUpResponse = error.error.message;
         this._toaster.open({ text: error.error.message, type: 'danger' });
       }

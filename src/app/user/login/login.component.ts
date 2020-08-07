@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
     this.userService.loginService(userData).subscribe(
       /**Handle sucess */
       (response) => {
-        console.log('Login service res', response);
+        console.debug('Login service res', response);
         this.loginResponse = response.message;
 
         /**get user info from response and store as cookie for auth*/

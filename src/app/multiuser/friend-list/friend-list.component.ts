@@ -38,10 +38,16 @@ export class FriendListComponent implements OnInit, OnDestroy {
     private _toaster: Toaster
   ) {
     this.authToken = Cookie.get('authToken');
+    /**listen for any friend request made */
+    this.getFriendRequestList();
+    /**listen for any approval/rejection for this user */
+    this.fRequestUpdateListener();
+    /**listen for any updates made by friends */
+    this.friendlyUpdatesListener();
   }
 
   ngOnInit(): void {
-    console.log('NGINIT_______FRIENDLIST');
+    console.debug('NGINIT_______FRIENDLIST');
     /**get friend list on user's login */
     this.getFriends();
     /**listen for any friend request made */
@@ -51,16 +57,9 @@ export class FriendListComponent implements OnInit, OnDestroy {
     /**listen for any updates made by friends */
     this.friendlyUpdatesListener();
   }
-  ngOnDestroy(): void {
-    /**listen for any friend request made */
-    this.getFriendRequestList();
-    /**listen for any approval/rejection for this user */
-    this.fRequestUpdateListener();
-    /**listen for any updates made by friends */
-    this.friendlyUpdatesListener();
-  }
+  ngOnDestroy(): void {}
   public handeShakeAuthentication(): any {
-    console.log('listen to hand shake');
+    console.debug('listen to hand shake');
     this.multiUserService.autheticateUser().subscribe((data) => {
       this.multiUserService.setUser(this.authToken);
       this.getFriends();
@@ -68,14 +67,14 @@ export class FriendListComponent implements OnInit, OnDestroy {
   }
   /**get friend list by API end point */
   public getFriends(): any {
-    //console.log('get online users list', this.userId);
+    //console.debug('get online users list', this.userId);
     let user = {
       senderId: this.userId,
     };
     this.multiUserService.getFriendRequests(user).subscribe(
       (response) => {
-        //console.log('friend reques::', response.message);
-        //console.log('friend reques::', typeof response.data);
+        //console.debug('friend reques::', response.message);
+        //console.debug('friend reques::', typeof response.data);
 
         if (response.status === 200) {
           this.resultList = response.data;
@@ -90,7 +89,7 @@ export class FriendListComponent implements OnInit, OnDestroy {
   }
   /**compute different type of friend list */
   public refineLists(friends): any {
-    //console.log('refining list:: for different groups', friends);
+    //console.debug('refining list:: for different groups', friends);
     friends.map((req) => {
       switch (req.status) {
         case 'pending':
@@ -126,8 +125,8 @@ export class FriendListComponent implements OnInit, OnDestroy {
     this.toApproveRequest = this.toApproveRequest.filter(
       (usr) => usr.recieverId == this.userId
     );
-    //console.log('to approve list::', this.toApproveRequest);
-    //console.log('friend list::', this.friendsList);
+    //console.debug('to approve list::', this.toApproveRequest);
+    //console.debug('friend list::', this.friendsList);
   }
   /**listen for any friend request made for this user and update the friend list */
   public getFriendRequestList(): any {
@@ -138,7 +137,7 @@ export class FriendListComponent implements OnInit, OnDestroy {
   }
   /**approve/reject friend request */
   public updateFRequest(request, action): any {
-    //console.log('Clicked updateFRequest:', action);
+    //console.debug('Clicked updateFRequest:', action);
     let updatedFriendRequest = { ...request, status: action };
     /**emit the updated request */
     this.multiUserService.updateFriendRequest(updatedFriendRequest);
@@ -190,31 +189,31 @@ export class FriendListComponent implements OnInit, OnDestroy {
   }
   /**Invoke addition to friendsItem  */
   public openFriendsItem(friend): any {
-    console.log('friend::', friend);
+    console.debug('friend::', friend);
     this.selectedFriend.emit(friend);
   }
   /**listener for friendly task updates */
   public friendlyUpdatesListener(): any {
     let toastString;
     let friendList = [];
-    console.log('Friendly task updates');
+    console.debug('Friendly task updates');
     this.multiUserService.friendlyTaskUpdates().subscribe((updates) => {
-      console.log('updates listener::', updates);
+      console.debug('updates listener::', updates);
       if (typeof updates === 'string') {
         toastString = updates;
-        console.log('toast string::', toastString);
+        console.debug('toast string::', toastString);
       } else {
         friendList = updates;
-        console.log('friendlist::', updates);
+        console.debug('friendlist::', updates);
       }
-      console.log('is friend::', friendList, this.userId);
+      console.debug('is friend::', friendList, this.userId);
       if (friendList.length !== 0) {
         friendList.map((fr) => {
           if (fr !== null && fr === this.userId) {
-            console.log('Found friend');
+            console.debug('Found friend');
             this._toaster.open({ text: toastString, type: 'dark' });
             //emit reload tasklist event
-            console.log("reloading task for  ,since it's a friend");
+            console.debug("reloading task for  ,since it's a friend");
             setTimeout(() => this.reloadTaskList.emit(this.userId), 1400);
           }
         });

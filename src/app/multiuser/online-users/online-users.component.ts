@@ -21,6 +21,9 @@ export class OnlineUsersComponent implements OnInit {
     private _toaster: Toaster
   ) {
     this.authToken = Cookie.get('authToken');
+    /**keep listeners active */
+    this.getOnlineUsersList();
+    this.recieveFriendRequestByUserId();
   }
 
   ngOnInit(): void {
@@ -30,16 +33,16 @@ export class OnlineUsersComponent implements OnInit {
   }
 
   public handeShakeAuthentication(): any {
-    console.log('listen to hand shake online compoenent');
+    console.debug('listen to hand shake online compoenent');
     this.multiUserService.autheticateUser().subscribe((data) => {
       this.multiUserService.setUser(this.authToken);
       this.getOnlineUsersList();
     });
   }
   public getOnlineUsersList(): any {
-    //console.log('get online users list');
+    //console.debug('get online users list');
     this.multiUserService.getOnlineUserList().subscribe((data) => {
-      //console.log('Online users from socket::', data);
+      //console.debug('Online users from socket::', data);
       /**filter out the current user */
       let users = [];
       data.map((d) => {
@@ -47,13 +50,13 @@ export class OnlineUsersComponent implements OnInit {
           users.push(d);
         }
       });
-      //console.log('final list:', users);
+      //console.debug('final list:', users);
       this.onlineUsers.emit(users);
       this.onlineUsersList = users;
     });
   }
   public addFriend(userId, username): any {
-    //console.log('Add friend start', userId);
+    //console.debug('Add friend start', userId);
     /**to and from denotes friend request sent to and from user */
     let friendList = {
       recieverId: userId,
@@ -62,14 +65,14 @@ export class OnlineUsersComponent implements OnInit {
       senderName: this.username,
     };
     this.multiUserService.sendFriendRequest(friendList);
-    //console.log('fiendlist::', friendList);
+    //console.debug('fiendlist::', friendList);
   }
   public recieveFriendRequestByUserId(): any {
-    //console.log('listen to friend request');
+    //console.debug('listen to friend request');
     this.multiUserService
       .recieveFriendRequest(this.userId)
       .subscribe((data) => {
-        //console.log('recieved friend request for ', data);
+        //console.debug('recieved friend request for ', data);
         const { recieverId, recieverName, senderId, senderName } = data;
         this._toaster.open({
           text: `${senderName} sent you an friend request`,

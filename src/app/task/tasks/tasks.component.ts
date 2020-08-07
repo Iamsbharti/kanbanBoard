@@ -40,13 +40,13 @@ export class TasksComponent implements OnInit {
       taskListId: this.taskListId,
       userId: this.userId,
     };
-    //console.log('input:', taskInfo);
+    //console.debug('input:', taskInfo);
     this.taskService.getTasks(taskInfo).subscribe(
       (response) => {
-        console.log('get all task res::', response.message);
+        console.debug('get all task res::', response.message);
         /**updated tasks */
         this.tasks = response.data;
-        //console.log('All tasks::', this.tasks);
+        //console.debug('All tasks::', this.tasks);
       },
       (error) => {
         console.warn('Error::', error.error);
@@ -56,40 +56,40 @@ export class TasksComponent implements OnInit {
   /**toggle create task pop up */
   public openCreateTaskForm(taskListId): any {
     this.toggleCreateTaskForm = !this.toggleCreateTaskForm;
-    console.log('Tasklist id after popup::', taskListId);
+    console.debug('Tasklist id after popup::', taskListId);
     this.taskListId = taskListId;
   }
   /**Reload tasklist post task new create */
   public addNewTask(newTask): any {
-    console.log('newtask in task component::', newTask);
+    console.debug('newtask in task component::', newTask);
     return this.tasks.push(newTask);
   }
   /**emitt subtask creation */
   public emitSubTaskCreation(taskId): any {
-    console.log('Emit creation');
+    console.debug('Emit creation');
     this.notify.emit(taskId);
   }
   /**emit subtask deletion */
   public emitTaskDeletion(taskId, taskListId, userId): any {
-    console.log('Emit deletetion', taskId, taskListId, userId);
+    console.debug('Emit deletetion', taskId, taskListId, userId);
     this.delete.emit(`${taskId}:${taskListId}:${userId}`);
   }
   /**emit edit subtask*/
   public editSubTask(values, taskListId): any {
-    console.log('Emit edit subtask:', values);
+    console.debug('Emit edit subtask:', values);
     this.editSTask.emit(`${values}:${taskListId}`);
   }
   /**emit edit task event */
   public emitEditTask(taskId, name, taskListId, status): any {
-    console.log('Emit edit task::', taskId, name, taskListId);
+    console.debug('Emit edit task::', taskId, name, taskListId);
     this.edit.emit(`${taskId}:${name}:${taskListId}:${status}`);
   }
   /**delete sub task */
   public deleteSubTask(values): any {
-    console.log('Delete task listeners::', values, this.userId);
+    console.debug('Delete task listeners::', values, this.userId);
     /**call delete service */
     let [taskId, subTaskId] = values.split(':');
-    console.log(subTaskId, taskId);
+    console.debug(subTaskId, taskId);
     let taskInfo = {
       subTaskId: subTaskId,
       taskId: taskId,
@@ -98,7 +98,7 @@ export class TasksComponent implements OnInit {
     };
     this.taskService.updateSubTask(taskInfo).subscribe(
       (response) => {
-        console.log('Delete api reponse::', response);
+        console.debug('Delete api reponse::', response);
         /**success toast  */
         this._toast.open({ text: response.message, type: 'success' });
         /**refresh for specific user */
@@ -108,12 +108,12 @@ export class TasksComponent implements OnInit {
         } else {
           refreshUserId = this.loggedInUser;
         }
-        console.log('refreshing for::', refreshUserId);
+        console.debug('refreshing for::', refreshUserId);
         this.getAllTask(refreshUserId, taskId);
         this.notifyForSTaskDelete.emit();
       },
       (error) => {
-        console.log('Error Deleting Task::', error.error);
+        console.debug('Error Deleting Task::', error.error);
         this._toast.open({ text: error.error.message, type: 'danger' });
       }
     );

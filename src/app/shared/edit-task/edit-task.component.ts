@@ -63,27 +63,27 @@ export class EditTaskComponent implements OnInit {
     //this.selected = this.selectTasks[0];
     /**toggle selection item based on task ops */
     if (this.operationName === 'Edit TaskList') {
-      console.log('ops edit tasklist::', this.selectTasks);
+      console.debug('ops edit tasklist::', this.selectTasks);
       this.toggleTaskList = true;
       this.toggleTasks = true;
       this.toggleStatusSelection = true;
     }
     if (this.operationName === 'Edit Task') {
-      console.log('ops edit task::', this.selectTasksList);
-      console.log('ops edit task');
+      console.debug('ops edit task::', this.selectTasksList);
+      console.debug('ops edit task');
       /*this.selectTasksList.map((list) => {
         if (list.taskListId === this.taskListId) {
-          console.log('taskname::', list.name);
+          console.debug('taskname::', list.name);
           this.selectedTask = list.name;
         }
       });*/
       this.toggleTaskList = false;
       this.toggleTasks = true;
-      //console.log('selected value::', this.selectedTask);
+      //console.debug('selected value::', this.selectedTask);
     }
     if (this.operationName === 'Edit SubTask') {
-      console.log('ops edit subtask::', this.selectTasks);
-      console.log('ops edit subtasks');
+      console.debug('ops edit subtask::', this.selectTasks);
+      console.debug('ops edit subtasks');
       this.toggleTaskList = true;
       this.toggleTasks = false;
       this.getAllTask();
@@ -95,20 +95,20 @@ export class EditTaskComponent implements OnInit {
       taskListId: this.taskListId,
       userId: this.userId,
     };
-    console.log('input:', taskInfo);
+    console.debug('input:', taskInfo);
     this.taskService.getTasks(taskInfo).subscribe(
       (response) => {
-        console.log('get all task res::', response.message);
+        console.debug('get all task res::', response.message);
         /**updated tasks */
         this.selectTasks = response.data;
-        console.log('All tasks::', this.selectTasks);
+        console.debug('All tasks::', this.selectTasks);
         this.selectTasks.map((list) => {
           if (list.taskId === this.taskId) {
-            console.log('taskfor subtask::', list.taskId);
+            console.debug('taskfor subtask::', list.taskId);
             this.selected = list.taskId;
           }
         });
-        console.log('selected task::', this.selected);
+        console.debug('selected task::', this.selected);
       },
       (error) => {
         console.warn('Error::', error.error);
@@ -116,11 +116,11 @@ export class EditTaskComponent implements OnInit {
     );
   }
   public editTask(): any {
-    console.log('editing task');
+    console.debug('editing task');
     /**create a single task */
-    console.log('operation::', this.operationName);
+    console.debug('operation::', this.operationName);
     if (this.operationName.endsWith('Edit Task')) {
-      console.log('edit task');
+      console.debug('edit task');
       let taskInfo = {
         taskListId: this.taskListId,
         taskId: this.taskId,
@@ -132,10 +132,10 @@ export class EditTaskComponent implements OnInit {
           taskListId: this.selectedTask,
         },
       };
-      console.log('update taskinfo::', taskInfo);
+      console.debug('update taskinfo::', taskInfo);
       this.taskService.updateTask(taskInfo).subscribe(
         (response) => {
-          console.log('update task response::', response.message);
+          console.debug('update task response::', response.message);
 
           /**New task Create success */
           if (response.status === 200) {
@@ -143,7 +143,7 @@ export class EditTaskComponent implements OnInit {
             this.errorResponse = false;
             this.successResponse = true;
             this.editTaskResponse = response.message;
-            console.log('emitt new task change', response.data);
+            console.debug('emitt new task change', response.data);
             /**notify tasklist component for task updates */
             let refreshUserId;
             if (this.flagOperationForFriend) {
@@ -151,7 +151,7 @@ export class EditTaskComponent implements OnInit {
             } else {
               refreshUserId = this.loggedInUser;
             }
-            console.log('refreshing for::', refreshUserId);
+            console.debug('refreshing for::', refreshUserId);
             this.notifyEditTask.emit(refreshUserId);
             /**emit update notifiation to friends if any*/
             let notification = `${this.username} updated a Task`;
@@ -165,14 +165,14 @@ export class EditTaskComponent implements OnInit {
           /**compute any error while */
           this.errorResponse = false;
           this.editTaskResponse = error.error.message;
-          console.log('resposen::', this.editTaskResponse);
+          console.debug('resposen::', this.editTaskResponse);
 
           this._toast.open({ text: error.error.message, type: 'danger' });
         }
       );
     }
     if (this.operationName.includes('Edit SubTask')) {
-      console.log('edit new subtask');
+      console.debug('edit new subtask');
       let taskInfo = {
         taskId: this.taskId,
         subTaskId: this.subTaskId,
@@ -184,10 +184,10 @@ export class EditTaskComponent implements OnInit {
           taskId: this.selected,
         },
       };
-      console.log('subtaskinfor::', taskInfo);
+      console.debug('subtaskinfor::', taskInfo);
       this.taskService.updateSubTask(taskInfo).subscribe(
         (response) => {
-          console.log('update task response::', response.message);
+          console.debug('update task response::', response.message);
           /**subtask update success */
           if (response.status === 200) {
             this._toast.open({ text: response.message, type: 'success' });
@@ -213,13 +213,13 @@ export class EditTaskComponent implements OnInit {
           /**compute any error while */
           this.errorResponse = false;
           this.editTaskResponse = error.error.message;
-          console.log('resposen-subtask::', this.editTaskResponse);
+          console.debug('resposen-subtask::', this.editTaskResponse);
           this._toast.open({ text: error.error.message, type: 'danger' });
         }
       );
     }
     if (this.operationName.includes('Edit TaskList')) {
-      console.log('update tasklist');
+      console.debug('update tasklist');
       let taskListInfo = {
         userId: this.userId,
         taskListId: this.taskListId,
@@ -230,7 +230,7 @@ export class EditTaskComponent implements OnInit {
       };
       this.taskService.updateTaskList(taskListInfo).subscribe(
         (response) => {
-          console.log('update tasklist  response::', response.message);
+          console.debug('update tasklist  response::', response.message);
 
           /**New subtask update success */
           if (response.status === 200) {
@@ -238,7 +238,7 @@ export class EditTaskComponent implements OnInit {
             this.errorResponse = false;
             this.successResponse = true;
             this.editTaskResponse = response.message;
-            console.log('emmit  tasklist edit');
+            console.debug('emmit  tasklist edit');
             this.notifyEditTaskList.emit(
               `${this.name + ':' + this.taskListId}`
             );
@@ -255,17 +255,17 @@ export class EditTaskComponent implements OnInit {
           /**compute any error while update*/
           this.errorResponse = false;
           this.editTaskResponse = error.error.message;
-          console.log('resposen-taklist::', this.editTaskResponse);
+          console.debug('resposen-taklist::', this.editTaskResponse);
           this._toast.open({ text: error.error.message, type: 'danger' });
         }
       );
     }
   }
   public notifyFriends(notification): any {
-    console.log('notify friends for updates');
+    console.debug('notify friends for updates');
     /**emit update notifiation to friends if any*/
     if (this.usersFriend.length !== 0) {
-      console.log('updates string::', notification, this.usersFriend);
+      console.debug('updates string::', notification, this.usersFriend);
       this.multiUserService.notifyFriendsForUpdates(
         notification,
         this.usersFriend

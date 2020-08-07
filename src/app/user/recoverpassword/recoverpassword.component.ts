@@ -48,13 +48,13 @@ export class RecoverpasswordComponent implements OnInit {
     let user = {
       email: this.email,
     };
-    console.log('Send recovery ccode-service call', user);
+    console.debug('Send recovery ccode-service call', user);
     /**Switch on loader */
     this.loadSpinner = true;
     this.loadMessage = 'Sending Email...';
     this._userService.recoverPassword(user).subscribe(
       (response) => {
-        console.log('Recovery response', response);
+        console.debug('Recovery response', response);
         /**Toast */
         /**Switch off loader */
         this.loadSpinner = false;
@@ -70,7 +70,7 @@ export class RecoverpasswordComponent implements OnInit {
   }
   /**Reset Password */
   public resetPassword(): any {
-    console.log('reset Password');
+    console.debug('reset Password');
     let resetInfo = {
       email: this.email,
       recoveryCode: this.code,
@@ -81,7 +81,7 @@ export class RecoverpasswordComponent implements OnInit {
     this.loadMessage = 'Resetting Password....';
     this._userService.resetPassword(resetInfo).subscribe(
       (response) => {
-        console.log('reset api res', response);
+        console.debug('reset api res', response);
         /**Switch off loader */
         this.loadSpinner = false;
 
