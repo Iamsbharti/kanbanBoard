@@ -25,11 +25,15 @@ export class SignupComponent implements OnInit {
   public country: String;
   public countrycode: any;
   public ctr: String = 'country';
+  public passwordError: String;
   constructor(
     private userService: UserService,
     private _router: Router,
     private _toaster: Toaster
-  ) {}
+  ) {
+    this.passwordError = `Password should have at least 1 Lowercase,Uppercase,Special
+    Character & of min length 8 `;
+  }
 
   ngOnInit(): void {
     /**Compute list of countries */
@@ -52,7 +56,9 @@ export class SignupComponent implements OnInit {
     return this.equalPwd;
   }
   public validatePassword(): Boolean {
-    let pattern = new RegExp('^[A-Za-z0-9]\\w{8,64}$');
+    let pattern = new RegExp(
+      '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})'
+    );
     if (this.password === undefined) return true;
     this.acceptedPwd = pattern.test(this.password.toString());
     return this.acceptedPwd;
@@ -70,13 +76,19 @@ export class SignupComponent implements OnInit {
     this.userService.signUpService(newuser).subscribe(
       (response) => {
         console.log('Sign up response', response);
-        this.signUpResponse = `${response.message}, Redirecting to Login`;
-
-        /**Toast sucess */
-        this._toaster.open({ text: response.message, type: 'success' });
-
-        /**Route to Login page */
-        setTimeout(() => this._router.navigate(['/login']), 2000);
+        if (
+          response.status === 400 &&
+          response.data[0] === 'Invalid Password'
+        ) {
+          this.signUpResponse = this.passwordError;
+        }
+        if (response.status === 200) {
+          this.signUpResponse = `${response.message}, Redirecting to Login`;
+          /**Toast sucess */
+          this._toaster.open({ text: response.message, type: 'success' });
+          /**Route to Login page */
+          setTimeout(() => this._router.navigate(['/login']), 2000);
+        }
       },
       (error) => {
         console.warn('SignUpError', error.error);

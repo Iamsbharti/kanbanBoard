@@ -85,7 +85,7 @@
         Password Is required
       </div>
       <div [hidden]="validatePassword()" class="alert alert-danger">
-        Password should be alphanumeric and of min length 8
+        {{ passwordError }}
       </div>
       <input
         class="form-control mt-1"

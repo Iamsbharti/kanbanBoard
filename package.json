@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "start-api": "nodemon server/app.js",
+    "start-fe": "nodemon app.js",
     "docs": "apidoc -i server/router/ -o apidoc/"
   },
   "private": true,
