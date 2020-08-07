@@ -8,7 +8,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "start-api": "nodemon server/app.js"
+    "start-api": "nodemon server/app.js",
+    "docs": "apidoc -i server/router/ -o apidoc/"
   },
   "private": true,
   "dependencies": {
@@ -23,6 +24,7 @@
     "@angular/router": "~9.1.9",
     "@hapi/joi": "^17.1.1",
     "@ng-bootstrap/ng-bootstrap": "^7.0.0",
+    "apidoc": "^0.24.0",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "bootstrap": "^4.5.0",
