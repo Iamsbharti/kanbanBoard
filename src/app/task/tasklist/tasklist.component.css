@@ -79,3 +79,8 @@ img {
   overflow-x: hidden;
   position: relative;
 }
+@media only screen and (max-width: 725px) {
+  row {
+    flex-direction: column;
+  }
+}
